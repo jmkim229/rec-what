@@ -6,49 +6,79 @@
   <meta name="description" content="주일학교, 캠프, 수련회를 위한 레크리에이션 아이디어 모음. 연령대별·인원별·장소별로 쉽게 찾아보세요.">
   <title>레크 뭐하지? - 레크리에이션 아이디어 모음</title>
   <link rel="stylesheet" href="css/style.css">
+  <style>
+    .hero-badge {
+      display: inline-block;
+      background: rgba(255,255,255,0.2);
+      color: white;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 4px 14px;
+      border-radius: 20px;
+      margin-bottom: 16px;
+      letter-spacing: 0.5px;
+    }
+    .section-title {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      color: #1a1a2e;
+      text-align: center;
+    }
+    .section-title span {
+      color: #4f8ef7;
+    }
+  </style>
 </head>
 <body>
 
   <header>
+    <span class="hero-badge">주일학교 · 캠프 · 수련회</span>
     <h1>🎉 레크 뭐하지?</h1>
-    <p>주일학교·캠프·수련회 레크리에이션, 바로 찾아보세요</p>
+    <p>오늘 레크 뭐 할지 고민될 때, 바로 찾아보세요</p>
   </header>
 
   <nav>
-    <a href="#indoor">실내</a>
-    <a href="#outdoor">야외</a>
-    <a href="#small">소그룹</a>
-    <a href="#large">전체</a>
+    <a href="indoor.html">🏠 실내</a>
+    <a href="outdoor.html">🌳 야외</a>
+    <a href="small-group.html">👥 소그룹</a>
+    <a href="large-group.html">🏟️ 전체</a>
   </nav>
 
   <main>
     <section class="hero">
-      <h2>오늘 레크 뭐 할지 모르겠다면?</h2>
-      <p>연령대, 인원, 장소에 맞는 레크리에이션을 골라보세요 👇</p>
+      <h2>카테고리를 선택하세요</h2>
+      <p>장소와 인원에 맞는 레크리에이션을 골라보세요 👇</p>
     </section>
 
-    <section class="category-grid">
-      <div class="card" id="indoor">
+    <p class="section-title">📂 카테고리별 <span>게임 모음</span></p>
+
+    <div class="category-grid">
+      <a href="indoor.html" class="category-card">
         <span class="emoji">🏠</span>
         <h3>실내 레크</h3>
-        <p>좁은 공간에서도 신나게!</p>
-      </div>
-      <div class="card" id="outdoor">
+        <p>좁은 공간에서도<br>신나게 즐기는 게임</p>
+        <span class="arrow">5개 게임 보기 →</span>
+      </a>
+      <a href="outdoor.html" class="category-card">
         <span class="emoji">🌳</span>
         <h3>야외 레크</h3>
-        <p>뛰고 달리고 함께!</p>
-      </div>
-      <div class="card" id="small">
+        <p>뛰고 달리고<br>함께하는 액티비티</p>
+        <span class="arrow">5개 게임 보기 →</span>
+      </a>
+      <a href="small-group.html" class="category-card">
         <span class="emoji">👥</span>
-        <h3>소그룹 (5~15명)</h3>
-        <p>친밀감을 높이는 게임</p>
-      </div>
-      <div class="card" id="large">
+        <h3>소그룹</h3>
+        <p>5~15명이 함께<br>친밀감을 높이는 게임</p>
+        <span class="arrow">5개 게임 보기 →</span>
+      </a>
+      <a href="large-group.html" class="category-card">
         <span class="emoji">🏟️</span>
-        <h3>전체 활동 (30명+)</h3>
-        <p>대규모 단체 레크</p>
-      </div>
-    </section>
+        <h3>전체 활동</h3>
+        <p>30명 이상이<br>함께하는 대규모 레크</p>
+        <span class="arrow">5개 게임 보기 →</span>
+      </a>
+    </div>
   </main>
 
   <footer>
