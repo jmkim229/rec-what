@@ -37,6 +37,12 @@
     <section class="hero">
       <h2>어떤 상황인가요?</h2>
       <p>인원과 장소에 맞는 레크리에이션을 골라보세요 👇</p>
+      <div class="search-wrap">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="searchInput" placeholder="게임 이름으로 검색... (예: 마피아, 빙고)" autocomplete="off">
+        <button class="search-clear" id="clearBtn" aria-label="검색어 지우기">✕</button>
+      </div>
+      <div class="search-results" id="searchResults"></div>
     </section>
 
     <div class="category-grid">
@@ -87,6 +93,91 @@
         <p>워크숍·MT·팀빌딩<br>성인 추천 게임</p>
         <span class="arrow">5개 게임 보기 →</span>
       </a>
+    </div>
+
+    <p class="section-title" style="margin-top:56px;">🔥 인기 게임 <span>TOP 5</span></p>
+    <div class="top5-list">
+      <a href="games/mafia.html" class="top5-card">
+        <span class="top5-rank">1</span>
+        <span class="top5-emoji">🕵️</span>
+        <div class="top5-info">
+          <strong>마피아 게임</strong>
+          <span>심리전의 끝판왕 — 소그룹·MT 단골</span>
+        </div>
+        <span class="top5-arrow">→</span>
+      </a>
+      <a href="games/ox-quiz.html" class="top5-card">
+        <span class="top5-rank">2</span>
+        <span class="top5-emoji">⭕</span>
+        <div class="top5-info">
+          <strong>OX 퀴즈</strong>
+          <span>전 연령 인원 제한 없는 클래식 게임</span>
+        </div>
+        <span class="top5-arrow">→</span>
+      </a>
+      <a href="games/bomb-pass.html" class="top5-card">
+        <span class="top5-rank">3</span>
+        <span class="top5-emoji">💣</span>
+        <div class="top5-info">
+          <strong>폭탄 돌리기</strong>
+          <span>준비물 없이 30초만에 시작 가능</span>
+        </div>
+        <span class="top5-arrow">→</span>
+      </a>
+      <a href="games/human-bingo.html" class="top5-card">
+        <span class="top5-rank">4</span>
+        <span class="top5-emoji">🎯</span>
+        <div class="top5-info">
+          <strong>인간 빙고</strong>
+          <span>첫 만남 어색함을 단번에 해소</span>
+        </div>
+        <span class="top5-arrow">→</span>
+      </a>
+      <a href="games/escape-mission.html" class="top5-card">
+        <span class="top5-rank">5</span>
+        <span class="top5-emoji">🔐</span>
+        <div class="top5-info">
+          <strong>방탈출 미션</strong>
+          <span>협동과 추리가 합쳐진 몰입 게임</span>
+        </div>
+        <span class="top5-arrow">→</span>
+      </a>
+    </div>
+
+    <p class="section-title" style="margin-top:56px;">💡 이런 상황엔 <span>이 게임!</span></p>
+    <div class="situation-grid">
+      <div class="situation-card">
+        <div class="situation-title">🤝 처음 만난 팀, 어색할 때</div>
+        <div class="situation-games">
+          <a href="games/human-bingo.html">🎯 인간 빙고</a>
+          <a href="games/guess-who.html">🤔 나는 누구일까요?</a>
+          <a href="games/truth-or-lie.html">✅ 진실 혹은 거짓</a>
+        </div>
+      </div>
+      <div class="situation-card">
+        <div class="situation-title">⚡ 준비물 없이 바로 시작</div>
+        <div class="situation-games">
+          <a href="games/wordchain.html">💬 끝말잇기</a>
+          <a href="games/nunchigame.html">👀 눈치 게임</a>
+          <a href="games/updown.html">⬆️ 업다운 퀴즈</a>
+        </div>
+      </div>
+      <div class="situation-card">
+        <div class="situation-title">🏃 에너지 폭발이 필요할 때</div>
+        <div class="situation-games">
+          <a href="games/bomb-pass.html">💣 폭탄 돌리기</a>
+          <a href="games/treasure-hunt.html">🗺️ 보물찾기</a>
+          <a href="games/wave.html">🌊 파도타기</a>
+        </div>
+      </div>
+      <div class="situation-card">
+        <div class="situation-title">🧠 두뇌를 써야 할 때</div>
+        <div class="situation-games">
+          <a href="games/mafia.html">🕵️ 마피아 게임</a>
+          <a href="games/escape-mission.html">🔐 방탈출 미션</a>
+          <a href="games/debate-game.html">🗣️ 토론 게임</a>
+        </div>
+      </div>
     </div>
   </main>
 
