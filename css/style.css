@@ -120,6 +120,7 @@ main {
 .card-large:hover   { border-color: #FF6B35; }
 .card-young:hover   { border-color: #ec4899; }
 .card-older:hover   { border-color: #0d9488; }
+.card-adult:hover   { border-color: #4f46e5; }
 
 .emoji-wrap {
   width: 72px;
@@ -143,6 +144,7 @@ main {
 .card-large   .emoji-wrap { background: #fff3e0; }
 .card-young   .emoji-wrap { background: #fdf2f8; }
 .card-older   .emoji-wrap { background: #f0fdfa; }
+.card-adult   .emoji-wrap { background: #eef2ff; }
 
 .category-card h3 {
   font-size: 17px;
@@ -170,6 +172,7 @@ main {
 .card-large   .arrow { color: #FF6B35; }
 .card-young   .arrow { color: #ec4899; }
 .card-older   .arrow { color: #0d9488; }
+.card-adult   .arrow { color: #4f46e5; }
 
 /* ── 목록 페이지 공통 ── */
 .page-header {
