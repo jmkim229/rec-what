@@ -6,6 +6,86 @@
   <meta name="description" content="몸으로 말해요 팀전 게임 방법, 준비물, 변형 방법. 워크숍·MT를 뒤집어 놓는 성인 레크리에이션!">
   <title>몸으로 말해요 팀전 - 레크 뭐하지?</title>
   <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .word-gen {
+      background: white;
+      border-radius: 20px;
+      padding: 28px 24px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      text-align: center;
+    }
+    .difficulty-btns {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+    .diff-btn {
+      padding: 10px 24px;
+      border-radius: 50px;
+      border: 2px solid #e5e7eb;
+      background: white;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      color: #888;
+      transition: all 0.18s;
+    }
+    .diff-btn:hover { border-color: #4f46e5; color: #4f46e5; }
+    .diff-btn.active.easy   { background: #dcfce7; border-color: #22c55e; color: #16a34a; }
+    .diff-btn.active.medium { background: #fef9c3; border-color: #eab308; color: #a16207; }
+    .diff-btn.active.hard   { background: #fee2e2; border-color: #ef4444; color: #dc2626; }
+    .word-display {
+      min-height: 140px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f5f3ff;
+      border-radius: 16px;
+      margin-bottom: 24px;
+      border: 2px dashed #c7d2fe;
+      padding: 16px;
+    }
+    .word-placeholder { font-size: 16px; color: #ccc; line-height: 1.8; }
+    .word-result {
+      font-size: clamp(28px, 8vw, 52px);
+      font-weight: 800;
+      color: #4f46e5;
+      letter-spacing: -1px;
+      display: inline-block;
+    }
+    @keyframes popIn {
+      0%   { transform: scale(0.2) rotate(-6deg); opacity: 0; }
+      55%  { transform: scale(1.18) rotate(2deg); opacity: 1; }
+      75%  { transform: scale(0.94) rotate(-1deg); }
+      100% { transform: scale(1) rotate(0deg); opacity: 1; }
+    }
+    .pop { animation: popIn 0.42s cubic-bezier(0.34, 1.56, 0.64, 1) both; }
+    .pick-btn {
+      display: inline-block;
+      background: linear-gradient(135deg, #4f46e5, #818cf8);
+      color: white;
+      border: none;
+      border-radius: 50px;
+      padding: 18px 48px;
+      font-size: 20px;
+      font-weight: 800;
+      cursor: pointer;
+      font-family: inherit;
+      box-shadow: 0 6px 20px rgba(79,70,229,0.35);
+      transition: transform 0.15s, box-shadow 0.15s;
+      letter-spacing: -0.3px;
+    }
+    .pick-btn:hover  { transform: translateY(-3px) scale(1.03); box-shadow: 0 10px 28px rgba(79,70,229,0.4); }
+    .pick-btn:active { transform: scale(0.97); }
+    .diff-label { font-size: 12px; margin-top: 14px; color: #bbb; }
+    @media (max-width: 480px) {
+      .pick-btn { padding: 16px 36px; font-size: 18px; width: 100%; }
+      .diff-btn { flex: 1; padding: 10px 10px; font-size: 14px; }
+    }
+  </style>
   <!-- Google tag (gtag.js) -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8683975585186347"
        crossorigin="anonymous"></script>
@@ -109,11 +189,66 @@
         </div>
       </div>
     </div>
+    <div class="section">
+      <h2>🎲 제시어 랜덤 생성기</h2>
+      <div class="word-gen">
+        <div class="difficulty-btns">
+          <button class="diff-btn active easy" data-level="easy">🟢 쉬움</button>
+          <button class="diff-btn medium" data-level="medium">🟡 보통</button>
+          <button class="diff-btn hard" data-level="hard">🔴 어려움</button>
+        </div>
+        <div class="word-display" id="wordDisplay">
+          <span class="word-placeholder">버튼을 눌러<br>제시어를 뽑으세요!</span>
+        </div>
+        <button class="pick-btn" id="pickBtn">🎲 제시어 뽑기</button>
+        <p class="diff-label" id="diffLabel">난이도: 쉬움 (어린이용)</p>
+      </div>
+    </div>
   </div>
 
   <footer>
     <p>© 2025 레크 뭐하지? | 모든 레크 진행자를 위한 아이디어 모음</p>
   </footer>
 
+  <script>
+    const WORDS = {
+      easy: ['강아지','고양이','토끼','코끼리','기린','원숭이','펭귄','나비','자전거','비행기','수영','달리기','줄넘기','밥 먹기','양치질','청소기','우산','시계','전화기','피아노'],
+      medium: ['택배기사','치과의사','소방관','발레리나','권투선수','낚시','스키','볼링','골프','테니스','냉장고','세탁기','에어컨','엘리베이터','에스컬레이터','선풍기','복사기','자판기'],
+      hard: ['몽유병자','줄타기 곡예사','잠수함 함장','무중력 우주인','슬로모션 액션배우','투명인간','로봇청소기','녹아내리는 아이스크림','바람 부는 날 우산 쓰기']
+    };
+    const LABELS = {
+      easy: '난이도: 쉬움 (어린이용)',
+      medium: '난이도: 보통 (초등 고학년~청소년)',
+      hard: '난이도: 어려움 (성인·팀빌딩)'
+    };
+
+    let currentLevel = 'easy';
+    let lastWord = '';
+
+    document.querySelectorAll('.diff-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.diff-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentLevel = btn.dataset.level;
+        document.getElementById('diffLabel').textContent = LABELS[currentLevel];
+        document.getElementById('wordDisplay').innerHTML = '<span class="word-placeholder">버튼을 눌러<br>제시어를 뽑으세요!</span>';
+        lastWord = '';
+      });
+    });
+
+    document.getElementById('pickBtn').addEventListener('click', () => {
+      const pool = WORDS[currentLevel];
+      let word;
+      let tries = 0;
+      do {
+        word = pool[Math.floor(Math.random() * pool.length)];
+        tries++;
+      } while (word === lastWord && pool.length > 1 && tries < 10);
+      lastWord = word;
+
+      const display = document.getElementById('wordDisplay');
+      display.innerHTML = `<span class="word-result pop" id="wordResult">${word}</span>`;
+    });
+  </script>
 </body>
 </html>
