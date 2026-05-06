@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta name="description" content="몸으로 말해요 제시어 랜덤 뽑기. 쉬움·보통·어려움 난이도별 제시어를 즉시 뽑아보세요!">
+  <title>제시어 뽑기 🎲 - 몸으로 말해요</title>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8683975585186347"
+       crossorigin="anonymous"></script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-75JKFQWSHP"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-75JKFQWSHP');
+  </script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg-from: #FF6B35;
+      --bg-to:   #FFD700;
+    }
+
+    body {
+      font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+      min-height: 100dvh;
+      height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      background: linear-gradient(145deg, var(--bg-from), var(--bg-to));
+      transition: background 0.5s ease;
+      overflow: hidden;
+      user-select: none;
+    }
+
+    /* ── 상단 바 ── */
+    .top-bar {
+      padding: 16px 20px 12px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+
+    .back-link {
+      align-self: flex-start;
+      color: rgba(255,255,255,0.75);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 4px 0;
+      transition: color 0.15s;
+    }
+    .back-link:hover { color: white; }
+
+    .diff-btns {
+      display: flex;
+      gap: 10px;
+    }
+
+    .diff-btn {
+      padding: 9px 22px;
+      border-radius: 50px;
+      border: 2px solid rgba(255,255,255,0.5);
+      background: rgba(255,255,255,0.15);
+      color: rgba(255,255,255,0.85);
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.18s;
+      backdrop-filter: blur(4px);
+    }
+    .diff-btn:hover {
+      background: rgba(255,255,255,0.3);
+      border-color: white;
+      color: white;
+    }
+    .diff-btn.active {
+      background: white;
+      border-color: white;
+      color: #333;
+    }
+
+    .diff-hint {
+      font-size: 12px;
+      color: rgba(255,255,255,0.65);
+      font-weight: 600;
+      letter-spacing: 0.3px;
+    }
+
+    /* ── 중앙 제시어 무대 ── */
+    .word-stage {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .word-box {
+      background: rgba(255,255,255,0.18);
+      backdrop-filter: blur(10px);
+      border: 2px solid rgba(255,255,255,0.35);
+      border-radius: 28px;
+      padding: 40px 36px;
+      text-align: center;
+      width: 100%;
+      max-width: 500px;
+      min-height: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .word-placeholder {
+      font-size: 20px;
+      color: rgba(255,255,255,0.55);
+      font-weight: 700;
+      line-height: 1.8;
+    }
+
+    .word-result {
+      font-size: clamp(48px, 12vw, 80px);
+      font-weight: 900;
+      color: white;
+      letter-spacing: -2px;
+      line-height: 1.1;
+      text-shadow: 0 4px 20px rgba(0,0,0,0.15);
+      word-break: keep-all;
+      display: inline-block;
+    }
+
+    @keyframes popIn {
+      0%   { transform: scale(0.15) rotate(-10deg); opacity: 0; }
+      55%  { transform: scale(1.12) rotate(2deg);  opacity: 1; }
+      75%  { transform: scale(0.95) rotate(-1deg); }
+      100% { transform: scale(1)    rotate(0deg);  opacity: 1; }
+    }
+    .pop { animation: popIn 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) both; }
+
+    /* ── 하단 버튼 영역 ── */
+    .bottom-bar {
+      padding: 16px 24px 32px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+
+    .pick-btn {
+      width: 100%;
+      max-width: 400px;
+      padding: 22px 0;
+      border-radius: 50px;
+      border: none;
+      background: white;
+      color: #FF6B35;
+      font-size: 22px;
+      font-weight: 900;
+      cursor: pointer;
+      font-family: inherit;
+      box-shadow: 0 8px 28px rgba(0,0,0,0.18);
+      transition: transform 0.15s, box-shadow 0.15s;
+      letter-spacing: -0.5px;
+    }
+    .pick-btn:hover  { transform: translateY(-3px) scale(1.02); box-shadow: 0 14px 36px rgba(0,0,0,0.22); }
+    .pick-btn:active { transform: scale(0.97); box-shadow: 0 4px 14px rgba(0,0,0,0.15); }
+
+    .used-count {
+      font-size: 12px;
+      color: rgba(255,255,255,0.55);
+      font-weight: 600;
+    }
+
+    /* ── 모바일 세밀 조정 ── */
+    @media (max-width: 400px) {
+      .diff-btn { padding: 8px 14px; font-size: 13px; }
+      .pick-btn  { font-size: 19px; padding: 19px 0; }
+      .word-box  { padding: 28px 20px; min-height: 160px; }
+    }
+
+    /* 난이도별 버튼 포커스 색상 */
+    .diff-btn.active[data-level="easy"]   { color: #16a34a; }
+    .diff-btn.active[data-level="medium"] { color: #d97706; }
+    .diff-btn.active[data-level="hard"]   { color: #7c3aed; }
+  </style>
+</head>
+<body>
+
+  <div class="top-bar">
+    <a href="bodyspeak.html" class="back-link">← 게임 페이지로</a>
+    <div class="diff-btns">
+      <button class="diff-btn active" data-level="easy">🟢 쉬움</button>
+      <button class="diff-btn" data-level="medium">🟡 보통</button>
+      <button class="diff-btn" data-level="hard">🔴 어려움</button>
+    </div>
+    <span class="diff-hint" id="diffHint">쉬움 — 어린이용</span>
+  </div>
+
+  <div class="word-stage">
+    <div class="word-box" id="wordBox">
+      <span class="word-placeholder">아래 버튼을 눌러<br>제시어를 뽑으세요!</span>
+    </div>
+  </div>
+
+  <div class="bottom-bar">
+    <button class="pick-btn" id="pickBtn">🎲 제시어 뽑기</button>
+    <span class="used-count" id="usedCount"></span>
+  </div>
+
+  <script>
+    const WORDS = {
+      easy:   ['강아지','고양이','토끼','코끼리','기린','원숭이','펭귄','나비','자전거','비행기','수영','달리기','줄넘기','밥 먹기','양치질','청소기','우산','시계','전화기','피아노'],
+      medium: ['택배기사','치과의사','소방관','발레리나','권투선수','낚시','스키','볼링','골프','테니스','냉장고','세탁기','에어컨','엘리베이터','에스컬레이터','선풍기','복사기','자판기'],
+      hard:   ['몽유병자','줄타기 곡예사','잠수함 함장','무중력 우주인','슬로모션 액션배우','투명인간','로봇청소기','녹아내리는 아이스크림','바람 부는 날 우산 쓰기']
+    };
+
+    const THEMES = {
+      easy:   { from: '#22c55e', to: '#86efac', hint: '쉬움 — 어린이용',         btnColor: '#16a34a' },
+      medium: { from: '#FF6B35', to: '#FFD700', hint: '보통 — 초등 고학년·청소년', btnColor: '#d97706' },
+      hard:   { from: '#4f46e5', to: '#818cf8', hint: '어려움 — 성인·팀빌딩',    btnColor: '#7c3aed' }
+    };
+
+    const HINTS = { easy: '쉬움 — 어린이용', medium: '보통 — 초등 고학년·청소년', hard: '어려움 — 성인·팀빌딩' };
+
+    let level = 'easy';
+    let pool  = [];
+    let used  = [];
+    let last  = '';
+
+    function setTheme(lvl) {
+      const t = THEMES[lvl];
+      document.documentElement.style.setProperty('--bg-from', t.from);
+      document.documentElement.style.setProperty('--bg-to',   t.to);
+      document.getElementById('diffHint').textContent = t.hint;
+      document.querySelector('.pick-btn').style.color = t.btnColor;
+    }
+
+    function resetPool() {
+      pool = [...WORDS[level]];
+      used = [];
+      updateCount();
+    }
+
+    function updateCount() {
+      const total = WORDS[level].length;
+      const done  = used.length;
+      document.getElementById('usedCount').textContent =
+        done > 0 ? `${done} / ${total} 제시어 사용됨` : '';
+    }
+
+    function pick() {
+      if (pool.length === 0) resetPool();
+
+      let word, tries = 0;
+      do {
+        const idx = Math.floor(Math.random() * pool.length);
+        word = pool.splice(idx, 1)[0];
+        tries++;
+      } while (word === last && WORDS[level].length > 1 && tries < 5);
+
+      last = word;
+      used.push(word);
+      updateCount();
+
+      const box = document.getElementById('wordBox');
+      box.innerHTML = `<span class="word-result pop">${word}</span>`;
+    }
+
+    // 난이도 전환
+    document.querySelectorAll('.diff-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.diff-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        level = btn.dataset.level;
+        setTheme(level);
+        resetPool();
+        last = '';
+        document.getElementById('wordBox').innerHTML =
+          '<span class="word-placeholder">아래 버튼을 눌러<br>제시어를 뽑으세요!</span>';
+      });
+    });
+
+    document.getElementById('pickBtn').addEventListener('click', pick);
+
+    // 초기화
+    setTheme(level);
+    resetPool();
+  </script>
+</body>
+</html>
