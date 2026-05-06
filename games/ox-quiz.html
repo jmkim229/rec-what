@@ -6,6 +6,88 @@
   <meta name="description" content="OX 퀴즈 게임 방법, 준비물, 변형 방법까지. 주일학교·수련회 전체 레크리에이션으로 인기 만점!">
   <title>OX 퀴즈 - 레크 뭐하지?</title>
   <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .ox-gen { background: white; border-radius: 20px; padding: 28px 24px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+
+    .ox-category-tabs {
+      display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin-bottom: 22px;
+    }
+    .cat-btn {
+      padding: 7px 16px; border-radius: 50px; border: 2px solid #e5e7eb;
+      background: white; font-size: 13px; font-weight: 700; cursor: pointer;
+      font-family: inherit; color: #888; transition: all 0.15s;
+    }
+    .cat-btn:hover { border-color: #FF6B35; color: #FF6B35; }
+    .cat-btn.active { background: #FF6B35; border-color: #FF6B35; color: white; }
+
+    .ox-progress {
+      text-align: center; font-size: 12px; color: #bbb; margin-bottom: 14px;
+    }
+
+    .ox-card {
+      background: #fffbf7; border: 2px dashed #ffe0cc; border-radius: 16px;
+      padding: 28px 20px; text-align: center; margin-bottom: 20px; min-height: 160px;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px;
+    }
+    .ox-question {
+      font-size: clamp(16px, 4vw, 22px); font-weight: 700; color: #1a1a2e;
+      line-height: 1.6; word-break: keep-all;
+    }
+    .ox-cat-badge {
+      font-size: 11px; font-weight: 700; padding: 3px 12px; border-radius: 20px;
+      background: #fff3e0; color: #FF6B35;
+    }
+
+    .ox-answer-area {
+      text-align: center; margin-bottom: 20px; min-height: 110px;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
+    }
+    .ox-symbol {
+      font-size: 72px; font-weight: 900; line-height: 1;
+      display: none;
+    }
+    .ox-symbol.o { color: #ef4444; }
+    .ox-symbol.x { color: #3b82f6; }
+    .ox-symbol.show { display: block; }
+    @keyframes oxPop {
+      0%   { transform: scale(0.1) rotate(-20deg); opacity: 0; }
+      55%  { transform: scale(1.25) rotate(4deg); opacity: 1; }
+      75%  { transform: scale(0.9) rotate(-2deg); }
+      100% { transform: scale(1) rotate(0deg); }
+    }
+    .ox-symbol.pop { animation: oxPop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) both; }
+    .ox-desc {
+      font-size: 13px; color: #666; line-height: 1.7; max-width: 380px;
+      background: #f8fafc; border-radius: 10px; padding: 10px 14px;
+      display: none; text-align: center;
+    }
+    .ox-desc.show { display: block; }
+
+    .ox-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .reveal-btn {
+      background: linear-gradient(135deg, #FF6B35, #FFD700); color: white;
+      border: none; border-radius: 50px; padding: 16px 40px;
+      font-size: 18px; font-weight: 800; cursor: pointer; font-family: inherit;
+      box-shadow: 0 6px 20px rgba(255,107,53,0.35);
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .reveal-btn:hover  { transform: translateY(-2px) scale(1.03); box-shadow: 0 10px 28px rgba(255,107,53,0.4); }
+    .reveal-btn:active { transform: scale(0.97); }
+    .reveal-btn:disabled { opacity: 0.4; cursor: default; transform: none; box-shadow: none; }
+    .next-btn {
+      background: white; color: #FF6B35; border: 2px solid #FF6B35;
+      border-radius: 50px; padding: 15px 36px;
+      font-size: 16px; font-weight: 800; cursor: pointer; font-family: inherit;
+      transition: all 0.15s;
+    }
+    .next-btn:hover { background: #fff3e0; }
+
+    @media (max-width: 480px) {
+      .reveal-btn { padding: 14px 28px; font-size: 16px; width: 100%; }
+      .next-btn   { padding: 13px 24px; font-size: 15px; width: 100%; }
+      .ox-symbol  { font-size: 56px; }
+    }
+  </style>
   <!-- Google tag (gtag.js) -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8683975585186347"
        crossorigin="anonymous"></script>
@@ -113,11 +195,168 @@
         </div>
       </div>
     </div>
+    <div class="section">
+      <h2>❓ OX 문제 랜덤 생성기</h2>
+      <div class="ox-gen">
+
+        <div class="ox-category-tabs">
+          <button class="cat-btn active" data-cat="all">전체</button>
+          <button class="cat-btn" data-cat="common">일반상식</button>
+          <button class="cat-btn" data-cat="science">자연·과학</button>
+          <button class="cat-btn" data-cat="history">역사·문화</button>
+          <button class="cat-btn" data-cat="fun">재미있는 사실</button>
+        </div>
+
+        <p class="ox-progress" id="oxProgress">문제를 불러오는 중...</p>
+
+        <div class="ox-card">
+          <span class="ox-cat-badge" id="oxBadge"></span>
+          <p class="ox-question" id="oxQuestion">아래 버튼을 눌러 첫 번째 문제를 시작하세요!</p>
+        </div>
+
+        <div class="ox-answer-area">
+          <div class="ox-symbol o" id="oxSymbolO">⭕</div>
+          <div class="ox-symbol x" id="oxSymbolX">❌</div>
+          <p class="ox-desc" id="oxDesc"></p>
+        </div>
+
+        <div class="ox-btns">
+          <button class="reveal-btn" id="revealBtn" disabled>정답 공개</button>
+          <button class="next-btn" id="nextBtn">다음 문제 →</button>
+        </div>
+
+      </div>
+    </div>
   </div>
 
   <footer>
     <p>© 2025 레크 뭐하지? | 모든 레크 진행자를 위한 아이디어 모음</p>
   </footer>
 
+  <script>
+  const ALL_QUESTIONS = [
+    // 일반상식
+    { cat: 'common', label: '일반상식', q: '대한민국의 수도는 서울이다.', a: 'O', desc: '서울은 조선 시대부터 수도였으며, 현재도 대한민국의 수도입니다.' },
+    { cat: 'common', label: '일반상식', q: '세계에서 가장 큰 대양은 태평양이다.', a: 'O', desc: '태평양은 지구 표면의 약 46%를 차지하는 세계 최대의 바다입니다.' },
+    { cat: 'common', label: '일반상식', q: '1년은 항상 365일이다.', a: 'X', desc: '4년마다 돌아오는 윤년에는 2월이 29일이 되어 1년이 366일입니다.' },
+    { cat: 'common', label: '일반상식', q: '올림픽은 4년마다 열린다.', a: 'O', desc: '하계·동계 올림픽 모두 4년 주기로 개최되며, 서로 2년씩 엇갈려 진행됩니다.' },
+    { cat: 'common', label: '일반상식', q: '피자는 미국에서 처음 만들어졌다.', a: 'X', desc: '피자는 이탈리아 나폴리에서 유래했습니다. 미국은 이민자들을 통해 피자가 전파된 나라입니다.' },
+    { cat: 'common', label: '일반상식', q: '세계에서 가장 많이 사용되는 언어는 영어이다.', a: 'X', desc: '모국어 화자 수 기준으로 중국어(만다린)가 1위입니다. 영어는 공용어로는 가장 넓게 쓰이지만 모국어 화자 수로는 3위 내외입니다.' },
+    { cat: 'common', label: '일반상식', q: '다이아몬드는 세상에서 가장 단단한 물질이다.', a: 'O', desc: '모스 경도 기준으로 다이아몬드는 10점 만점으로 가장 단단한 천연물질입니다.' },
+    { cat: 'common', label: '일반상식', q: '태양은 지구에서 가장 가까운 별이다.', a: 'O', desc: '태양은 지구에서 약 1억 5천만 km 떨어진 가장 가까운 별입니다. 그 다음으로 가까운 별은 프록시마 센타우리입니다.' },
+    { cat: 'common', label: '일반상식', q: '번개는 같은 장소에 두 번 떨어질 수 없다.', a: 'X', desc: '번개는 같은 장소에 여러 번 칠 수 있습니다. 높은 건물이나 피뢰침에는 반복적으로 번개가 내리칩니다.' },
+    { cat: 'common', label: '일반상식', q: '사람의 혀 지문은 모두 다르다.', a: 'O', desc: '손가락 지문처럼 혀의 표면 무늬도 사람마다 달라 개인 식별에 활용할 수 있다는 연구 결과가 있습니다.' },
+
+    // 자연·과학
+    { cat: 'science', label: '자연·과학', q: '인체에서 가장 큰 기관은 피부이다.', a: 'O', desc: '피부는 성인 기준 약 1.5~2㎡에 달하는 인체 최대 기관으로, 체온 조절과 외부 보호 역할을 합니다.' },
+    { cat: 'science', label: '자연·과학', q: '지구는 태양 주위를 하루에 한 바퀴 돈다.', a: 'X', desc: '지구가 태양 주위를 공전하는 데는 약 365.25일(1년)이 걸립니다. 하루(24시간)는 지구 자전 주기입니다.' },
+    { cat: 'science', label: '자연·과학', q: '성인 인간의 뼈는 총 206개이다.', a: 'O', desc: '갓난아이는 약 270~300개의 뼈를 가지고 태어나지만, 성장하면서 뼈가 합쳐져 성인은 206개가 됩니다.' },
+    { cat: 'science', label: '자연·과학', q: '상어는 물고기가 아니다.', a: 'X', desc: '상어는 연골어류에 속하는 물고기입니다. 뼈 대신 연골로 이루어진 점이 일반 경골어류와 다릅니다.' },
+    { cat: 'science', label: '자연·과학', q: '빛의 속도로 지구를 돌면 1초에 약 7.5바퀴를 돌 수 있다.', a: 'O', desc: '빛의 속도는 초당 약 30만 km이며, 지구 둘레는 약 4만 km이므로 1초에 약 7.5바퀴를 돌 수 있습니다.' },
+    { cat: 'science', label: '자연·과학', q: '인간의 눈으로 볼 수 있는 별은 약 1억 개이다.', a: 'X', desc: '맨눈으로 볼 수 있는 별은 맑은 밤 기준으로 약 3,000~5,000개 정도입니다.' },
+    { cat: 'science', label: '자연·과학', q: '물은 0°C에서 항상 언다.', a: 'X', desc: '순수한 물은 기압이 낮거나 용기 상태에 따라 0°C 이하에서도 얼지 않는 "과냉각" 상태가 될 수 있습니다.' },
+    { cat: 'science', label: '자연·과학', q: '우리 몸의 세포는 매일 교체된다.', a: 'X', desc: '세포 종류마다 교체 주기가 다릅니다. 피부 세포는 2~4주, 적혈구는 4개월, 뼈세포는 10년 이상 걸립니다.' },
+    { cat: 'science', label: '자연·과학', q: '문어의 심장은 3개이다.', a: 'O', desc: '문어는 주심장 1개와 아가미 심장 2개, 총 3개의 심장을 가지고 있습니다. 피도 파란색입니다!' },
+
+    // 역사·문화
+    { cat: 'history', label: '역사·문화', q: '한글은 세종대왕이 만들었다.', a: 'O', desc: '세종대왕은 1443년 훈민정음(한글)을 창제하여 백성이 쉽게 글을 읽고 쓸 수 있도록 했습니다.' },
+    { cat: 'history', label: '역사·문화', q: '마라톤의 공식 거리는 42.195km이다.', a: 'O', desc: '1908년 런던 올림픽에서 영국 왕실의 요청으로 출발점을 조정하면서 42.195km가 공식 거리로 굳어졌습니다.' },
+    { cat: 'history', label: '역사·문화', q: '이순신 장군은 임진왜란 당시 한 번도 패배하지 않았다.', a: 'O', desc: '이순신 장군은 임진왜란에서 23전 23승의 불패 신화를 기록했습니다. 노량 해전에서 전사하셨습니다.' },
+    { cat: 'history', label: '역사·문화', q: '콜럼버스는 자신이 아메리카 대륙을 발견했다는 사실을 알고 있었다.', a: 'X', desc: '콜럼버스는 죽을 때까지 자신이 발견한 땅이 인도라고 믿었습니다. 아메리카 대륙임을 밝힌 것은 아메리고 베스푸치입니다.' },
+    { cat: 'history', label: '역사·문화', q: '프랑스의 자유의 여신상은 프랑스가 미국에 선물한 것이다.', a: 'O', desc: '자유의 여신상은 미국의 독립 100주년을 기념해 프랑스가 1886년 미국에 선물했습니다.' },
+    { cat: 'history', label: '역사·문화', q: '세계에서 가장 오래된 현존 나라는 일본이다.', a: 'X', desc: '일반적으로 산마리노(301년 창건)가 세계에서 가장 오래된 공화국으로 알려져 있습니다.' },
+    { cat: 'history', label: '역사·문화', q: '2002년 한일 월드컵에서 한국은 4강에 진출했다.', a: 'O', desc: '한국은 2002년 FIFA 월드컵에서 4위를 차지하며 아시아 팀 최초로 4강에 진출하는 역사를 썼습니다.' },
+    { cat: 'history', label: '역사·문화', q: '만리장성은 달에서 맨눈으로 보인다.', a: 'X', desc: '만리장성은 달에서 맨눈으로 볼 수 없습니다. 이는 중국에서 널리 퍼진 오해로, 우주 비행사들도 확인한 바 있습니다.' },
+    { cat: 'history', label: '역사·문화', q: '김치는 유네스코 인류무형문화유산에 등재되어 있다.', a: 'O', desc: '김장 문화(Kimjang)가 2013년 유네스코 인류무형문화유산에 등재되었습니다.' },
+
+    // 재미있는 사실
+    { cat: 'fun', label: '재미있는 사실', q: '달팽이는 이빨이 있다.', a: 'O', desc: '달팽이의 혀(치설)에는 수천 개의 작은 이빨이 줄지어 있습니다. 종류에 따라 25,000개 이상인 경우도 있습니다!' },
+    { cat: 'fun', label: '재미있는 사실', q: '꿀은 수천 년이 지나도 썩지 않는다.', a: 'O', desc: '이집트 투탕카멘 무덤에서 3,000년 된 꿀이 발견되었고, 여전히 먹을 수 있는 상태였습니다.' },
+    { cat: 'fun', label: '재미있는 사실', q: '금붕어의 기억력은 3초이다.', a: 'X', desc: '금붕어의 기억력은 최대 몇 개월에 달한다는 연구 결과가 있습니다. 3초 기억력은 과학적 근거 없는 속설입니다.' },
+    { cat: 'fun', label: '재미있는 사실', q: '사람은 눈을 뜨고 재채기를 할 수 없다.', a: 'O', desc: '재채기할 때 눈꺼풀이 반사적으로 닫히는 것은 신체 반사 작용입니다. 의지로 눈을 뜨려 해도 자동으로 감깁니다.' },
+    { cat: 'fun', label: '재미있는 사실', q: '하루에 흘리는 침의 양으로 욕조를 가득 채울 수 있다.', a: 'X', desc: '하루 분비되는 침의 양은 약 1~1.5리터입니다. 욕조(약 150리터) 가득 채우려면 100일 이상 걸립니다.' },
+    { cat: 'fun', label: '재미있는 사실', q: '코알라의 지문은 인간과 거의 구별이 안 될 정도로 닮았다.', a: 'O', desc: '코알라의 지문은 현미경으로 봐야 구별될 정도로 인간 지문과 매우 유사합니다. 범죄 수사에서 혼동된 사례가 보고된 바 있습니다.' },
+    { cat: 'fun', label: '재미있는 사실', q: '바나나는 기술적으로 열매가 아니라 풀이다.', a: 'X', desc: '바나나 나무는 풀이지만, 바나나 자체는 식물학적으로 열매(과일)입니다. 다만 씨가 없어 수박·딸기처럼 과일로 분류됩니다.' },
+    { cat: 'fun', label: '재미있는 사실', q: '인간은 1분에 평균 15~20번 눈을 깜빡인다.', a: 'O', desc: '평상시 눈 깜빡임 횟수는 분당 15~20회이지만, 화면을 볼 때는 5~7회로 줄어 눈이 쉽게 피로해집니다.' },
+    { cat: 'fun', label: '재미있는 사실', q: '타조는 머리를 모래 속에 묻는다.', a: 'X', desc: '타조가 머리를 모래에 묻는다는 것은 속설입니다. 실제로는 알을 돌보기 위해 땅에 구멍을 파고 고개를 숙이는 모습이 잘못 알려진 것입니다.' },
+  ];
+
+  let currentCat = 'all';
+  let pool = [];
+  let used = [];
+  let currentQ = null;
+  let revealed = false;
+
+  function getPool() {
+    return currentCat === 'all' ? [...ALL_QUESTIONS] : ALL_QUESTIONS.filter(q => q.cat === currentCat);
+  }
+
+  function pickNext() {
+    if (pool.length === 0) {
+      pool = getPool();
+      used = [];
+    }
+    const idx = Math.floor(Math.random() * pool.length);
+    currentQ = pool.splice(idx, 1)[0];
+    used.push(currentQ);
+    revealed = false;
+  }
+
+  function updateProgress() {
+    const total = getPool().length;
+    const done = used.length;
+    document.getElementById('oxProgress').textContent = `${done} / ${total} 문제 완료`;
+  }
+
+  function render() {
+    document.getElementById('oxBadge').textContent = currentQ.label;
+    document.getElementById('oxQuestion').textContent = currentQ.q;
+
+    const symO = document.getElementById('oxSymbolO');
+    const symX = document.getElementById('oxSymbolX');
+    const desc = document.getElementById('oxDesc');
+    symO.className = 'ox-symbol o';
+    symX.className = 'ox-symbol x';
+    desc.className = 'ox-desc';
+
+    document.getElementById('revealBtn').disabled = false;
+    updateProgress();
+  }
+
+  function showAnswer() {
+    if (revealed) return;
+    revealed = true;
+    const symO = document.getElementById('oxSymbolO');
+    const symX = document.getElementById('oxSymbolX');
+    const desc = document.getElementById('oxDesc');
+    const sym = currentQ.a === 'O' ? symO : symX;
+    sym.className = `ox-symbol ${currentQ.a.toLowerCase()} show pop`;
+    desc.textContent = currentQ.desc;
+    desc.className = 'ox-desc show';
+    document.getElementById('revealBtn').disabled = true;
+  }
+
+  document.querySelectorAll('.cat-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentCat = btn.dataset.cat;
+      pool = []; used = [];
+      pickNext();
+      render();
+    });
+  });
+
+  document.getElementById('revealBtn').addEventListener('click', showAnswer);
+  document.getElementById('nextBtn').addEventListener('click', () => {
+    pickNext();
+    render();
+  });
+
+  // 초기 로드
+  pool = getPool();
+  pickNext();
+  render();
+  </script>
 </body>
 </html>
