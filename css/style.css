@@ -118,6 +118,8 @@ main {
 .card-outdoor:hover { border-color: #22c55e; }
 .card-small:hover   { border-color: #a855f7; }
 .card-large:hover   { border-color: #FF6B35; }
+.card-young:hover   { border-color: #ec4899; }
+.card-older:hover   { border-color: #0d9488; }
 
 .emoji-wrap {
   width: 72px;
@@ -139,6 +141,8 @@ main {
 .card-outdoor .emoji-wrap { background: #dcfce7; }
 .card-small   .emoji-wrap { background: #f3e8ff; }
 .card-large   .emoji-wrap { background: #fff3e0; }
+.card-young   .emoji-wrap { background: #fdf2f8; }
+.card-older   .emoji-wrap { background: #f0fdfa; }
 
 .category-card h3 {
   font-size: 17px;
@@ -164,6 +168,8 @@ main {
 .card-outdoor .arrow { color: #22c55e; }
 .card-small   .arrow { color: #a855f7; }
 .card-large   .arrow { color: #FF6B35; }
+.card-young   .arrow { color: #ec4899; }
+.card-older   .arrow { color: #0d9488; }
 
 /* ── 목록 페이지 공통 ── */
 .page-header {
