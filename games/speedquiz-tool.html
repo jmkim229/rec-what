@@ -454,6 +454,9 @@
        화면 2: 게임 진행
   ══════════════════════════ -->
   <div id="screen2">
+    <div style="padding: 6px 12px; border-bottom: 1px solid rgba(255,255,255,0.06);">
+      <button id="exitGameBtn" style="background:none;border:none;color:rgba(255,255,255,0.4);font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;padding:6px 4px;transition:color 0.18s;">← 게임 설명으로</button>
+    </div>
     <div class="game-top">
       <div class="g-topic" id="gameTopicLabel"></div>
       <div class="g-timer" id="timerDisplay">1:00</div>
@@ -483,8 +486,8 @@
        화면 3: 결과
   ══════════════════════════ -->
   <div id="screen3">
-    <div class="result-icon">⏰</div>
-    <div class="result-title">시간 종료!</div>
+    <div class="result-icon" id="resultIcon">⏰</div>
+    <div class="result-title" id="resultTitle">시간 종료!</div>
     <div class="result-topic" id="resultTopicLabel"></div>
     <div class="result-score-box">
       <div class="result-score-label">최종 점수</div>
@@ -637,7 +640,7 @@
         document.getElementById('screen2').classList.add('warning');
         document.getElementById('timerDisplay').classList.add('warning-text');
       }
-      if (timeLeft <= 0) endGame();
+      if (timeLeft <= 0) endGame('time');
     }, 1000);
   }
 
@@ -653,8 +656,8 @@
   ────────────────────────────── */
   function showWord() {
     if (wordIndex >= wordQueue.length) {
-      wordQueue = shuffle([...WORDS[selectedDiff][selectedTopic]]);
-      wordIndex = 0;
+      endGame('words');
+      return;
     }
     const word = wordQueue[wordIndex];
     const el   = document.getElementById('wordDisplay');
@@ -699,13 +702,23 @@
   /* ──────────────────────────────
      게임 종료
   ────────────────────────────── */
-  function endGame() {
+  function endGame(reason) {
     clearInterval(timerInterval);
     playEndSound();
 
-    document.getElementById('resultScore').textContent     = score;
-    document.getElementById('resultTopicLabel').textContent =
-      `${selectedTopic} · ${timeLimit}초`;
+    if (reason === 'words') {
+      document.getElementById('resultIcon').textContent  = '🎉';
+      document.getElementById('resultTitle').textContent = '모든 제시어 클리어!';
+      document.getElementById('resultTopicLabel').textContent =
+        `${selectedTopic} · 제시어 ${wordQueue.length}개 완료`;
+    } else {
+      document.getElementById('resultIcon').textContent  = '⏰';
+      document.getElementById('resultTitle').textContent = '시간 종료!';
+      document.getElementById('resultTopicLabel').textContent =
+        `${selectedTopic} · ${timeLimit}초`;
+    }
+
+    document.getElementById('resultScore').textContent = score;
 
     showScreen('screen3');
     document.getElementById('top-bar').classList.remove('hidden');
@@ -714,6 +727,13 @@
   document.getElementById('restartBtn').addEventListener('click', () => {
     showScreen('screen1');
     document.getElementById('top-bar').classList.remove('hidden');
+  });
+
+  document.getElementById('exitGameBtn').addEventListener('click', () => {
+    if (confirm('게임을 종료하고 나가시겠습니까?')) {
+      clearInterval(timerInterval);
+      window.location.href = 'speedquiz.html';
+    }
   });
 
   /* ──────────────────────────────
