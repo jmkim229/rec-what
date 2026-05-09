@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>스피드 퀴즈 진행자 도구 | 레크 뭐하지?</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-75JKFQWSHP"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-75JKFQWSHP');
+  </script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif; min-height: 100vh; overflow-x: hidden; }
+
+    /* ── 상단 뒤로가기 바 ── */
+    #top-bar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 5000;
+      background: rgba(26,26,46,0.85);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      padding: 10px 16px;
+    }
+    #top-bar a {
+      color: rgba(255,255,255,0.75);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 600;
+      transition: color 0.18s;
+    }
+    #top-bar a:hover { color: white; }
+    #top-bar.hidden { display: none; }
+
+    /* ══════════════════════════
+       화면 1 – 설정
+    ══════════════════════════ */
+    #screen1 {
+      min-height: 100vh;
+      background: #f0f4f8;
+      padding: 56px 16px 60px;
+    }
+
+    .s1-header {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+    .s1-header h1 { font-size: 26px; font-weight: 900; color: #1a1a2e; letter-spacing: -0.5px; }
+    .s1-header p  { font-size: 13px; color: #999; margin-top: 4px; }
+
+    .setup-card {
+      background: white;
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: 0 3px 14px rgba(0,0,0,0.07);
+      margin-bottom: 16px;
+      max-width: 480px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .setup-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: #bbb;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 12px;
+    }
+
+    /* 난이도 버튼 */
+    .diff-group {
+      display: flex;
+      gap: 8px;
+    }
+    .diff-btn {
+      flex: 1;
+      padding: 14px 6px;
+      border-radius: 14px;
+      border: 2px solid #e8e8e8;
+      background: white;
+      color: #555;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      line-height: 1.5;
+      text-align: center;
+      transition: all 0.18s;
+    }
+    .diff-btn small { display: block; font-size: 10px; font-weight: 500; color: #aaa; margin-top: 2px; }
+    .diff-btn.active { border-color: #FF6B35; background: #FF6B35; color: white; }
+    .diff-btn.active small { color: rgba(255,255,255,0.8); }
+
+    /* 주제 버튼 */
+    #topic-section { display: none; }
+    .topic-group {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .topic-btn {
+      padding: 16px 10px;
+      border-radius: 14px;
+      border: 2px solid #e8e8e8;
+      background: white;
+      color: #555;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      text-align: center;
+      transition: all 0.18s;
+    }
+    .topic-btn.active { border-color: #4f46e5; background: #4f46e5; color: white; }
+
+    /* 시간 버튼 */
+    .time-group {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+    .time-btn {
+      padding: 10px 14px;
+      border-radius: 50px;
+      border: 2px solid #e8e8e8;
+      background: white;
+      color: #666;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.18s;
+    }
+    .time-btn.active { background: #1a1a2e; border-color: #1a1a2e; color: white; }
+
+    #customTime {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 2px solid #e8e8e8;
+      font-size: 15px;
+      font-weight: 600;
+      font-family: inherit;
+      color: #1a1a2e;
+      outline: none;
+      transition: border-color 0.18s;
+    }
+    #customTime:focus { border-color: #FF6B35; }
+    #customTime::placeholder { color: #ccc; font-weight: 400; }
+
+    /* 시작 버튼 */
+    #startBtn {
+      display: block;
+      width: 100%;
+      max-width: 480px;
+      margin: 8px auto 0;
+      padding: 22px;
+      border-radius: 18px;
+      border: none;
+      background: linear-gradient(135deg, #FF6B35, #FFD700);
+      color: white;
+      font-size: 20px;
+      font-weight: 800;
+      cursor: pointer;
+      font-family: inherit;
+      box-shadow: 0 6px 24px rgba(255,107,53,0.4);
+      transition: transform 0.15s;
+    }
+    #startBtn:active { transform: scale(0.97); }
+    #startBtn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+    .s1-error {
+      text-align: center;
+      color: #ef4444;
+      font-size: 13px;
+      font-weight: 600;
+      margin-top: 10px;
+      max-width: 480px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* ══════════════════════════
+       화면 2 – 게임 진행
+    ══════════════════════════ */
+    #screen2 {
+      display: none;
+      min-height: 100vh;
+      background: #1a1a2e;
+      flex-direction: column;
+    }
+
+    /* 경고 깜빡임 */
+    #screen2.warning { animation: warnFlash 0.5s linear infinite; }
+    @keyframes warnFlash {
+      0%, 100% { background: #1a1a2e; }
+      50%       { background: #3d0000; }
+    }
+
+    /* 상단 정보바 */
+    .game-top {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      padding: 16px 20px 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .g-topic {
+      font-size: 12px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.5);
+      letter-spacing: 0.5px;
+    }
+    .g-timer {
+      font-size: 52px;
+      font-weight: 900;
+      color: white;
+      letter-spacing: -2px;
+      line-height: 1;
+      text-align: center;
+    }
+    .g-timer.warning-text { color: #ff4444; }
+    .g-score {
+      font-size: 20px;
+      font-weight: 800;
+      color: #FFD700;
+      text-align: right;
+    }
+
+    /* 제시어 영역 */
+    .word-area {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px 24px;
+    }
+    #wordDisplay {
+      font-weight: 900;
+      color: white;
+      text-align: center;
+      line-height: 1.2;
+      letter-spacing: -1px;
+      word-break: keep-all;
+      transition: font-size 0.1s;
+    }
+
+    /* 하단 버튼 */
+    .game-btns {
+      display: flex;
+      gap: 12px;
+      padding: 0 16px 12px;
+    }
+    .correct-btn {
+      flex: 2;
+      padding: 24px 10px;
+      border-radius: 18px;
+      border: none;
+      background: linear-gradient(135deg, #16a34a, #4ade80);
+      color: white;
+      font-size: 20px;
+      font-weight: 800;
+      cursor: pointer;
+      font-family: inherit;
+      box-shadow: 0 6px 20px rgba(22,163,74,0.4);
+      transition: transform 0.1s;
+    }
+    .correct-btn:active { transform: scale(0.95); }
+
+    .pass-btn {
+      flex: 1;
+      padding: 24px 10px;
+      border-radius: 18px;
+      border: 2px solid rgba(255,255,255,0.2);
+      background: transparent;
+      color: rgba(255,255,255,0.7);
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      transition: background 0.15s, transform 0.1s;
+    }
+    .pass-btn:active { transform: scale(0.95); background: rgba(255,255,255,0.1); }
+
+    .pause-wrap {
+      padding: 0 16px 28px;
+    }
+    .pause-btn {
+      width: 100%;
+      padding: 14px;
+      border-radius: 14px;
+      border: 2px solid rgba(255,255,255,0.15);
+      background: transparent;
+      color: rgba(255,255,255,0.5);
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.18s;
+    }
+    .pause-btn:hover { background: rgba(255,255,255,0.08); color: white; }
+
+    /* 일시정지 오버레이 */
+    #pause-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.85);
+      z-index: 6000;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+    }
+    #pause-overlay.show { display: flex; }
+    #pause-overlay p {
+      font-size: 28px;
+      font-weight: 800;
+      color: white;
+    }
+    #resume-btn {
+      padding: 18px 48px;
+      border-radius: 50px;
+      border: 3px solid white;
+      background: transparent;
+      color: white;
+      font-size: 18px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      transition: background 0.18s;
+    }
+    #resume-btn:hover { background: rgba(255,255,255,0.2); }
+
+    /* ══════════════════════════
+       화면 3 – 종료
+    ══════════════════════════ */
+    #screen3 {
+      display: none;
+      min-height: 100vh;
+      background: #1a1a2e;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 24px;
+      text-align: center;
+    }
+    .result-icon { font-size: 64px; margin-bottom: 12px; }
+    .result-title { font-size: 28px; font-weight: 900; color: white; margin-bottom: 8px; }
+    .result-topic { font-size: 14px; color: rgba(255,255,255,0.5); margin-bottom: 32px; }
+    .result-score-box {
+      background: rgba(255,255,255,0.07);
+      border-radius: 24px;
+      padding: 28px 48px;
+      margin-bottom: 40px;
+    }
+    .result-score-label { font-size: 13px; color: rgba(255,255,255,0.5); margin-bottom: 6px; }
+    .result-score-num { font-size: 80px; font-weight: 900; color: #FFD700; letter-spacing: -3px; line-height: 1; }
+    .result-score-unit { font-size: 20px; font-weight: 700; color: rgba(255,255,255,0.6); margin-top: 4px; }
+
+    .restart-btn {
+      width: 100%;
+      max-width: 320px;
+      padding: 20px;
+      border-radius: 16px;
+      border: none;
+      background: linear-gradient(135deg, #FF6B35, #FFD700);
+      color: white;
+      font-size: 18px;
+      font-weight: 800;
+      cursor: pointer;
+      font-family: inherit;
+      box-shadow: 0 6px 20px rgba(255,107,53,0.4);
+      margin-bottom: 14px;
+      transition: transform 0.15s;
+    }
+    .restart-btn:active { transform: scale(0.97); }
+
+    .home-link-result {
+      font-size: 14px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.45);
+      text-decoration: none;
+      padding: 12px;
+      transition: color 0.18s;
+    }
+    .home-link-result:hover { color: white; }
+
+    /* 모바일 */
+    @media (max-width: 480px) {
+      .g-timer { font-size: 42px; }
+      .correct-btn { font-size: 18px; padding: 20px 8px; }
+      .pass-btn { font-size: 14px; padding: 20px 8px; }
+      .result-score-num { font-size: 64px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 상단 뒤로가기 -->
+  <div id="top-bar">
+    <a href="speedquiz.html">← 게임 설명으로 돌아가기</a>
+  </div>
+
+  <!-- ══════════════════════════
+       화면 1: 설정
+  ══════════════════════════ -->
+  <div id="screen1">
+    <div class="s1-header">
+      <h1>⚡ 스피드 퀴즈 도구</h1>
+      <p>난이도와 주제를 선택하고 게임을 시작하세요</p>
+    </div>
+
+    <!-- 난이도 -->
+    <div class="setup-card">
+      <div class="setup-label">① 난이도 선택</div>
+      <div class="diff-group">
+        <button class="diff-btn" data-diff="easy">쉬움<small>초등 저학년</small></button>
+        <button class="diff-btn" data-diff="normal">보통<small>초등 고학년~청소년</small></button>
+        <button class="diff-btn" data-diff="hard">어려움<small>성인·팀빌딩</small></button>
+      </div>
+    </div>
+
+    <!-- 주제 -->
+    <div class="setup-card" id="topic-section">
+      <div class="setup-label">② 주제 선택</div>
+      <div class="topic-group" id="topic-group"></div>
+    </div>
+
+    <!-- 시간 -->
+    <div class="setup-card">
+      <div class="setup-label">③ 제한 시간</div>
+      <div class="time-group">
+        <button class="time-btn" data-sec="30">30초</button>
+        <button class="time-btn active" data-sec="60">1분</button>
+        <button class="time-btn" data-sec="90">1분 30초</button>
+        <button class="time-btn" data-sec="120">2분</button>
+        <button class="time-btn" data-sec="180">3분</button>
+      </div>
+      <input type="number" id="customTime" placeholder="직접 입력 (10~600초)" min="10" max="600" inputmode="numeric">
+    </div>
+
+    <button id="startBtn" disabled>🎬 게임 시작</button>
+    <div class="s1-error" id="s1Error"></div>
+  </div>
+
+  <!-- ══════════════════════════
+       화면 2: 게임 진행
+  ══════════════════════════ -->
+  <div id="screen2">
+    <div class="game-top">
+      <div class="g-topic" id="gameTopicLabel"></div>
+      <div class="g-timer" id="timerDisplay">1:00</div>
+      <div class="g-score" id="scoreDisplay">0점</div>
+    </div>
+
+    <div class="word-area">
+      <div id="wordDisplay"></div>
+    </div>
+
+    <div class="game-btns">
+      <button class="correct-btn" id="correctBtn">✅ 정답!</button>
+      <button class="pass-btn"    id="passBtn">⏭️ 패스</button>
+    </div>
+    <div class="pause-wrap">
+      <button class="pause-btn" id="pauseBtn">⏸️ 일시정지</button>
+    </div>
+  </div>
+
+  <!-- 일시정지 오버레이 -->
+  <div id="pause-overlay">
+    <p>⏸️ 일시정지</p>
+    <button id="resume-btn">▶ 계속하기</button>
+  </div>
+
+  <!-- ══════════════════════════
+       화면 3: 결과
+  ══════════════════════════ -->
+  <div id="screen3">
+    <div class="result-icon">⏰</div>
+    <div class="result-title">시간 종료!</div>
+    <div class="result-topic" id="resultTopicLabel"></div>
+    <div class="result-score-box">
+      <div class="result-score-label">최종 점수</div>
+      <div class="result-score-num" id="resultScore">0</div>
+      <div class="result-score-unit">개 정답</div>
+    </div>
+    <button class="restart-btn" id="restartBtn">🔄 다시 시작</button>
+    <a class="home-link-result" href="speedquiz.html">🏠 게임 설명으로 돌아가기</a>
+  </div>
+
+  <script>
+  /* ──────────────────────────────
+     제시어 데이터
+  ────────────────────────────── */
+  const WORDS = {
+    easy: {
+      '동물': ['강아지','고양이','토끼','코끼리','기린','원숭이','펭귄','나비','독수리','개구리','햄스터','돌고래','곰','여우','늑대','호랑이','사자','얼룩말','악어','캥거루','앵무새','두더지','다람쥐','하마','코뿔소','치타','플라밍고','수달','너구리','판다'],
+      '음식': ['김치','라면','떡볶이','피자','햄버거','치킨','짜장면','김밥','만두','비빔밥','삼겹살','갈비','떡국','칼국수','우동','초밥','돈가스','카레라이스','오므라이스','스파게티','케이크','아이스크림','도넛','와플','빵','과일','사과','바나나','수박','딸기'],
+      '일상물건': ['연필','지우개','가방','책','공책','시계','우산','양말','신발','모자','안경','휴대폰','컴퓨터','텔레비전','냉장고','의자','책상','침대','베개','이불','거울','칫솔','비누','수건','빗','컵','접시','숟가락','젓가락','가위'],
+      '성경 이야기': ['예수님','하나님','천사','십자가','비둘기','양','목자','방주','무지개','별','빵','물고기','바다','산','동굴','사자','사과','뱀','천국','기도','찬양','교회','성경책','마리아','요셉','노아','모세','다윗','베드로','부활']
+    },
+    normal: {
+      '직업': ['의사','간호사','선생님','경찰관','소방관','군인','요리사','미용사','가수','배우','운동선수','화가','작가','기자','변호사','판사','약사','농부','어부','목수','택배기사','우체부','청소부','수의사','사진작가','아나운서','마술사','모델','디자이너','건축가'],
+      '스포츠': ['축구','야구','농구','배구','테니스','탁구','배드민턴','골프','볼링','양궁','수영','다이빙','수구','카누','조정','스키','스노보드','스케이트','컬링','봅슬레이','태권도','유도','검도','권투','레슬링','펜싱','사이클','마라톤','높이뛰기','멀리뛰기'],
+      '영화·드라마': ['어벤져스','해리포터','반지의 제왕','스타워즈','인터스텔라','인셉션','매트릭스','타이타닉','라이온킹','토이스토리','겨울왕국','알라딘','미녀와 야수','인사이드아웃','코코','주토피아','모아나','라푼젤','슈렉','마다가스카','오징어 게임','기생충','부산행','베테랑','명량','극한직업','신과함께','아저씨','엽기적인 그녀','친구'],
+      '성경 인물·사건': ['아담','노아','아브라함','모세','다윗','솔로몬','다니엘','요나','엘리야','에스더','삼손','룻','마리아','요셉','베드로','바울','도마','막달라 마리아','삭개오','세례 요한','홍해','십자가','부활','오병이어','노아의 방주','바벨탑','가나안','출애굽','다윗과 골리앗','사자굴']
+    },
+    hard: {
+      '추상개념': ['사랑','우정','행복','슬픔','분노','평화','자유','정의','희망','절망','용기','두려움','인내','겸손','자존심','질투','배신','신뢰','의심','후회','그리움','외로움','설렘','기대','실망','감동','충격','안도','위로','격려'],
+      '사자성어': ['일석이조','새옹지마','화룡점정','어부지리','결자해지','청출어람','동상이몽','우후죽순','일사천리','자업자득','유비무환','호시탐탐','천고마비','동분서주','백발백중','형설지공','와신상담','수주대토','마이동풍','우공이산','고진감래','다다익선','이심전심','일거양득','풍전등화','대기만성','십시일반','인과응보','살신성인','권불십년'],
+      '한국 역사 인물': ['세종대왕','이순신','광개토대왕','김유신','강감찬','을지문덕','정약용','신사임당','율곡 이이','퇴계 이황','유관순','안중근','윤봉길','김구','이승만','박정희','김대중','노무현','정몽주','이성계','허준','장영실','김홍도','신윤복','추사 김정희','황진이','논개','명성황후','흥선대원군','원효대사'],
+      '성경 심화': ['삼위일체','성령강림','산상수훈','팔복','주기도문','십계명','이사야','예레미야','에스겔','호세아','요엘','아모스','미가','나훔','하박국','스바냐','학개','스가랴','말라기','계시록','유월절','오순절','초막절','안식일','할례','회당','성전','언약궤','만나','메시아']
+    }
+  };
+
+  const TOPICS = {
+    easy:   ['동물','음식','일상물건','성경 이야기'],
+    normal: ['직업','스포츠','영화·드라마','성경 인물·사건'],
+    hard:   ['추상개념','사자성어','한국 역사 인물','성경 심화']
+  };
+
+  /* ──────────────────────────────
+     상태 변수
+  ────────────────────────────── */
+  let selectedDiff  = null;
+  let selectedTopic = null;
+  let timeLimit     = 60;
+  let score         = 0;
+  let timeLeft      = 60;
+  let timerInterval = null;
+  let wordQueue     = [];
+  let wordIndex     = 0;
+  let isPaused      = false;
+
+  /* ──────────────────────────────
+     화면 1: 설정
+  ────────────────────────────── */
+
+  // 난이도 선택
+  document.querySelectorAll('.diff-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.diff-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      selectedDiff  = btn.dataset.diff;
+      selectedTopic = null;
+
+      // 주제 버튼 생성
+      const group = document.getElementById('topic-group');
+      group.innerHTML = '';
+      TOPICS[selectedDiff].forEach(t => {
+        const b = document.createElement('button');
+        b.className   = 'topic-btn';
+        b.textContent = t;
+        b.addEventListener('click', () => selectTopic(t, b));
+        group.appendChild(b);
+      });
+      document.getElementById('topic-section').style.display = 'block';
+      updateStartBtn();
+    });
+  });
+
+  function selectTopic(topic, el) {
+    document.querySelectorAll('.topic-btn').forEach(b => b.classList.remove('active'));
+    el.classList.add('active');
+    selectedTopic = topic;
+    updateStartBtn();
+  }
+
+  // 시간 버튼
+  document.querySelectorAll('.time-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      timeLimit = parseInt(btn.dataset.sec);
+      document.getElementById('customTime').value = '';
+      document.getElementById('s1Error').textContent = '';
+    });
+  });
+
+  // 직접 입력
+  document.getElementById('customTime').addEventListener('input', e => {
+    const v = parseInt(e.target.value);
+    if (!isNaN(v) && v >= 10 && v <= 600) {
+      timeLimit = v;
+      document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById('s1Error').textContent = '';
+    }
+  });
+
+  function updateStartBtn() {
+    document.getElementById('startBtn').disabled = !(selectedDiff && selectedTopic);
+  }
+
+  // 게임 시작
+  document.getElementById('startBtn').addEventListener('click', startGame);
+
+  /* ──────────────────────────────
+     게임 시작
+  ────────────────────────────── */
+  function startGame() {
+    score      = 0;
+    timeLeft   = timeLimit;
+    wordQueue  = shuffle([...WORDS[selectedDiff][selectedTopic]]);
+    wordIndex  = 0;
+    isPaused   = false;
+
+    document.getElementById('gameTopicLabel').textContent = selectedTopic;
+    document.getElementById('scoreDisplay').textContent   = '0점';
+    document.getElementById('screen2').classList.remove('warning');
+    document.getElementById('timerDisplay').classList.remove('warning-text');
+
+    showScreen('screen2');
+    document.getElementById('top-bar').classList.add('hidden');
+
+    showWord();
+    startTimer();
+  }
+
+  /* ──────────────────────────────
+     타이머
+  ────────────────────────────── */
+  function startTimer() {
+    clearInterval(timerInterval);
+    updateTimerDisplay();
+    timerInterval = setInterval(() => {
+      if (isPaused) return;
+      timeLeft--;
+      updateTimerDisplay();
+      if (timeLeft <= 5) {
+        document.getElementById('screen2').classList.add('warning');
+        document.getElementById('timerDisplay').classList.add('warning-text');
+      }
+      if (timeLeft <= 0) endGame();
+    }, 1000);
+  }
+
+  function updateTimerDisplay() {
+    const m = Math.floor(timeLeft / 60);
+    const s = timeLeft % 60;
+    document.getElementById('timerDisplay').textContent =
+      m > 0 ? `${m}:${String(s).padStart(2,'0')}` : `${s}`;
+  }
+
+  /* ──────────────────────────────
+     제시어
+  ────────────────────────────── */
+  function showWord() {
+    if (wordIndex >= wordQueue.length) {
+      wordQueue = shuffle([...WORDS[selectedDiff][selectedTopic]]);
+      wordIndex = 0;
+    }
+    const word = wordQueue[wordIndex];
+    const el   = document.getElementById('wordDisplay');
+    el.textContent = word;
+
+    // 글자 수에 따라 폰트 크기 조정
+    const len = word.length;
+    let size;
+    if      (len <= 2) size = 'clamp(4rem, 20vw, 7rem)';
+    else if (len <= 4) size = 'clamp(3.5rem, 16vw, 6rem)';
+    else if (len <= 6) size = 'clamp(2.8rem, 12vw, 5rem)';
+    else               size = 'clamp(2rem,  9vw,  3.8rem)';
+    el.style.fontSize = size;
+  }
+
+  function nextWord() { wordIndex++; showWord(); }
+
+  /* ──────────────────────────────
+     정답 / 패스
+  ────────────────────────────── */
+  document.getElementById('correctBtn').addEventListener('click', () => {
+    score++;
+    document.getElementById('scoreDisplay').textContent = `${score}점`;
+    nextWord();
+  });
+
+  document.getElementById('passBtn').addEventListener('click', nextWord);
+
+  /* ──────────────────────────────
+     일시정지
+  ────────────────────────────── */
+  document.getElementById('pauseBtn').addEventListener('click', () => {
+    isPaused = true;
+    document.getElementById('pause-overlay').classList.add('show');
+  });
+
+  document.getElementById('resume-btn').addEventListener('click', () => {
+    isPaused = false;
+    document.getElementById('pause-overlay').classList.remove('show');
+  });
+
+  /* ──────────────────────────────
+     게임 종료
+  ────────────────────────────── */
+  function endGame() {
+    clearInterval(timerInterval);
+    playEndSound();
+
+    document.getElementById('resultScore').textContent     = score;
+    document.getElementById('resultTopicLabel').textContent =
+      `${selectedTopic} · ${timeLimit}초`;
+
+    showScreen('screen3');
+    document.getElementById('top-bar').classList.remove('hidden');
+  }
+
+  document.getElementById('restartBtn').addEventListener('click', () => {
+    showScreen('screen1');
+    document.getElementById('top-bar').classList.remove('hidden');
+  });
+
+  /* ──────────────────────────────
+     효과음 (Web Audio API)
+  ────────────────────────────── */
+  function playEndSound() {
+    try {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      [[0, 523], [0.25, 392], [0.5, 262]].forEach(([t, freq]) => {
+        const osc  = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.type = 'square';
+        osc.frequency.value = freq;
+        gain.gain.setValueAtTime(0.15, ctx.currentTime + t);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + t + 0.22);
+        osc.start(ctx.currentTime + t);
+        osc.stop(ctx.currentTime + t + 0.22);
+      });
+    } catch(e) {}
+  }
+
+  /* ──────────────────────────────
+     유틸
+  ────────────────────────────── */
+  function showScreen(id) {
+    ['screen1','screen2','screen3'].forEach(s => {
+      const el = document.getElementById(s);
+      el.style.display = s === id ? 'flex' : 'none';
+    });
+    if (id === 'screen1') {
+      document.getElementById('screen1').style.display = 'block';
+    }
+  }
+
+  function shuffle(arr) {
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    return arr;
+  }
+  </script>
+</body>
+</html>
