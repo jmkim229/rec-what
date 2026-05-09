@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>업다운 진행자 도구 | 레크 뭐하지?</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-75JKFQWSHP"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-75JKFQWSHP');
+  </script>
+  <style>
+    body { background: #f5f7fa; }
+
+    .tool-wrap {
+      max-width: 480px;
+      margin: 0 auto;
+      padding: 20px 16px 60px;
+    }
+
+    /* ── 비밀 숫자 카드 ── */
+    .secret-card {
+      background: white;
+      border-radius: 22px;
+      padding: 24px 20px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.09);
+      margin-bottom: 16px;
+    }
+
+    .card-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #bbb;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 14px;
+    }
+
+    /* 범위 선택 */
+    .range-buttons {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+
+    .range-btn {
+      flex: 1;
+      min-width: 60px;
+      padding: 10px 6px;
+      border-radius: 12px;
+      border: 2px solid #e8e8e8;
+      background: white;
+      color: #666;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.18s;
+      font-family: 'Noto Sans KR', sans-serif;
+      text-align: center;
+    }
+
+    .range-btn.active {
+      background: #FF6B35;
+      border-color: #FF6B35;
+      color: white;
+    }
+
+    /* 랜덤 + 직접입력 */
+    .input-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      align-items: center;
+    }
+
+    .random-btn {
+      flex: 1;
+      padding: 14px 10px;
+      border-radius: 14px;
+      border: none;
+      background: linear-gradient(135deg, #FF6B35, #FFD700);
+      color: white;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: 'Noto Sans KR', sans-serif;
+      transition: transform 0.15s, box-shadow 0.15s;
+      box-shadow: 0 4px 14px rgba(255,107,53,0.35);
+    }
+
+    .random-btn:active { transform: scale(0.96); }
+
+    .manual-input {
+      width: 90px;
+      padding: 14px 10px;
+      border-radius: 14px;
+      border: 2px solid #e8e8e8;
+      font-size: 16px;
+      font-weight: 700;
+      text-align: center;
+      font-family: 'Noto Sans KR', sans-serif;
+      color: #1a1a2e;
+      outline: none;
+      transition: border-color 0.18s;
+    }
+
+    .manual-input:focus { border-color: #FF6B35; }
+
+    /* 비밀 숫자 표시 */
+    .secret-display {
+      text-align: center;
+      padding: 18px 0 8px;
+      border-top: 1px solid #f0f0f0;
+    }
+
+    .secret-label {
+      font-size: 12px;
+      color: #bbb;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .secret-number {
+      font-size: 80px;
+      font-weight: 800;
+      color: #FF6B35;
+      line-height: 1;
+      letter-spacing: -2px;
+      transition: filter 0.2s;
+    }
+
+    .secret-number.hidden {
+      filter: blur(16px);
+      user-select: none;
+    }
+
+    .toggle-btn {
+      margin-top: 12px;
+      padding: 8px 20px;
+      border-radius: 50px;
+      border: 2px solid #e8e8e8;
+      background: white;
+      color: #888;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: 'Noto Sans KR', sans-serif;
+      transition: all 0.18s;
+    }
+
+    .toggle-btn:hover { border-color: #FF6B35; color: #FF6B35; }
+
+    /* ── 힌트 버튼 카드 ── */
+    .hint-card {
+      background: white;
+      border-radius: 22px;
+      padding: 20px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.09);
+      margin-bottom: 16px;
+    }
+
+    .hint-buttons {
+      display: flex;
+      gap: 12px;
+    }
+
+    .hint-btn {
+      flex: 1;
+      padding: 28px 10px;
+      border-radius: 18px;
+      border: none;
+      font-size: 22px;
+      font-weight: 800;
+      cursor: pointer;
+      font-family: 'Noto Sans KR', sans-serif;
+      transition: transform 0.15s, box-shadow 0.15s;
+      letter-spacing: -0.5px;
+    }
+
+    .hint-btn:active { transform: scale(0.94); }
+
+    .btn-up {
+      background: linear-gradient(135deg, #3b82f6, #60a5fa);
+      color: white;
+      box-shadow: 0 6px 20px rgba(59,130,246,0.4);
+    }
+
+    .btn-down {
+      background: linear-gradient(135deg, #ef4444, #f87171);
+      color: white;
+      box-shadow: 0 6px 20px rgba(239,68,68,0.4);
+    }
+
+    /* ── 전체화면 플래시 오버레이 ── */
+    #flash-overlay {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.12s ease;
+    }
+
+    #flash-overlay.show {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    #flash-overlay.up-flash { background: rgba(59,130,246,0.93); }
+    #flash-overlay.down-flash { background: rgba(239,68,68,0.93); }
+
+    #flash-text {
+      font-size: 96px;
+      font-weight: 900;
+      color: white;
+      text-shadow: 0 4px 32px rgba(0,0,0,0.25);
+      letter-spacing: -2px;
+      animation: popIn 0.2s cubic-bezier(0.34,1.56,0.64,1) both;
+    }
+
+    #flash-sub {
+      font-size: 20px;
+      color: rgba(255,255,255,0.85);
+      font-weight: 700;
+      margin-top: 8px;
+    }
+
+    @keyframes popIn {
+      from { transform: scale(0.6); opacity: 0; }
+      to   { transform: scale(1);   opacity: 1; }
+    }
+
+    /* ── 기록 카드 ── */
+    .record-card {
+      background: white;
+      border-radius: 22px;
+      padding: 20px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.09);
+      margin-bottom: 16px;
+    }
+
+    .range-display {
+      background: #fff8f0;
+      border-radius: 14px;
+      padding: 16px;
+      text-align: center;
+      margin-bottom: 14px;
+    }
+
+    .range-display .range-label {
+      font-size: 12px;
+      color: #bbb;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .range-display .range-value {
+      font-size: 26px;
+      font-weight: 800;
+      color: #FF6B35;
+      letter-spacing: -0.5px;
+    }
+
+    .call-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .call-input {
+      flex: 1;
+      padding: 14px 14px;
+      border-radius: 14px;
+      border: 2px solid #e8e8e8;
+      font-size: 18px;
+      font-weight: 700;
+      text-align: center;
+      font-family: 'Noto Sans KR', sans-serif;
+      color: #1a1a2e;
+      outline: none;
+      transition: border-color 0.18s;
+    }
+
+    .call-input:focus { border-color: #FF6B35; }
+
+    .call-up-btn, .call-down-btn {
+      padding: 14px 16px;
+      border-radius: 14px;
+      border: none;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: 'Noto Sans KR', sans-serif;
+      transition: transform 0.15s;
+    }
+
+    .call-up-btn { background: #dbeafe; color: #2563eb; }
+    .call-down-btn { background: #fee2e2; color: #dc2626; }
+    .call-up-btn:active, .call-down-btn:active { transform: scale(0.94); }
+
+    .history-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      max-height: 220px;
+      overflow-y: auto;
+    }
+
+    .history-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .history-item.up   { background: #eff6ff; color: #2563eb; }
+    .history-item.down { background: #fef2f2; color: #dc2626; }
+
+    .history-num { font-size: 18px; }
+    .history-hint { font-size: 13px; opacity: 0.8; }
+
+    .history-empty {
+      text-align: center;
+      color: #ccc;
+      font-size: 13px;
+      padding: 20px 0;
+    }
+
+    .reset-row-btn {
+      margin-top: 12px;
+      width: 100%;
+      padding: 12px;
+      border-radius: 12px;
+      border: 2px solid #e8e8e8;
+      background: white;
+      color: #bbb;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: 'Noto Sans KR', sans-serif;
+      transition: all 0.18s;
+    }
+
+    .reset-row-btn:hover { border-color: #ef4444; color: #ef4444; }
+
+    /* ── 정답 공개 카드 ── */
+    .reveal-card {
+      background: white;
+      border-radius: 22px;
+      padding: 20px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.09);
+      margin-bottom: 16px;
+    }
+
+    .reveal-btn {
+      width: 100%;
+      padding: 20px;
+      border-radius: 16px;
+      border: none;
+      background: linear-gradient(135deg, #1a1a2e, #4a4a6e);
+      color: white;
+      font-size: 18px;
+      font-weight: 800;
+      cursor: pointer;
+      font-family: 'Noto Sans KR', sans-serif;
+      transition: transform 0.15s, box-shadow 0.15s;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+      margin-bottom: 10px;
+    }
+
+    .reveal-btn:active { transform: scale(0.97); }
+
+    .next-btn {
+      width: 100%;
+      padding: 16px;
+      border-radius: 16px;
+      border: 2px solid #e8e8e8;
+      background: white;
+      color: #666;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: 'Noto Sans KR', sans-serif;
+      transition: all 0.18s;
+    }
+
+    .next-btn:hover { border-color: #FF6B35; color: #FF6B35; }
+
+    /* ── 정답 공개 오버레이 ── */
+    #reveal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(220,38,38,0.95);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s;
+    }
+
+    #reveal-overlay.show {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    #reveal-overlay .reveal-label {
+      font-size: 20px;
+      color: rgba(255,255,255,0.85);
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    #reveal-overlay .reveal-number {
+      font-size: 120px;
+      font-weight: 900;
+      color: white;
+      line-height: 1;
+      letter-spacing: -4px;
+      animation: popIn 0.3s cubic-bezier(0.34,1.56,0.64,1) both;
+      text-shadow: 0 8px 40px rgba(0,0,0,0.2);
+    }
+
+    #reveal-overlay .reveal-close {
+      margin-top: 40px;
+      padding: 14px 40px;
+      border-radius: 50px;
+      border: 3px solid rgba(255,255,255,0.6);
+      background: transparent;
+      color: white;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: 'Noto Sans KR', sans-serif;
+      transition: background 0.18s;
+    }
+
+    #reveal-overlay .reveal-close:hover { background: rgba(255,255,255,0.2); }
+
+    /* 에러 메시지 */
+    .error-msg {
+      color: #ef4444;
+      font-size: 12px;
+      font-weight: 600;
+      margin-top: 6px;
+      display: none;
+    }
+
+    .error-msg.show { display: block; }
+  </style>
+</head>
+<body>
+
+  <div class="game-header">
+    <h1>🎯 업다운 진행자 도구</h1>
+    <p class="subtitle">비밀 숫자 설정부터 힌트 버튼까지</p>
+  </div>
+
+  <div class="tool-wrap">
+    <a href="updown.html" class="back-btn">← 게임 설명으로 돌아가기</a>
+
+    <!-- 1. 비밀 숫자 설정 -->
+    <div class="secret-card">
+      <div class="card-title">① 비밀 숫자 설정</div>
+
+      <div class="range-buttons">
+        <button class="range-btn" data-min="1" data-max="30">1~30</button>
+        <button class="range-btn active" data-min="1" data-max="100">1~100</button>
+        <button class="range-btn" data-min="1" data-max="50">1~50</button>
+        <button class="range-btn" data-min="1" data-max="200">1~200</button>
+      </div>
+
+      <div class="input-row">
+        <button class="random-btn" id="randomBtn">🎲 랜덤으로 정하기</button>
+        <input class="manual-input" type="number" id="manualInput" placeholder="직접 입력">
+      </div>
+
+      <div class="secret-display">
+        <div class="secret-label">비밀 숫자</div>
+        <div class="secret-number hidden" id="secretDisplay">?</div>
+        <button class="toggle-btn" id="toggleBtn">👁️ 보이기</button>
+      </div>
+    </div>
+
+    <!-- 2. 힌트 버튼 -->
+    <div class="hint-card">
+      <div class="card-title">② 힌트 버튼 (참가자에게 보여주기)</div>
+      <div class="hint-buttons">
+        <button class="hint-btn btn-up" id="upBtn">⬆️ 업!</button>
+        <button class="hint-btn btn-down" id="downBtn">⬇️ 다운!</button>
+      </div>
+    </div>
+
+    <!-- 3. 외친 숫자 기록 -->
+    <div class="record-card">
+      <div class="card-title">③ 외친 숫자 기록</div>
+
+      <div class="range-display">
+        <div class="range-label">현재 가능한 범위</div>
+        <div class="range-value" id="rangeDisplay">1 ~ 100</div>
+      </div>
+
+      <div class="call-row">
+        <input class="call-input" type="number" id="callInput" placeholder="외친 숫자">
+        <button class="call-up-btn" id="callUpBtn">⬆️ 업</button>
+        <button class="call-down-btn" id="callDownBtn">⬇️ 다운</button>
+      </div>
+      <div class="error-msg" id="callError"></div>
+
+      <div class="history-list" id="historyList">
+        <div class="history-empty">아직 기록이 없어요</div>
+      </div>
+
+      <button class="reset-row-btn" id="resetBtn">↺ 초기화</button>
+    </div>
+
+    <!-- 4. 정답 공개 -->
+    <div class="reveal-card">
+      <div class="card-title">④ 정답 공개</div>
+      <button class="reveal-btn" id="revealBtn">💣 정답 공개!</button>
+      <button class="next-btn" id="nextBtn">▶ 다음 라운드 시작</button>
+    </div>
+  </div>
+
+  <!-- 힌트 플래시 오버레이 -->
+  <div id="flash-overlay">
+    <div id="flash-text"></div>
+    <div id="flash-sub"></div>
+  </div>
+
+  <!-- 정답 공개 오버레이 -->
+  <div id="reveal-overlay">
+    <div class="reveal-label">💣 비밀 숫자는...</div>
+    <div class="reveal-number" id="revealNumber">?</div>
+    <button class="reveal-close" id="revealClose">닫기</button>
+  </div>
+
+  <footer>
+    <p>© 2025 레크 뭐하지? | 모든 레크 진행자를 위한 아이디어 모음</p>
+  </footer>
+
+  <script>
+    let rangeMin = 1;
+    let rangeMax = 100;
+    let currentMin = 1;
+    let currentMax = 100;
+    let secretNumber = null;
+    let isHidden = true;
+    let history = [];
+
+    // ── 범위 버튼 ──
+    document.querySelectorAll('.range-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.range-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        rangeMin = parseInt(btn.dataset.min);
+        rangeMax = parseInt(btn.dataset.max);
+        resetGame(false);
+      });
+    });
+
+    // ── 랜덤 버튼 ──
+    document.getElementById('randomBtn').addEventListener('click', () => {
+      secretNumber = Math.floor(Math.random() * (rangeMax - rangeMin + 1)) + rangeMin;
+      document.getElementById('manualInput').value = '';
+      updateSecretDisplay();
+    });
+
+    // ── 직접 입력 ──
+    document.getElementById('manualInput').addEventListener('input', e => {
+      const val = parseInt(e.target.value);
+      if (!isNaN(val) && val >= rangeMin && val <= rangeMax) {
+        secretNumber = val;
+        updateSecretDisplay();
+      }
+    });
+
+    function updateSecretDisplay() {
+      const el = document.getElementById('secretDisplay');
+      el.textContent = secretNumber !== null ? secretNumber : '?';
+      if (isHidden) el.classList.add('hidden');
+      else el.classList.remove('hidden');
+    }
+
+    // ── 숨기기/보이기 토글 ──
+    document.getElementById('toggleBtn').addEventListener('click', () => {
+      isHidden = !isHidden;
+      const el = document.getElementById('secretDisplay');
+      if (isHidden) {
+        el.classList.add('hidden');
+        document.getElementById('toggleBtn').textContent = '👁️ 보이기';
+      } else {
+        el.classList.remove('hidden');
+        document.getElementById('toggleBtn').textContent = '🙈 숨기기';
+      }
+    });
+
+    // ── 힌트 플래시 ──
+    function showFlash(type) {
+      const overlay = document.getElementById('flash-overlay');
+      const text = document.getElementById('flash-text');
+      const sub = document.getElementById('flash-sub');
+
+      overlay.classList.remove('up-flash', 'down-flash', 'show');
+      text.style.animation = 'none';
+      text.offsetHeight; // reflow
+
+      if (type === 'up') {
+        overlay.classList.add('up-flash');
+        text.textContent = '⬆️ 업!';
+        sub.textContent = '더 높은 숫자를 외치세요';
+      } else {
+        overlay.classList.add('down-flash');
+        text.textContent = '⬇️ 다운!';
+        sub.textContent = '더 낮은 숫자를 외치세요';
+      }
+
+      text.style.animation = 'popIn 0.2s cubic-bezier(0.34,1.56,0.64,1) both';
+      overlay.classList.add('show');
+
+      setTimeout(() => overlay.classList.remove('show'), 1200);
+    }
+
+    document.getElementById('upBtn').addEventListener('click', () => showFlash('up'));
+    document.getElementById('downBtn').addEventListener('click', () => showFlash('down'));
+    document.getElementById('flash-overlay').addEventListener('click', () => {
+      document.getElementById('flash-overlay').classList.remove('show');
+    });
+
+    // ── 외친 숫자 기록 ──
+    function recordCall(hint) {
+      const input = document.getElementById('callInput');
+      const val = parseInt(input.value);
+      const errorEl = document.getElementById('callError');
+
+      if (isNaN(val)) {
+        showError('숫자를 입력해주세요');
+        return;
+      }
+      if (val < currentMin || val > currentMax) {
+        showError(`범위(${currentMin}~${currentMax}) 밖의 숫자예요`);
+        return;
+      }
+      if (history.some(h => h.num === val)) {
+        showError('이미 외친 숫자예요');
+        return;
+      }
+
+      errorEl.classList.remove('show');
+
+      // 범위 갱신
+      if (hint === 'up') {
+        currentMin = Math.max(currentMin, val + 1);
+      } else {
+        currentMax = Math.min(currentMax, val - 1);
+      }
+
+      history.push({ num: val, hint });
+      input.value = '';
+      input.focus();
+
+      updateRangeDisplay();
+      renderHistory();
+      showFlash(hint);
+    }
+
+    function showError(msg) {
+      const el = document.getElementById('callError');
+      el.textContent = msg;
+      el.classList.add('show');
+      setTimeout(() => el.classList.remove('show'), 2500);
+    }
+
+    document.getElementById('callUpBtn').addEventListener('click', () => recordCall('up'));
+    document.getElementById('callDownBtn').addEventListener('click', () => recordCall('down'));
+    document.getElementById('callInput').addEventListener('keydown', e => {
+      if (e.key === 'Enter') recordCall('up');
+    });
+
+    function updateRangeDisplay() {
+      document.getElementById('rangeDisplay').textContent = `${currentMin} ~ ${currentMax}`;
+    }
+
+    function renderHistory() {
+      const list = document.getElementById('historyList');
+      if (history.length === 0) {
+        list.innerHTML = '<div class="history-empty">아직 기록이 없어요</div>';
+        return;
+      }
+      list.innerHTML = [...history].reverse().map(h => `
+        <div class="history-item ${h.hint}">
+          <span class="history-num">${h.num}</span>
+          <span class="history-hint">${h.hint === 'up' ? '⬆️ 업!' : '⬇️ 다운!'}</span>
+        </div>
+      `).join('');
+    }
+
+    // ── 초기화 ──
+    document.getElementById('resetBtn').addEventListener('click', () => resetGame(true));
+
+    function resetGame(clearSecret) {
+      currentMin = rangeMin;
+      currentMax = rangeMax;
+      history = [];
+      if (clearSecret) {
+        secretNumber = null;
+        document.getElementById('manualInput').value = '';
+        isHidden = true;
+        updateSecretDisplay();
+        document.getElementById('toggleBtn').textContent = '👁️ 보이기';
+      }
+      updateRangeDisplay();
+      renderHistory();
+      document.getElementById('callError').classList.remove('show');
+    }
+
+    // ── 정답 공개 ──
+    document.getElementById('revealBtn').addEventListener('click', () => {
+      if (secretNumber === null) {
+        alert('비밀 숫자를 먼저 설정해주세요!');
+        return;
+      }
+      document.getElementById('revealNumber').textContent = secretNumber;
+      const overlay = document.getElementById('reveal-overlay');
+      overlay.classList.add('show');
+      document.getElementById('revealNumber').style.animation = 'none';
+      document.getElementById('revealNumber').offsetHeight;
+      document.getElementById('revealNumber').style.animation = 'popIn 0.3s cubic-bezier(0.34,1.56,0.64,1) both';
+    });
+
+    document.getElementById('revealClose').addEventListener('click', () => {
+      document.getElementById('reveal-overlay').classList.remove('show');
+    });
+
+    // ── 다음 라운드 ──
+    document.getElementById('nextBtn').addEventListener('click', () => {
+      secretNumber = null;
+      document.getElementById('manualInput').value = '';
+      isHidden = true;
+      document.getElementById('toggleBtn').textContent = '👁️ 보이기';
+      updateSecretDisplay();
+      resetGame(false);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // 초기 범위 표시
+    updateRangeDisplay();
+  </script>
+</body>
+</html>
