@@ -721,10 +721,17 @@
 </head>
 <body>
 
+  <!-- 상단 뒤로가기 -->
+  <div style="position: fixed; top: 0; left: 0; right: 0; z-index: 7000; background: rgba(10,10,10,0.75); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); padding: 10px 16px;">
+    <a href="updown.html" style="display: inline-flex; align-items: center; gap: 6px; color: rgba(255,255,255,0.75); text-decoration: none; font-size: 14px; font-weight: 600; padding: 6px 4px; transition: color 0.18s;">
+      ← 게임 설명으로 돌아가기
+    </a>
+  </div>
+
   <!-- ══════════════════════════════
        화면 1: 진행자 전용
   ══════════════════════════════ -->
-  <div id="screen1">
+  <div id="screen1" style="padding-top: 60px;">
     <div class="s1-badge">진행자 전용</div>
     <h1 class="s1-title">🤫 진행자만 보세요</h1>
     <p class="s1-sub">참가자에게 화면을 보여주지 마세요!</p>
