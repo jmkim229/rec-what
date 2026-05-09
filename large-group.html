@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="전교인 행사, 운동회, 대규모 수련회에서 쓸 수 있는 단체게임 추천. OX퀴즈, 빙고, 팀대항 릴레이 등 대규모 레크리에이션 모음.">
+  <meta name="description" content="전교인 행사, 운동회, 대규모 수련회에서 쓸 수 있는 단체게임 추천. OX퀴즈, 빙고, 릴레이 미션 등 대규모 레크리에이션 모음.">
   <meta name="keywords" content="레크리에이션, 실내 레크리에이션, 야외 레크리에이션, 단체게임, 수련회 게임, 캠프 레크, 주일학교 게임, MT 게임, 팀빌딩, 소그룹 게임">
-  <title>단체게임 추천 - 30명 이상 대규모 레크리에이션 | 레크 뭐하지?</title>
+  <title>단체게임 추천 - 16명 이상 대규모 레크리에이션 | 레크 뭐하지?</title>
   <link rel="stylesheet" href="css/style.css">
   <!-- Google tag (gtag.js) -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8683975585186347"
@@ -17,84 +17,34 @@
     gtag('js', new Date());
     gtag('config', 'G-75JKFQWSHP');
   </script>
+  <script src="js/games-data.js"></script>
 </head>
 <body>
 
   <div class="page-header" style="background: linear-gradient(135deg, #f7934f 0%, #fbbf24 100%);">
     <h1>🏟️ 전체 활동</h1>
-    <p>30명 이상이 함께! 모든 연령이 즐길 수 있는 대규모 레크 게임 모음</p>
+    <p>16명 이상이 함께! 모든 연령이 즐길 수 있는 대규모 레크 게임 모음</p>
     <div class="tags">
       <span class="tag">전체</span>
-      <span class="tag">30명+</span>
+      <span class="tag">16명+</span>
       <span class="tag">모든연령</span>
-      <span class="tag">5게임</span>
+      <span class="tag" id="gameCountTag">로딩 중...</span>
     </div>
   </div>
 
   <div class="content">
     <a href="index.html" class="back-btn">← 홈으로 돌아가기</a>
-
-    <div class="game-grid">
-      <a href="games/ox-quiz.html" class="game-card">
-        <span class="game-emoji">⭕</span>
-        <h3>OX 퀴즈</h3>
-        <p class="desc">O 구역 또는 X 구역으로 이동! 틀리면 탈락, 마지막까지 살아남는 대형 퀴즈 게임</p>
-        <div class="meta">
-          <span class="meta-badge">20명+</span>
-          <span class="meta-badge">15~30분</span>
-          <span class="meta-badge">퀴즈 준비</span>
-        </div>
-      </a>
-
-      <a href="games/bingo.html" class="game-card">
-        <span class="game-emoji">🎰</span>
-        <h3>빙고 게임</h3>
-        <p class="desc">서로의 이름이나 특징으로 채우는 인물 빙고! 자연스럽게 친해지는 아이스브레이킹 게임</p>
-        <div class="meta">
-          <span class="meta-badge">15명+</span>
-          <span class="meta-badge">15~25분</span>
-          <span class="meta-badge">빙고판·펜</span>
-        </div>
-      </a>
-
-      <a href="games/talent-show.html" class="game-card">
-        <span class="game-emoji">🌟</span>
-        <h3>장기자랑</h3>
-        <p class="desc">팀별로 숨겨진 재능을 뽐내는 시간! 웃음과 응원이 넘치는 전체 참여 활동</p>
-        <div class="meta">
-          <span class="meta-badge">20명+</span>
-          <span class="meta-badge">30~50분</span>
-          <span class="meta-badge">무대·음향</span>
-        </div>
-      </a>
-
-      <a href="games/team-relay.html" class="game-card">
-        <span class="game-emoji">🏅</span>
-        <h3>릴레이 미션</h3>
-        <p class="desc">다양한 미션을 릴레이로! 팀워크와 응원이 하나로 합쳐지는 종합 대항전</p>
-        <div class="meta">
-          <span class="meta-badge">20명+</span>
-          <span class="meta-badge">30~45분</span>
-          <span class="meta-badge">미션 도구</span>
-        </div>
-      </a>
-
-      <a href="games/wave.html" class="game-card">
-        <span class="game-emoji">🌊</span>
-        <h3>단체 파도타기</h3>
-        <p class="desc">호흡을 맞춰 파도를 만들어라! 단순하지만 하나 됨을 느끼는 전체 협동 게임</p>
-        <div class="meta">
-          <span class="meta-badge">30명+</span>
-          <span class="meta-badge">10~20분</span>
-          <span class="meta-badge">준비물 없음</span>
-        </div>
-      </a>
-    </div>
+    <div class="game-grid" id="gameGrid"></div>
   </div>
 
   <footer>
     <p>© 2025 레크 뭐하지? | 모든 레크 진행자를 위한 아이디어 모음</p>
   </footer>
 
+  <script>
+    const filtered = filterGames({ groupSize: ['large', 'xlarge'] });
+    document.getElementById('gameCountTag').textContent = filtered.length + '개 게임';
+    document.getElementById('gameGrid').innerHTML = filtered.map(renderGameCard).join('');
+  </script>
 </body>
 </html>

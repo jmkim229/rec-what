@@ -7,6 +7,7 @@
   <meta name="keywords" content="레크리에이션, 실내 레크리에이션, 야외 레크리에이션, 단체게임, 수련회 게임, 캠프 레크, 주일학교 게임, MT 게임, 팀빌딩, 소그룹 게임">
   <title>레크리에이션 추천 모음 - 레크 뭐하지? | 실내·야외·단체게임</title>
   <link rel="stylesheet" href="css/style.css">
+  <script src="js/games-data.js"></script>
   <!-- Google tag (gtag.js) -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8683975585186347"
        crossorigin="anonymous"></script>
@@ -247,40 +248,7 @@
     </div>
 
     <p class="section-title" style="margin-top:56px;">💡 이런 상황엔 <span>이 게임!</span></p>
-    <div class="situation-grid">
-      <div class="situation-card">
-        <div class="situation-title">🤝 처음 만난 팀, 어색할 때</div>
-        <div class="situation-games">
-          <a href="games/human-bingo.html">🎯 인간 빙고</a>
-          <a href="games/guess-who.html">🤔 나는 누구일까요?</a>
-          <a href="games/truth-or-lie.html">✅ 진실 혹은 거짓</a>
-        </div>
-      </div>
-      <div class="situation-card">
-        <div class="situation-title">⚡ 준비물 없이 바로 시작</div>
-        <div class="situation-games">
-          <a href="games/wordchain.html">💬 끝말잇기</a>
-          <a href="games/nunchigame.html">👀 눈치 게임</a>
-          <a href="games/updown.html">⬆️ 업다운 퀴즈</a>
-        </div>
-      </div>
-      <div class="situation-card">
-        <div class="situation-title">🏃 에너지 폭발이 필요할 때</div>
-        <div class="situation-games">
-          <a href="games/bomb-pass.html">💣 폭탄 돌리기</a>
-          <a href="games/treasure-hunt.html">🗺️ 보물찾기</a>
-          <a href="games/wave.html">🌊 파도타기</a>
-        </div>
-      </div>
-      <div class="situation-card">
-        <div class="situation-title">🧠 두뇌를 써야 할 때</div>
-        <div class="situation-games">
-          <a href="games/mafia.html">🕵️ 마피아 게임</a>
-          <a href="games/escape-mission.html">🔐 방탈출 미션</a>
-          <a href="games/debate-game.html">🗣️ 토론 게임</a>
-        </div>
-      </div>
-    </div>
+    <div class="situation-grid" id="situationGrid"></div>
   </main>
 
   <footer>
@@ -289,111 +257,15 @@
   </footer>
 
   <script>
-  // ── 게임 데이터 ─────────────────────────────────────────────
-  const SMART_GAMES = [
-    { name:'폭탄 돌리기',     emoji:'💣', url:'games/bomb-pass.html',
-      desc:'긴장감 넘치는 순간, 터지면 벌칙!',
-      place:['indoor'], people:['small','mid','large'],
-      age:['elem-low','elem-high','teen','adult','mixed'],
-      time:'short', placeLabel:'실내', peopleLabel:'10명+', timeLabel:'10분' },
-    { name:'눈치 게임',       emoji:'👀', url:'games/nunchigame.html',
-      desc:'눈치껏 일어서야 살아남는다!',
-      place:['indoor'], people:['tiny','small','mid','large'],
-      age:['elem-low','elem-high','teen','adult','mixed'],
-      time:'quick', placeLabel:'실내', peopleLabel:'5명+', timeLabel:'5분' },
-    { name:'몸으로 말해요',   emoji:'🙌', url:'games/bodyspeak.html',
-      desc:'말 없이 몸으로만 표현해서 맞춰요!',
-      place:['indoor'], people:['small','mid','large'],
-      age:['elem-low','elem-high','teen','adult','mixed'],
-      time:'short', placeLabel:'실내', peopleLabel:'6명+', timeLabel:'15분' },
-    { name:'스피드 퀴즈',     emoji:'⚡', url:'games/speedquiz.html',
-      desc:'설명하는 사람도, 맞히는 사람도 초긴장!',
-      place:['indoor'], people:['tiny','small','mid'],
-      age:['elem-high','teen','adult','mixed'],
-      time:'short', placeLabel:'실내', peopleLabel:'4명+', timeLabel:'10분' },
-    { name:'업다운 게임',     emoji:'⬆️', url:'games/updown.html',
-      desc:'일어서야 할까, 앉아야 할까? 순간 판단!',
-      place:['indoor'], people:['small','mid','large'],
-      age:['elem-low','elem-high','teen','adult','mixed'],
-      time:'quick', placeLabel:'실내', peopleLabel:'10명+', timeLabel:'5분' },
-    { name:'이어달리기 변형', emoji:'🏃', url:'games/relay-race.html',
-      desc:'달리기에 미션을 더해 웃음이 두 배!',
-      place:['outdoor'], people:['small','mid','large'],
-      age:['elem-low','elem-high','teen','adult','mixed'],
-      time:'medium', placeLabel:'야외', peopleLabel:'10명+', timeLabel:'20분' },
-    { name:'보물찾기',        emoji:'🗺️', url:'games/treasure-hunt.html',
-      desc:'힌트를 풀며 보물을 찾아라!',
-      place:['outdoor'], people:['tiny','small','mid'],
-      age:['young','elem-low','elem-high'],
-      time:'medium', placeLabel:'야외', peopleLabel:'5명+', timeLabel:'30분' },
-    { name:'단체 줄넘기',     emoji:'🪢', url:'games/group-jumprope.html',
-      desc:'하나, 둘, 셋! 호흡 맞춰 함께 뛰어요',
-      place:['outdoor'], people:['small','mid','large'],
-      age:['elem-low','elem-high','teen'],
-      time:'short', placeLabel:'야외', peopleLabel:'8명+', timeLabel:'15분' },
-    { name:'수건 돌리기',     emoji:'🧣', url:'games/towel-pass.html',
-      desc:'뒤에 수건이 놓였다면 빨리 달려라!',
-      place:['indoor','outdoor'], people:['small','mid'],
-      age:['young','elem-low'],
-      time:'short', placeLabel:'실내·야외', peopleLabel:'8명+', timeLabel:'10분' },
-    { name:'풍선 터뜨리기',   emoji:'🎈', url:'games/balloon-pop.html',
-      desc:'내 풍선은 지키고, 상대 풍선은 터뜨려라!',
-      place:['indoor','outdoor'], people:['small','mid','large'],
-      age:['young','elem-low','elem-high'],
-      time:'short', placeLabel:'실내·야외', peopleLabel:'6명+', timeLabel:'15분' },
-    { name:'마피아 게임',     emoji:'🕵️', url:'games/mafia.html',
-      desc:'마피아를 찾아라! 눈치와 심리전의 대결',
-      place:['indoor'], people:['small','mid'],
-      age:['elem-high','teen','adult','mixed'],
-      time:'medium', placeLabel:'실내', peopleLabel:'6명+', timeLabel:'30분' },
-    { name:'이심전심',        emoji:'💞', url:'games/mind-match.html',
-      desc:'같은 단어를 동시에! 우리는 통하고 있어요',
-      place:['indoor'], people:['tiny','small','mid'],
-      age:['elem-low','elem-high','teen','adult','mixed'],
-      time:'short', placeLabel:'실내', peopleLabel:'4명+', timeLabel:'10분' },
-    { name:'진실 혹은 거짓', emoji:'✅', url:'games/truth-or-lie.html',
-      desc:'셋 중 하나는 거짓말! 진짜를 가려내세요',
-      place:['indoor'], people:['tiny','small'],
-      age:['elem-high','teen','adult','mixed'],
-      time:'short', placeLabel:'실내', peopleLabel:'4명+', timeLabel:'10분' },
-    { name:'끝말잇기 배틀',   emoji:'💬', url:'games/wordchain.html',
-      desc:'제한 시간 안에 이어라! 막히면 탈락!',
-      place:['indoor'], people:['tiny','small'],
-      age:['elem-low','elem-high','teen','adult','mixed'],
-      time:'short', placeLabel:'실내', peopleLabel:'4명+', timeLabel:'10분' },
-    { name:'OX 퀴즈',        emoji:'⭕', url:'games/ox-quiz.html',
-      desc:'O냐 X냐! 마지막까지 살아남아라',
-      place:['indoor','outdoor'], people:['small','mid','large'],
-      age:['elem-low','elem-high','teen','adult','mixed'],
-      time:'short', placeLabel:'실내·야외', peopleLabel:'10명+', timeLabel:'15분' },
-    { name:'빙고 게임',       emoji:'🎱', url:'games/bingo.html',
-      desc:'서로의 이름을 채워라! 빙고 완성까지 달려요',
-      place:['indoor'], people:['small','mid','large'],
-      age:['elem-low','elem-high','teen','adult','mixed'],
-      time:'medium', placeLabel:'실내', peopleLabel:'10명+', timeLabel:'20분' },
-    { name:'팀 대항 릴레이', emoji:'🏅', url:'games/team-relay.html',
-      desc:'미션을 릴레이로! 팀워크의 정수',
-      place:['outdoor'], people:['mid','large'],
-      age:['elem-low','elem-high','teen','adult','mixed'],
-      time:'medium', placeLabel:'야외', peopleLabel:'16명+', timeLabel:'30분' },
-    { name:'동물 흉내 게임', emoji:'🐘', url:'games/animal-imitate.html',
-      desc:'코끼리처럼, 토끼처럼! 온몸으로 표현해요',
-      place:['indoor','outdoor'], people:['tiny','small','mid'],
-      age:['young','elem-low'],
-      time:'quick', placeLabel:'실내·야외', peopleLabel:'5명+', timeLabel:'5분' },
-    { name:'색깔 찾기',       emoji:'🎨', url:'games/color-hunt.html',
-      desc:'빨강! 파랑! 외치면 달려가서 손을 얹어요',
-      place:['indoor','outdoor'], people:['tiny','small','mid'],
-      age:['young'],
-      time:'quick', placeLabel:'실내·야외', peopleLabel:'5명+', timeLabel:'5분' },
-    { name:'풍선 놀이',       emoji:'🎈', url:'games/balloon-play.html',
-      desc:'풍선을 땅에 닿지 않게! 두둥실 함께 놀아요',
-      place:['indoor','outdoor'], people:['tiny','small','mid'],
-      age:['young','elem-low'],
-      time:'short', placeLabel:'실내·야외', peopleLabel:'5명+', timeLabel:'10분' },
-  ];
+  // ── 필터 값 변환 (index.html 버튼값 → games-data.js 태그값) ──
+  const PLACE_MAP  = { indoor: ['indoor', 'both'], outdoor: ['outdoor', 'both'], any: null };
+  const PEOPLE_MAP = { tiny: ['small'], small: ['small','medium'], mid: ['medium','large'], large: ['large','xlarge'] };
+  const AGE_MAP    = {
+    young: ['young'], 'elem-low': ['kid-young'], 'elem-high': ['kid-old'],
+    teen: ['teen'], adult: ['adult'], mixed: null
+  };
+  const TIME_MAP   = { quick: 'short', short: 'medium', medium: 'long', any: null };
 
-  // ── 필터 상태 ────────────────────────────────────────────────
   const smartFilters = { place: null, people: null, age: null, time: null };
 
   function hasActiveFilter() {
@@ -402,21 +274,40 @@
 
   function matchGame(g) {
     const { place, people, age, time } = smartFilters;
-    if (place && place !== 'any' && !g.place.includes(place)) return false;
-    if (people && !g.people.includes(people)) return false;
-    if (age && !g.age.includes(age)) return false;
+    const t = g.tags;
+
+    if (place && place !== 'any') {
+      const locs = PLACE_MAP[place];
+      if (locs && !locs.some(l => t.location.includes(l))) return false;
+    }
+    if (people) {
+      const sizes = PEOPLE_MAP[people];
+      if (sizes && !sizes.some(s => t.groupSize.includes(s))) return false;
+    }
+    if (age && age !== 'mixed') {
+      const ages = AGE_MAP[age];
+      if (ages && !ages.some(a => t.ageGroup.includes(a))) return false;
+    }
     if (time && time !== 'any') {
-      if (time === 'quick' && g.time !== 'quick') return false;
-      if (time === 'short' && g.time === 'medium') return false;
+      const dur = TIME_MAP[time];
+      if (time === 'quick' && t.duration !== 'short') return false;
+      if (time === 'short' && t.duration === 'long') return false;
     }
     return true;
+  }
+
+  function locationLabel(g) {
+    const locs = g.tags.location;
+    if (locs.includes('both')) return '실내·야외';
+    if (locs.includes('indoor')) return '실내';
+    return '야외';
   }
 
   function renderSmart() {
     const container = document.getElementById('smartResults');
     if (!hasActiveFilter()) { container.innerHTML = ''; return; }
 
-    const matched = SMART_GAMES.filter(matchGame);
+    const matched = gamesData.filter(matchGame);
     if (matched.length === 0) {
       container.innerHTML = `<p style="text-align:center;padding:32px 0;color:#aaa;font-size:15px;background:white;border-radius:18px;box-shadow:0 3px 14px rgba(0,0,0,0.06);">조건에 맞는 게임이 없어요 😅 조건을 바꿔보세요!</p>`;
       return;
@@ -425,18 +316,18 @@
       matched.map(g => `
         <a href="${g.url}" class="game-card">
           <span class="game-emoji">${g.emoji}</span>
-          <h3>${g.name}</h3>
-          <p class="desc">${g.desc}</p>
+          <h3>${g.title}</h3>
+          <p class="desc">${g.description}</p>
           <div class="meta">
-            <span class="meta-badge" style="background:#eef2ff;color:#4f46e5;">${g.placeLabel}</span>
-            <span class="meta-badge" style="background:#f0fdf4;color:#16a34a;">${g.peopleLabel}</span>
-            <span class="meta-badge" style="background:#fff8e1;color:#d97706;">${g.timeLabel}</span>
+            <span class="meta-badge" style="background:#eef2ff;color:#4f46e5;">${locationLabel(g)}</span>
+            <span class="meta-badge" style="background:#f0fdf4;color:#16a34a;">${g.people}</span>
+            <span class="meta-badge" style="background:#fff8e1;color:#d97706;">${g.time}</span>
           </div>
         </a>`).join('') +
       `</div>`;
   }
 
-  // ── 버튼 이벤트 ─────────────────────────────────────────────
+  // ── 버튼 이벤트 ──────────────────────────────────────────────
   document.querySelectorAll('.filter-buttons').forEach(group => {
     const key = group.dataset.filter;
     group.querySelectorAll('.filter-btn').forEach(btn => {
@@ -460,6 +351,23 @@
     document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
     renderSmart();
   });
+
+  // ── 상황별 섹션 자동 렌더링 ──────────────────────────────────
+  const SITUATIONS = [
+    { key: 'ice-break', title: '🤝 처음 만난 팀, 어색할 때' },
+    { key: 'no-prep',   title: '⚡ 준비물 없이 바로 시작' },
+    { key: 'energy',    title: '🏃 에너지 폭발이 필요할 때' },
+    { key: 'brain',     title: '🧠 두뇌를 써야 할 때' }
+  ];
+
+  document.getElementById('situationGrid').innerHTML = SITUATIONS.map(sit => {
+    const games = filterGames({ situation: [sit.key] }).slice(0, 3);
+    const links = games.map(g => `<a href="${g.url}">${g.emoji} ${g.title}</a>`).join('');
+    return `<div class="situation-card">
+      <div class="situation-title">${sit.title}</div>
+      <div class="situation-games">${links}</div>
+    </div>`;
+  }).join('');
   </script>
 </body>
 </html>

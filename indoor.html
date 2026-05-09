@@ -17,6 +17,7 @@
     gtag('js', new Date());
     gtag('config', 'G-75JKFQWSHP');
   </script>
+  <script src="js/games-data.js"></script>
 </head>
 <body>
 
@@ -27,74 +28,23 @@
       <span class="tag">실내</span>
       <span class="tag">준비 간단</span>
       <span class="tag">어린이 추천</span>
-      <span class="tag">5게임</span>
+      <span class="tag" id="gameCountTag">로딩 중...</span>
     </div>
   </div>
 
   <div class="content">
     <a href="index.html" class="back-btn">← 홈으로 돌아가기</a>
-
-    <div class="game-grid">
-      <a href="games/bomb-pass.html" class="game-card">
-        <span class="game-emoji">💣</span>
-        <h3>폭탄 돌리기</h3>
-        <p class="desc">음악이 멈추는 순간, 폭탄을 들고 있으면 탈락! 긴장감 넘치는 인기 게임</p>
-        <div class="meta">
-          <span class="meta-badge">10명+</span>
-          <span class="meta-badge">10~15분</span>
-          <span class="meta-badge">공 1개</span>
-        </div>
-      </a>
-
-      <a href="games/nunchigame.html" class="game-card">
-        <span class="game-emoji">🎯</span>
-        <h3>눈치 게임</h3>
-        <p class="desc">한 명씩 차례로 일어나며 숫자를 외쳐요. 동시에 일어나면 탈락! 집중력 게임</p>
-        <div class="meta">
-          <span class="meta-badge">8명+</span>
-          <span class="meta-badge">10~20분</span>
-          <span class="meta-badge">준비물 없음</span>
-        </div>
-      </a>
-
-      <a href="games/updown.html" class="game-card">
-        <span class="game-emoji">⬆️</span>
-        <h3>업다운 게임</h3>
-        <p class="desc">진행자가 숫자를 외치면 그 숫자만큼 일어서거나 앉아야 해요. 단체 반응 게임</p>
-        <div class="meta">
-          <span class="meta-badge">10명+</span>
-          <span class="meta-badge">5~10분</span>
-          <span class="meta-badge">준비물 없음</span>
-        </div>
-      </a>
-
-      <a href="games/bodyspeak.html" class="game-card">
-        <span class="game-emoji">🕺</span>
-        <h3>몸으로 말해요</h3>
-        <p class="desc">말 없이 몸으로만 단어를 표현해서 팀원이 맞추는 팀 대결 게임</p>
-        <div class="meta">
-          <span class="meta-badge">8명+</span>
-          <span class="meta-badge">15~25분</span>
-          <span class="meta-badge">종이·펜</span>
-        </div>
-      </a>
-
-      <a href="games/speedquiz.html" class="game-card">
-        <span class="game-emoji">⚡</span>
-        <h3>스피드 퀴즈</h3>
-        <p class="desc">제시어를 설명하는 사람과 맞히는 사람! 제한 시간 안에 최대한 많이 맞히는 게임</p>
-        <div class="meta">
-          <span class="meta-badge">4명+</span>
-          <span class="meta-badge">15~20분</span>
-          <span class="meta-badge">퀴즈 카드</span>
-        </div>
-      </a>
-    </div>
+    <div class="game-grid" id="gameGrid"></div>
   </div>
 
   <footer>
     <p>© 2025 레크 뭐하지? | 모든 레크 진행자를 위한 아이디어 모음</p>
   </footer>
 
+  <script>
+    const filtered = filterGames({ location: ['indoor', 'both'] });
+    document.getElementById('gameCountTag').textContent = filtered.length + '개 게임';
+    document.getElementById('gameGrid').innerHTML = filtered.map(renderGameCard).join('');
+  </script>
 </body>
 </html>

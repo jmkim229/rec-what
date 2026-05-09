@@ -17,6 +17,7 @@
     gtag('js', new Date());
     gtag('config', 'G-75JKFQWSHP');
   </script>
+  <script src="js/games-data.js"></script>
 </head>
 <body>
 
@@ -27,69 +28,13 @@
       <span class="tag">성인</span>
       <span class="tag">워크숍·MT</span>
       <span class="tag">팀빌딩</span>
-      <span class="tag">5게임</span>
+      <span class="tag" id="gameCountTag">로딩 중...</span>
     </div>
   </div>
 
   <div class="content">
     <a href="index.html" class="back-btn" style="color:#4f46e5;">← 홈으로 돌아가기</a>
-
-    <div class="game-grid">
-      <a href="games/human-bingo.html" class="game-card">
-        <span class="game-emoji">🎯</span>
-        <h3>인간 빙고</h3>
-        <p class="desc">팀원들의 특징을 빙고판에 직접 채우며 서로를 알아가는 아이스브레이킹 게임. 어색한 분위기를 단번에 깨는 MT·워크숍 단골 활동</p>
-        <div class="meta">
-          <span class="meta-badge">5~30명</span>
-          <span class="meta-badge">20~30분</span>
-          <span class="meta-badge">빙고판·펜</span>
-        </div>
-      </a>
-
-      <a href="games/photo-mission.html" class="game-card">
-        <span class="game-emoji">📸</span>
-        <h3>팀 포토 미션</h3>
-        <p class="desc">주어진 미션 목록대로 팀이 함께 사진을 찍어오는 창의적인 팀 활동. 자연스러운 협동과 웃음이 넘쳐나는 야외·실내 겸용 게임</p>
-        <div class="meta">
-          <span class="meta-badge">10~40명</span>
-          <span class="meta-badge">30~45분</span>
-          <span class="meta-badge">스마트폰</span>
-        </div>
-      </a>
-
-      <a href="games/guess-who.html" class="game-card">
-        <span class="game-emoji">🤔</span>
-        <h3>나는 누구일까요?</h3>
-        <p class="desc">익명으로 제출한 팀원 정보를 맞히는 게임. 몰랐던 동료의 의외의 모습에 웃음과 친밀감이 동시에 높아지는 팀빌딩 게임</p>
-        <div class="meta">
-          <span class="meta-badge">6~30명</span>
-          <span class="meta-badge">20~35분</span>
-          <span class="meta-badge">포스트잇</span>
-        </div>
-      </a>
-
-      <a href="games/body-talk.html" class="game-card">
-        <span class="game-emoji">🙌</span>
-        <h3>몸으로 말해요 팀전</h3>
-        <p class="desc">말 없이 몸짓으로만 단어를 전달하는 팀 대항전. 박장대소가 보장되는 에너지 넘치는 레크리에이션으로 워크숍 중반 활력 충전에 최고</p>
-        <div class="meta">
-          <span class="meta-badge">8~40명</span>
-          <span class="meta-badge">20~30분</span>
-          <span class="meta-badge">단어 카드</span>
-        </div>
-      </a>
-
-      <a href="games/relay-quiz.html" class="game-card">
-        <span class="game-emoji">⚡</span>
-        <h3>스피드 릴레이 퀴즈</h3>
-        <p class="desc">팀원이 릴레이로 이어받아 푸는 스피드 퀴즈 대결. 상식·시사·업무 관련 문제를 섞으면 팀 특성에 딱 맞는 커스텀 대회가 완성돼요</p>
-        <div class="meta">
-          <span class="meta-badge">10~50명</span>
-          <span class="meta-badge">20~40분</span>
-          <span class="meta-badge">퀴즈 세트</span>
-        </div>
-      </a>
-    </div>
+    <div class="game-grid" id="gameGrid"></div>
   </div>
 
   <footer>
@@ -97,5 +42,10 @@
     <p style="margin-top:8px;"><a href="privacy.html" style="color:#bbb;">개인정보처리방침</a> | <a href="terms.html" style="color:#bbb;">이용약관</a></p>
   </footer>
 
+  <script>
+    const filtered = filterGames({ ageGroup: ['adult'] });
+    document.getElementById('gameCountTag').textContent = filtered.length + '개 게임';
+    document.getElementById('gameGrid').innerHTML = filtered.map(renderGameCard).join('');
+  </script>
 </body>
 </html>
