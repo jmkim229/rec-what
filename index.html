@@ -104,7 +104,7 @@
         </div>
         <h3>실내 레크</h3>
         <p>좁은 공간에서도<br>신나게 즐기는 게임</p>
-        <span class="arrow">5개 게임 보기 →</span>
+        <span class="arrow" id="arrowIndoor">로딩 중...</span>
       </a>
       <a href="outdoor.html" class="category-card card-outdoor">
         <div class="card-illu">
@@ -119,7 +119,7 @@
         </div>
         <h3>야외 레크</h3>
         <p>뛰고 달리고<br>함께하는 액티비티</p>
-        <span class="arrow">5개 게임 보기 →</span>
+        <span class="arrow" id="arrowOutdoor">로딩 중...</span>
       </a>
       <a href="small-group.html" class="category-card card-small">
         <div class="card-illu">
@@ -134,7 +134,7 @@
         </div>
         <h3>소그룹</h3>
         <p>5~15명이 함께<br>친밀감을 높이는 게임</p>
-        <span class="arrow">5개 게임 보기 →</span>
+        <span class="arrow" id="arrowSmall">로딩 중...</span>
       </a>
       <a href="large-group.html" class="category-card card-large">
         <div class="card-illu">
@@ -149,7 +149,7 @@
         </div>
         <h3>전체 활동</h3>
         <p>30명 이상이<br>함께하는 대규모 레크</p>
-        <span class="arrow">5개 게임 보기 →</span>
+        <span class="arrow" id="arrowLarge">로딩 중...</span>
       </a>
     </div>
 
@@ -168,7 +168,7 @@
         </div>
         <h3>유아 레크</h3>
         <p>5~7세를 위한<br>신체·감각 놀이</p>
-        <span class="arrow">5개 게임 보기 →</span>
+        <span class="arrow" id="arrowYoung">로딩 중...</span>
       </a>
       <a href="ages-older.html" class="category-card card-older">
         <div class="card-illu">
@@ -188,13 +188,13 @@
         </div>
         <h3>초등 고학년 레크</h3>
         <p>10~13세를 위한<br>전략·사고 게임</p>
-        <span class="arrow">5개 게임 보기 →</span>
+        <span class="arrow" id="arrowOlder">로딩 중...</span>
       </a>
       <a href="adult.html" class="category-card card-adult">
         <div class="emoji-wrap">💼</div>
         <h3>성인 레크</h3>
         <p>워크숍·MT·팀빌딩<br>성인 추천 게임</p>
-        <span class="arrow">5개 게임 보기 →</span>
+        <span class="arrow" id="arrowAdult">로딩 중...</span>
       </a>
     </div>
 
@@ -257,6 +257,23 @@
   </footer>
 
   <script>
+  // ── 카테고리 카드 게임 개수 자동 계산 ──
+  (function() {
+    const counts = {
+      arrowIndoor:  filterGames({ location: ['indoor', 'both'] }).length,
+      arrowOutdoor: filterGames({ location: ['outdoor', 'both'] }).length,
+      arrowSmall:   filterGames({ groupSize: ['small', 'medium'] }).length,
+      arrowLarge:   filterGames({ groupSize: ['large', 'xlarge'] }).length,
+      arrowYoung:   filterGames({ ageGroup: ['young'] }).length,
+      arrowOlder:   filterGames({ ageGroup: ['kid-old'] }).length,
+      arrowAdult:   filterGames({ ageGroup: ['adult'] }).length,
+    };
+    Object.entries(counts).forEach(([id, n]) => {
+      const el = document.getElementById(id);
+      if (el) el.textContent = n + '개 게임 보기 →';
+    });
+  })();
+
   // ── 필터 값 변환 (index.html 버튼값 → games-data.js 태그값) ──
   const PLACE_MAP  = { indoor: ['indoor', 'both'], outdoor: ['outdoor', 'both'], any: null };
   const PEOPLE_MAP = { tiny: ['small'], small: ['small','medium'], mid: ['medium','large'], large: ['large','xlarge'] };
