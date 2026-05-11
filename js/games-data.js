@@ -73,35 +73,18 @@ const gamesData = [
   {
     id: 'body-talk',
     emoji: '🙌',
-    title: '몸으로 말해요 팀전',
-    description: '말 없이 몸짓으로만 단어를 전달하는 팀 대항전. 박장대소가 보장되는 에너지 넘치는 레크리에이션',
-    url: 'games/body-talk.html',
-    people: '8~40명',
-    time: '20~30분',
-    prep: '단어 카드',
-    tags: {
-      location: ['indoor'],
-      groupSize: ['medium', 'large', 'xlarge'],
-      ageGroup: ['teen', 'adult'],
-      duration: 'long',
-      situation: ['energy', 'ice-break']
-    }
-  },
-  {
-    id: 'bodyspeak',
-    emoji: '🕺',
     title: '몸으로 말해요',
-    description: '말 없이 몸으로만 단어를 표현해서 팀원이 맞추는 팀 대결 게임',
-    url: 'games/bodyspeak.html',
+    description: '말은 금지! 몸짓으로만 전달하는 팀 대항 제스처 게임. 릴레이·1분 챌린지·테마 버전 등 다양한 변형 포함',
+    url: 'games/body-talk.html',
     people: '8명+',
-    time: '15~25분',
+    time: '15~30분',
     prep: '제시어 카드',
     tags: {
       location: ['indoor'],
-      groupSize: ['medium', 'large'],
+      groupSize: ['medium', 'large', 'xlarge'],
       ageGroup: ['kid-young', 'kid-old', 'teen', 'adult'],
       duration: 'medium',
-      situation: ['energy']
+      situation: ['energy', 'brain']
     }
   },
   {

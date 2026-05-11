@@ -2,7 +2,7 @@ const GAMES = [
   { name: '폭탄 돌리기', emoji: '💣', url: 'games/bomb-pass.html', tag: '실내·전체활동' },
   { name: '눈치 게임', emoji: '👀', url: 'games/nunchigame.html', tag: '실내·소그룹' },
   { name: '업다운 퀴즈', emoji: '⬆️', url: 'games/updown.html', tag: '실내·전체활동' },
-  { name: '몸으로 말해요', emoji: '🙌', url: 'games/bodyspeak.html', tag: '실내·소그룹' },
+  { name: '몸으로 말해요', emoji: '🙌', url: 'games/body-talk.html', tag: '실내·소그룹' },
   { name: '스피드 퀴즈', emoji: '⚡', url: 'games/speedquiz.html', tag: '실내·전체활동' },
   { name: '이어달리기', emoji: '🏃', url: 'games/relay-race.html', tag: '야외·전체활동' },
   { name: '보물찾기', emoji: '🗺️', url: 'games/treasure-hunt.html', tag: '야외·전체활동' },
