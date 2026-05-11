@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="빅스텝 게임 방법, 준비물, 진행 팁, 변형 방법까지. 5명+이 함께하는 가위바위보 큰 걸음 점수제 레크리에이션. 야외·캠프·수련회 추천.">
+  <meta name="keywords" content="레크리에이션, 단체게임, 수련회 게임, 캠프 레크, 빅스텝, 가위바위보 게임, 야외 레크리에이션, 걷기 게임, MT 게임, 팀빌딩">
+  <title>👣 빅스텝 방법과 진행 팁 - 단체 레크리에이션 | 레크 뭐하지?</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .game-header {
+      background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+    }
+
+    /* 결과 규칙 카드 */
+    .result-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .result-card {
+      background: white;
+      border-radius: 16px;
+      padding: 18px 12px 14px;
+      text-align: center;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+      transition: transform 0.18s, box-shadow 0.18s;
+    }
+
+    .result-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 28px rgba(243,156,18,0.18);
+    }
+
+    .result-card .result-emoji {
+      font-size: 36px;
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .result-card .result-label {
+      font-size: 13px;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+
+    .result-card .result-action {
+      font-size: 13px;
+      color: #666;
+      line-height: 1.5;
+    }
+
+    .result-card.lose {
+      border-top: 4px solid #e74c3c;
+    }
+    .result-card.lose .result-label { color: #c0392b; }
+
+    .result-card.draw {
+      border-top: 4px solid #3498db;
+    }
+    .result-card.draw .result-label { color: #2980b9; }
+
+    .result-card.win {
+      border-top: 4px solid #27ae60;
+    }
+    .result-card.win .result-label { color: #1e8449; }
+
+    /* 규칙 하이라이트 박스 */
+    .rule-highlight {
+      background: linear-gradient(135deg, #fef9e7, #fdebd0);
+      border-left: 4px solid #f39c12;
+      border-radius: 0 12px 12px 0;
+      padding: 14px 18px;
+      margin: 14px 0;
+      font-size: 14px;
+      color: #784212;
+      line-height: 1.7;
+    }
+
+    .rule-highlight strong {
+      color: #b7770d;
+    }
+
+    /* 타임라인 박스 */
+    .score-flow {
+      background: linear-gradient(135deg, #1a1a2e, #2c2c54);
+      border-radius: 18px;
+      padding: 20px 18px;
+      margin: 18px 0;
+      color: white;
+    }
+
+    .score-flow h3 {
+      font-size: 16px;
+      font-weight: 800;
+      color: #f39c12;
+      margin-bottom: 12px;
+    }
+
+    .flow-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 10px 14px;
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+
+    .flow-row:last-child { margin-bottom: 0; }
+
+    .flow-row .flow-icon {
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
+    .flow-row .flow-text {
+      color: rgba(255,255,255,0.88);
+      line-height: 1.5;
+    }
+
+    @media (max-width: 480px) {
+      .result-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+      }
+      .result-card { padding: 14px 8px 10px; }
+      .result-card .result-emoji { font-size: 28px; }
+      .result-card .result-label { font-size: 12px; }
+      .result-card .result-action { font-size: 12px; }
+    }
+  </style>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8683975585186347"
+       crossorigin="anonymous"></script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-75JKFQWSHP"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-75JKFQWSHP');
+  </script>
+</head>
+<body>
+
+  <div class="game-header">
+    <h1>👣 빅스텝</h1>
+    <p class="subtitle">가위바위보로 한 발 한 발! 큰 걸음으로 결승선을 점령하라</p>
+    <div class="tags">
+      <span class="tag">야외·넓은 실내</span>
+      <span class="tag">5명 이상</span>
+      <span class="tag">전 연령</span>
+      <span class="tag">에너지 폭발</span>
+    </div>
+  </div>
+
+  <div class="content">
+    <a href="../index.html" class="back-btn">← 게임 목록으로</a>
+
+    <div class="info-box">
+      <div class="info-item">
+        <div class="label">인원</div>
+        <div class="value">5명+</div>
+      </div>
+      <div class="info-item">
+        <div class="label">장소</div>
+        <div class="value">야외·넓은 실내</div>
+      </div>
+      <div class="info-item">
+        <div class="label">소요시간</div>
+        <div class="value">5분 (점수제)</div>
+      </div>
+      <div class="info-item">
+        <div class="label">준비물</div>
+        <div class="value">출발선/결승선 표시</div>
+      </div>
+      <div class="info-item">
+        <div class="label">추천연령</div>
+        <div class="value">유아~성인 (전 연령)</div>
+      </div>
+    </div>
+
+    <!-- 가위바위보 결과 규칙 -->
+    <div class="section">
+      <h2>✊ 가위바위보 결과</h2>
+      <div class="result-grid">
+        <div class="result-card lose">
+          <span class="result-emoji">😭</span>
+          <div class="result-label">사회자 승</div>
+          <div class="result-action">출발선으로<br>즉시 복귀</div>
+        </div>
+        <div class="result-card draw">
+          <span class="result-emoji">🤝</span>
+          <div class="result-label">무승부</div>
+          <div class="result-action">1걸음<br>전진</div>
+        </div>
+        <div class="result-card win">
+          <span class="result-emoji">🎉</span>
+          <div class="result-label">참가자 승</div>
+          <div class="result-action">2걸음<br>전진</div>
+        </div>
+      </div>
+
+      <div class="rule-highlight">
+        <strong>걸음 폭은 자유!</strong><br>
+        점프는 금지지만 다리를 최대한 찢어서 멀리 나갈 수 있어요.<br>
+        유연성이 좋을수록 유리한 게임입니다. 🤸
+      </div>
+    </div>
+
+    <!-- 게임 방법 -->
+    <div class="section">
+      <h2>🎮 게임 방법</h2>
+      <div class="step-list">
+        <div class="step">
+          <div class="step-num">1</div>
+          <p>사회자가 술래가 되어 <strong>결승선 라인에 정면으로</strong> 선다. 참가자들은 약 10~15m 떨어진 출발선에 정렬한다.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <p>사회자와 참가자들이 동시에 <strong>"가위바위보!"</strong>를 외치며 손을 머리 위로 들어 올린다. 사회자가 모든 참가자의 손을 한눈에 볼 수 있다.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <p>결과에 따라 즉시 행동: <strong>사회자 승</strong>은 출발선으로 복귀, <strong>무승부</strong>는 1걸음 전진, <strong>참가자 승</strong>은 2걸음 전진.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <p>걸음 폭은 자유! <strong>점프만 금지</strong>, 다리를 최대한 찢어서 유연성을 발휘해 멀리 갈 수 있다. 다리 찢기 챔피언이 유리한 게임이다.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">5</div>
+          <p>결승선을 통과하면 <strong>+1점 획득</strong> 후 즉시 출발선으로 돌아가서 게임에 다시 합류한다.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">6</div>
+          <p>제한시간 <strong>5분이 끝났을 때</strong> 가장 많은 점수를 획득한 사람이 우승!</p>
+        </div>
+      </div>
+
+      <div class="score-flow">
+        <h3>🏁 게임 흐름 요약</h3>
+        <div class="flow-row">
+          <span class="flow-icon">🚩</span>
+          <span class="flow-text">출발선 정렬 → 사회자와 가위바위보</span>
+        </div>
+        <div class="flow-row">
+          <span class="flow-icon">👣</span>
+          <span class="flow-text">결과에 따라 전진 또는 출발선 복귀</span>
+        </div>
+        <div class="flow-row">
+          <span class="flow-icon">🎯</span>
+          <span class="flow-text">결승선 통과 시 +1점, 즉시 출발선으로 복귀</span>
+        </div>
+        <div class="flow-row">
+          <span class="flow-icon">🏆</span>
+          <span class="flow-text">5분 후 가장 많은 점수를 획득한 사람 우승!</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 진행 팁 -->
+    <div class="section">
+      <h2>💡 진행 팁</h2>
+      <div class="tip-box">
+        <strong>거리·리듬·안전을 함께 챙기세요!</strong>
+        <ul>
+          <li>출발선과 결승선 사이 거리는 인원수에 따라 조정하세요. 5~10명은 8~10m, 20명 이상은 12~15m 추천.</li>
+          <li>사회자는 가위바위보 외칠 때 리듬을 다양하게 바꿔보세요. ("가~위~바~위~보!" / "가위바위보!" / "가위! 바위! 보!") 타이밍이 다양해야 게임이 지루하지 않아요.</li>
+          <li>다리 찢기를 시도하다 다칠 수 있으니 사전에 스트레칭 시간을 잠깐 가지면 좋아요.</li>
+          <li>점수판을 옆에 세워두면 참가자들이 자기 점수를 확인하며 더 몰입할 수 있어요.</li>
+          <li>사회자는 일부러 자주 지는 가위바위보를 내서 참가자들이 빨리 결승선에 도달하게 하면 분위기가 살아납니다.</li>
+          <li>결승선 통과 후 출발선까지 뛰어가는 시간도 변수! 빨리 뛰는 게 중요해요.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 변형 방법 -->
+    <div class="section">
+      <h2>🔄 변형 방법</h2>
+      <div class="variation-list">
+        <div class="variation">
+          <strong>⏱️ 라운드 모드</strong>
+          제한시간 대신 정해진 라운드 수(예: 20라운드)로 진행하는 변형. 끝나는 시점이 정확해서 진행이 깔끔하다.
+        </div>
+        <div class="variation">
+          <strong>🎯 미션 빅스텝</strong>
+          결승선에 미션 카드를 두고, 통과 시 미션 수행 후 점수 획득. 미션 예시: 노래 한 소절 부르기, 닭 울음소리 내기, 댄스 5초.
+        </div>
+        <div class="variation">
+          <strong>⚔️ 팀 빅스텝</strong>
+          두 팀으로 나눠 진행. 팀원 전체 점수 합산으로 승부. 서로 응원하는 분위기가 생긴다.
+        </div>
+        <div class="variation">
+          <strong>🎲 럭키 빅스텝</strong>
+          사회자가 매 라운드 시작 전 주사위를 굴려서 그 라운드의 이김/무승부 보상을 랜덤 변경. (예: 주사위 6이면 그 라운드는 이기면 3걸음, 무승부 2걸음)
+        </div>
+        <div class="variation">
+          <strong>🌀 역방향 빅스텝</strong>
+          결승선에서 시작해 출발선이 목표인 변형. 뒤로 걸어가야 하는 코믹함 + 균형감 테스트.
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <footer>
+    <p>© 2025 레크 뭐하지? | 모든 레크 진행자를 위한 아이디어 모음</p>
+  </footer>
+
+</body>
+</html>

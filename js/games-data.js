@@ -615,6 +615,23 @@ const gamesData = [
     }
   },
   {
+    id: 'bigstep',
+    emoji: '👣',
+    title: '빅스텝',
+    description: '가위바위보로 큰 걸음! 5분간 결승선 도달 점수제 게임',
+    url: 'games/bigstep.html',
+    people: '5명+',
+    time: '5분',
+    prep: '출발선/결승선 표시',
+    tags: {
+      location: ['both'],
+      groupSize: ['small', 'medium', 'large', 'xlarge'],
+      ageGroup: ['young', 'kid-young', 'kid-old', 'teen', 'adult'],
+      duration: 'short',
+      situation: ['energy', 'no-prep']
+    }
+  },
+  {
     id: 'wordchain',
     emoji: '🔤',
     title: '끝말잇기 배틀',
