@@ -258,10 +258,10 @@
 
   <script>
   // ── 카테고리 카드 게임 개수 자동 계산 ──
-  (function() {
+  try {
     const counts = {
-      arrowIndoor:  filterGames({ location: ['indoor', 'both'] }).length,
-      arrowOutdoor: filterGames({ location: ['outdoor', 'both'] }).length,
+      arrowIndoor:  filterGames({ location: ['indoor'] }).length,
+      arrowOutdoor: filterGames({ location: ['outdoor'] }).length,
       arrowSmall:   filterGames({ groupSize: ['small', 'medium'] }).length,
       arrowLarge:   filterGames({ groupSize: ['large', 'xlarge'] }).length,
       arrowYoung:   filterGames({ ageGroup: ['young'] }).length,
@@ -272,7 +272,7 @@
       const el = document.getElementById(id);
       if (el) el.textContent = n + '개 게임 보기 →';
     });
-  })();
+  } catch(e) { console.error('카테고리 카운트 오류:', e); }
 
   // ── 필터 값 변환 (index.html 버튼값 → games-data.js 태그값) ──
   const PLACE_MAP  = { indoor: ['indoor', 'both'], outdoor: ['outdoor', 'both'], any: null };
@@ -292,21 +292,24 @@
   function matchGame(g) {
     const { place, people, age, time } = smartFilters;
     const t = g.tags;
+    if (!t) return false;
 
     if (place && place !== 'any') {
       const locs = PLACE_MAP[place];
-      if (locs && !locs.some(l => t.location.includes(l))) return false;
+      const loc = Array.isArray(t.location) ? t.location : [];
+      if (locs && !locs.some(l => loc.includes(l) || loc.includes('both'))) return false;
     }
     if (people) {
       const sizes = PEOPLE_MAP[people];
-      if (sizes && !sizes.some(s => t.groupSize.includes(s))) return false;
+      const gs = Array.isArray(t.groupSize) ? t.groupSize : [];
+      if (sizes && !sizes.some(s => gs.includes(s))) return false;
     }
     if (age && age !== 'mixed') {
       const ages = AGE_MAP[age];
-      if (ages && !ages.some(a => t.ageGroup.includes(a))) return false;
+      const ag = Array.isArray(t.ageGroup) ? t.ageGroup : [];
+      if (ages && !ages.some(a => ag.includes(a))) return false;
     }
     if (time && time !== 'any') {
-      const dur = TIME_MAP[time];
       if (time === 'quick' && t.duration !== 'short') return false;
       if (time === 'short' && t.duration === 'long') return false;
     }
@@ -377,14 +380,16 @@
     { key: 'brain',     title: '🧠 두뇌를 써야 할 때' }
   ];
 
-  document.getElementById('situationGrid').innerHTML = SITUATIONS.map(sit => {
-    const games = filterGames({ situation: [sit.key] }).slice(0, 3);
-    const links = games.map(g => `<a href="${g.url}">${g.emoji} ${g.title}</a>`).join('');
-    return `<div class="situation-card">
-      <div class="situation-title">${sit.title}</div>
-      <div class="situation-games">${links}</div>
-    </div>`;
-  }).join('');
+  try {
+    document.getElementById('situationGrid').innerHTML = SITUATIONS.map(sit => {
+      const games = filterGames({ situation: [sit.key] }).slice(0, 3);
+      const links = games.map(g => `<a href="${g.url}">${g.emoji} ${g.title}</a>`).join('');
+      return `<div class="situation-card">
+        <div class="situation-title">${sit.title}</div>
+        <div class="situation-games">${links}</div>
+      </div>`;
+    }).join('');
+  } catch(e) { console.error('상황별 섹션 오류:', e); }
   </script>
 </body>
 </html>

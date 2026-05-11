@@ -666,24 +666,30 @@ function renderGameCard(g) {
 
 /* 필터 함수 */
 function filterGames(criteria) {
+  if (!Array.isArray(gamesData)) return [];
   return gamesData.filter(g => {
     const t = g.tags;
+    if (!t) return false;
     if (criteria.location) {
       const locs = Array.isArray(criteria.location) ? criteria.location : [criteria.location];
-      const gameHas = locs.some(l => t.location.includes(l) || t.location.includes('both'));
+      const loc = Array.isArray(t.location) ? t.location : [];
+      const gameHas = locs.some(l => loc.includes(l) || loc.includes('both'));
       if (!gameHas) return false;
     }
     if (criteria.groupSize) {
       const sizes = Array.isArray(criteria.groupSize) ? criteria.groupSize : [criteria.groupSize];
-      if (!sizes.some(s => t.groupSize.includes(s))) return false;
+      const gs = Array.isArray(t.groupSize) ? t.groupSize : [];
+      if (!sizes.some(s => gs.includes(s))) return false;
     }
     if (criteria.ageGroup) {
       const ages = Array.isArray(criteria.ageGroup) ? criteria.ageGroup : [criteria.ageGroup];
-      if (!ages.some(a => t.ageGroup.includes(a))) return false;
+      const ag = Array.isArray(t.ageGroup) ? t.ageGroup : [];
+      if (!ages.some(a => ag.includes(a))) return false;
     }
     if (criteria.situation) {
       const sits = Array.isArray(criteria.situation) ? criteria.situation : [criteria.situation];
-      if (!sits.some(s => t.situation.includes(s))) return false;
+      const st = Array.isArray(t.situation) ? t.situation : [];
+      if (!sits.some(s => st.includes(s))) return false;
     }
     return true;
   });
