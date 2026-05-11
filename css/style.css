@@ -934,6 +934,70 @@ footer {
 }
 .ag-count strong { color: #FF6B35; }
 
+/* ── 하단 돌아가기 버튼 ── */
+.bottom-back-nav {
+  text-align: center;
+  padding: 36px 0 12px;
+}
+
+.bottom-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 13px 28px;
+  border: 2px solid currentColor;
+  border-radius: 50px;
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+  opacity: 0.8;
+  transition: opacity 0.2s, transform 0.15s;
+  margin-bottom: 0;
+}
+
+.bottom-back-btn:hover {
+  opacity: 1;
+  text-decoration: none;
+  transform: translateX(-3px);
+}
+
+/* ── 맨 위로 플로팅 버튼 ── */
+#scrollTopBtn {
+  position: fixed;
+  bottom: 28px;
+  right: 24px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: #FF6B35;
+  color: white;
+  border: none;
+  font-size: 20px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(255, 107, 53, 0.4);
+  z-index: 999;
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.25s, transform 0.25s;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+#scrollTopBtn.visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+#scrollTopBtn:hover {
+  background: #e85d20;
+  box-shadow: 0 6px 20px rgba(255, 107, 53, 0.55);
+}
+
 /* ── 모바일 대응 ── */
 @media (max-width: 480px) {
   header h1 { font-size: 28px; }
