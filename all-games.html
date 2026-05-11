@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="레크 뭐하지?의 모든 레크리에이션 게임을 한눈에! 실내·야외·소그룹·대규모·연령별로 필터링해서 원하는 게임을 바로 찾아보세요.">
+  <meta name="keywords" content="레크리에이션, 전체 게임 목록, 단체게임, 실내 레크, 야외 레크, 수련회 게임, 캠프 레크, 주일학교 게임, MT 게임, 팀빌딩">
+  <title>전체 게임 보기 - 모든 레크리에이션 목록 | 레크 뭐하지?</title>
+  <link rel="stylesheet" href="css/style.css">
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8683975585186347"
+       crossorigin="anonymous"></script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-75JKFQWSHP"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-75JKFQWSHP');
+  </script>
+  <script src="js/games-data.js"></script>
+</head>
+<body>
+
+  <div class="page-header" style="background: linear-gradient(135deg, #FF6B35 0%, #FFD700 100%);">
+    <h1>📚 전체 게임 보기</h1>
+    <p>레크 뭐하지?의 모든 게임을 한눈에</p>
+    <div class="tags">
+      <span class="tag">전체 목록</span>
+      <span class="tag">필터 지원</span>
+      <span class="tag" id="totalCountTag">로딩 중...</span>
+    </div>
+  </div>
+
+  <div class="content" style="max-width:960px;">
+    <a href="index.html" class="back-btn">← 홈으로 돌아가기</a>
+
+    <!-- 필터 바 -->
+    <div class="ag-filter-bar">
+      <div class="ag-filter-row">
+        <span class="ag-filter-label">📍 장소</span>
+        <button class="ag-btn active" data-group="place" data-value="all">전체</button>
+        <button class="ag-btn" data-group="place" data-value="indoor">실내</button>
+        <button class="ag-btn" data-group="place" data-value="outdoor">야외</button>
+      </div>
+      <div class="ag-filter-row">
+        <span class="ag-filter-label">👥 인원</span>
+        <button class="ag-btn active" data-group="people" data-value="all">전체</button>
+        <button class="ag-btn" data-group="people" data-value="small">소그룹 (15명 이하)</button>
+        <button class="ag-btn" data-group="people" data-value="large">대규모 (16명 이상)</button>
+      </div>
+      <div class="ag-filter-row">
+        <span class="ag-filter-label">🎂 연령</span>
+        <button class="ag-btn active" data-group="age" data-value="all">전체</button>
+        <button class="ag-btn" data-group="age" data-value="young">유아</button>
+        <button class="ag-btn" data-group="age" data-value="elem">초등</button>
+        <button class="ag-btn" data-group="age" data-value="teen">청소년</button>
+        <button class="ag-btn" data-group="age" data-value="adult">성인</button>
+      </div>
+      <div class="ag-count">총 <strong id="filteredCount">-</strong>개의 게임</div>
+    </div>
+
+    <div class="game-grid" id="gameGrid"></div>
+  </div>
+
+  <footer>
+    <p>© 2025 레크 뭐하지? | 모든 레크 진행자를 위한 아이디어 모음</p>
+    <p style="margin-top:8px;"><a href="privacy.html" style="color:#bbb;">개인정보처리방침</a> | <a href="terms.html" style="color:#bbb;">이용약관</a></p>
+  </footer>
+
+  <script>
+    const filters = { place: 'all', people: 'all', age: 'all' };
+
+    function applyFilters() {
+      try {
+        let result = filterGames({});
+
+        if (filters.place === 'indoor')  result = result.filter(g => { const l = g.tags.location || []; return l.includes('indoor') || l.includes('both'); });
+        if (filters.place === 'outdoor') result = result.filter(g => { const l = g.tags.location || []; return l.includes('outdoor') || l.includes('both'); });
+
+        if (filters.people === 'small') result = result.filter(g => { const s = g.tags.groupSize || []; return s.includes('small') || s.includes('medium'); });
+        if (filters.people === 'large') result = result.filter(g => { const s = g.tags.groupSize || []; return s.includes('large') || s.includes('xlarge'); });
+
+        if (filters.age === 'young') result = result.filter(g => (g.tags.ageGroup || []).includes('young'));
+        if (filters.age === 'elem')  result = result.filter(g => { const a = g.tags.ageGroup || []; return a.includes('kid-young') || a.includes('kid-old'); });
+        if (filters.age === 'teen')  result = result.filter(g => (g.tags.ageGroup || []).includes('teen'));
+        if (filters.age === 'adult') result = result.filter(g => (g.tags.ageGroup || []).includes('adult'));
+
+        document.getElementById('filteredCount').textContent = result.length;
+        document.getElementById('gameGrid').innerHTML = result.length > 0
+          ? result.map(renderGameCard).join('')
+          : '<p style="text-align:center;padding:48px 0;color:#aaa;grid-column:1/-1;">조건에 맞는 게임이 없어요 😅</p>';
+      } catch(e) {
+        console.error('필터 오류:', e);
+      }
+    }
+
+    // 필터 버튼 이벤트
+    document.querySelectorAll('.ag-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const group = btn.dataset.group;
+        const value = btn.dataset.value;
+        filters[group] = value;
+        document.querySelectorAll('[data-group="' + group + '"]').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        applyFilters();
+      });
+    });
+
+    // 초기 렌더링
+    try {
+      const total = filterGames({}).length;
+      document.getElementById('totalCountTag').textContent = '총 ' + total + '개';
+      document.getElementById('filteredCount').textContent = total;
+    } catch(e) {
+      document.getElementById('totalCountTag').textContent = '오류 발생';
+    }
+    applyFilters();
+  </script>
+</body>
+</html>

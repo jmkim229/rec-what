@@ -786,6 +786,102 @@ footer {
 }
 .reset-btn:hover { border-color: #FF6B35; color: #FF6B35; }
 
+/* ── 전체 게임 보기 배너 ── */
+.all-games-banner {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: linear-gradient(135deg, #fff8f0, #fff3e0);
+  border: 2px solid #fde8cc;
+  border-radius: 20px;
+  padding: 20px 24px;
+  margin: 32px 0 0;
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+}
+.all-games-banner:hover {
+  border-color: #FF6B35;
+  box-shadow: 0 6px 24px rgba(255,107,53,0.14);
+  transform: translateY(-2px);
+}
+.all-games-icon {
+  font-size: 36px;
+  flex-shrink: 0;
+}
+.all-games-text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.all-games-text strong {
+  font-size: 15px;
+  font-weight: 800;
+  color: #1a1a2e;
+}
+.all-games-text span {
+  font-size: 12px;
+  color: #aaa;
+}
+.all-games-arrow {
+  flex-shrink: 0;
+  background: #FF6B35;
+  color: white;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 8px 18px;
+  border-radius: 50px;
+  white-space: nowrap;
+}
+
+/* ── all-games.html 필터 바 ── */
+.ag-filter-bar {
+  background: white;
+  border-radius: 18px;
+  padding: 20px 20px 16px;
+  box-shadow: 0 3px 14px rgba(0,0,0,0.07);
+  margin-bottom: 28px;
+}
+.ag-filter-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+.ag-filter-row:last-child { margin-bottom: 0; }
+.ag-filter-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: #888;
+  min-width: 36px;
+}
+.ag-btn {
+  padding: 6px 14px;
+  border-radius: 50px;
+  border: 1.5px solid #eee;
+  background: #fafafa;
+  color: #666;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif;
+  outline: none;
+}
+.ag-btn:hover { border-color: #FF6B35; color: #FF6B35; }
+.ag-btn.active { background: #FF6B35; border-color: #FF6B35; color: white; }
+.ag-count {
+  font-size: 13px;
+  color: #aaa;
+  font-weight: 600;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid #f0f0f0;
+}
+.ag-count strong { color: #FF6B35; }
+
 /* ── 모바일 대응 ── */
 @media (max-width: 480px) {
   header h1 { font-size: 28px; }
@@ -805,4 +901,6 @@ footer {
   .filter-row { flex-direction: column; gap: 6px; }
   .filter-label { padding-top: 0; min-width: unset; }
   .filter-btn { font-size: 12px; padding: 6px 12px; }
+  .all-games-banner { flex-wrap: wrap; gap: 12px; }
+  .all-games-arrow { width: 100%; text-align: center; }
 }
