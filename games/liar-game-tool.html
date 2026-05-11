@@ -489,54 +489,89 @@
       color: #a78bfa;
     }
 
-    /* 역전 기회 */
-    .guess-section {
+    /* 역전 기회 섹션 */
+    .reversal-section {
       width: 100%;
       max-width: 360px;
       background: #1e293b;
       border-radius: 16px;
-      padding: 18px;
-      display: none;
+      padding: 20px 18px;
+      text-align: center;
     }
-    .guess-title {
-      font-size: 13px;
-      font-weight: 700;
+    .reversal-title {
+      font-size: 15px;
+      font-weight: 800;
       color: #fbbf24;
-      margin-bottom: 10px;
+      margin-bottom: 4px;
     }
-    .guess-input {
-      width: 100%;
-      padding: 12px 14px;
-      border-radius: 10px;
-      border: 1.5px solid #334155;
-      background: #0f172a;
-      color: white;
-      font-size: 16px;
-      font-family: inherit;
-      margin-bottom: 10px;
+    .reversal-sub {
+      font-size: 13px;
+      color: #cbd5e1;
+      margin-bottom: 4px;
     }
-    .guess-input:focus { outline: none; border-color: #7c3aed; }
-    .guess-submit {
-      width: 100%;
-      padding: 12px;
-      border-radius: 10px;
+    .reversal-hint {
+      font-size: 12px;
+      color: #64748b;
+      margin-bottom: 16px;
+    }
+    .reversal-btns {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .reversal-btn-win {
+      padding: 14px;
+      border-radius: 12px;
       border: none;
-      background: #fbbf24;
-      color: #1a1a1a;
+      background: linear-gradient(135deg, #15803d, #22c55e);
+      color: white;
       font-size: 15px;
       font-weight: 700;
       cursor: pointer;
       font-family: inherit;
+      box-shadow: 0 4px 14px rgba(34,197,94,0.35);
     }
-    .guess-result {
-      margin-top: 10px;
-      font-size: 14px;
+    .reversal-btn-lose {
+      padding: 14px;
+      border-radius: 12px;
+      border: none;
+      background: linear-gradient(135deg, #991b1b, #ef4444);
+      color: white;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      box-shadow: 0 4px 14px rgba(239,68,68,0.35);
+    }
+
+    /* 최종 결과 */
+    .final-icon {
+      font-size: 52px;
+      animation: revealIn 0.5s cubic-bezier(0.34,1.56,0.64,1) both;
+    }
+    .final-title {
+      font-size: 28px;
+      font-weight: 800;
+      color: white;
+      animation: revealIn 0.5s 0.1s cubic-bezier(0.34,1.56,0.64,1) both;
+    }
+    .final-topic-box {
+      background: #1e293b;
+      border-radius: 14px;
+      padding: 16px 28px;
+      animation: revealIn 0.5s 0.2s cubic-bezier(0.34,1.56,0.64,1) both;
+    }
+    .final-topic-label {
+      font-size: 12px;
+      color: #64748b;
       font-weight: 600;
-      text-align: center;
-      line-height: 1.5;
+      margin-bottom: 4px;
     }
-    .guess-correct { color: #4ade80; }
-    .guess-wrong   { color: #f87171; }
+    .final-topic-word {
+      font-size: 28px;
+      font-weight: 800;
+      color: #a78bfa;
+    }
 
     .result-actions {
       width: 100%;
@@ -562,11 +597,6 @@
       background: #1e293b;
       color: #94a3b8;
       border: 1.5px solid #334155;
-    }
-    .result-btn-guess {
-      background: rgba(251,191,36,0.12);
-      color: #fbbf24;
-      border: 1.5px solid rgba(251,191,36,0.3);
     }
   </style>
 </head>
@@ -690,21 +720,31 @@
         <div class="result-liar-nums" id="result-liar-nums">?번</div>
       </div>
     </div>
-    <div class="result-topic-box">
-      <div class="result-topic-label">오늘의 주제어</div>
-      <div class="result-topic-word" id="result-topic-word">?</div>
+
+    <!-- Phase 1: 역전 기회 판정 -->
+    <div id="result-phase1">
+      <div class="reversal-section">
+        <div class="reversal-title">⚡ 역전 기회!</div>
+        <div class="reversal-sub">라이어에게 주제어 맞히기 기회를 주세요</div>
+        <div class="reversal-hint">진행자가 결과를 판정하세요</div>
+        <div class="reversal-btns">
+          <button class="reversal-btn-win" onclick="judgeResult(true)">✅ 맞혔어요 — 라이어 승!</button>
+          <button class="reversal-btn-lose" onclick="judgeResult(false)">❌ 못 맞혔어요 — 시민 승!</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Phase 2: 최종 결과 -->
+    <div id="result-phase2" style="display:none;text-align:center;width:100%;max-width:360px;">
+      <div class="final-icon" id="final-icon">🎉</div>
+      <div class="final-title" id="final-title">라이어 역전 승!</div>
+      <div class="final-topic-box" style="margin-top:16px;">
+        <div class="final-topic-label" id="final-topic-label">주제어를 맞혔습니다!</div>
+        <div class="final-topic-word" id="final-topic-word">?</div>
+      </div>
     </div>
 
     <div class="result-actions">
-      <button class="result-btn result-btn-guess" onclick="toggleGuess()">
-        🎬 라이어 역전 기회 (주제 맞히기)
-      </button>
-      <div class="guess-section" id="guess-section">
-        <div class="guess-title">💡 라이어가 주제어를 맞히면 역전 승리!</div>
-        <input class="guess-input" id="guess-input" type="text" placeholder="주제어를 입력하세요" autocomplete="off">
-        <button class="guess-submit" onclick="checkGuess()">제출</button>
-        <div class="guess-result" id="guess-result"></div>
-      </div>
       <button class="result-btn result-btn-primary" onclick="newRound()">🔄 새 라운드</button>
       <button class="result-btn result-btn-secondary" onclick="location.href='liar-game.html'">🏠 게임 설명으로</button>
     </div>
@@ -916,7 +956,6 @@ function goToResult() {
 
   const liarList = Array.from(S.liarSet).sort().map(i => (i + 1) + '번').join(', ') + ' 참가자';
   document.getElementById('result-liar-nums').textContent = liarList;
-  document.getElementById('result-topic-word').textContent = S.topic;
 
   // 애니메이션 재실행
   const el = document.getElementById('result-reveal');
@@ -924,33 +963,29 @@ function goToResult() {
   void el.offsetWidth;
   el.style.animation = 'revealIn 0.7s cubic-bezier(0.34,1.56,0.64,1) both';
 
-  // 역전 기회 초기화
-  document.getElementById('guess-section').style.display = 'none';
-  document.getElementById('guess-input').value = '';
-  document.getElementById('guess-result').textContent = '';
+  // 페이즈 초기화
+  document.getElementById('result-phase1').style.display = 'block';
+  document.getElementById('result-phase2').style.display = 'none';
 
   showScreen('result');
 }
 
 /* ══ 화면 4: 결과 ══ */
-function toggleGuess() {
-  const sec = document.getElementById('guess-section');
-  sec.style.display = sec.style.display === 'none' ? 'block' : 'none';
-  if (sec.style.display === 'block') document.getElementById('guess-input').focus();
-}
+function judgeResult(isLiarWin) {
+  document.getElementById('result-phase1').style.display = 'none';
+  const phase2 = document.getElementById('result-phase2');
+  phase2.style.display = 'block';
 
-function checkGuess() {
-  const input = document.getElementById('guess-input').value.trim();
-  const resultEl = document.getElementById('guess-result');
-  if (!input) return;
-
-  if (input === S.topic) {
-    resultEl.textContent = '🎉 역전 승리! 라이어가 주제어를 맞혔습니다!';
-    resultEl.className = 'guess-result guess-correct';
+  if (isLiarWin) {
+    document.getElementById('final-icon').textContent = '🎉';
+    document.getElementById('final-title').textContent = '라이어 역전 승!';
+    document.getElementById('final-topic-label').textContent = '주제어를 맞혔습니다!';
   } else {
-    resultEl.textContent = '❌ 오답! 주제어는 "' + S.topic + '"였습니다. 시민 승리!';
-    resultEl.className = 'guess-result guess-wrong';
+    document.getElementById('final-icon').textContent = '🎊';
+    document.getElementById('final-title').textContent = '시민 팀 승리!';
+    document.getElementById('final-topic-label').textContent = '주제어는';
   }
+  document.getElementById('final-topic-word').textContent = S.topic;
 }
 
 function newRound() {
