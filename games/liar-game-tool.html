@@ -514,6 +514,43 @@
       color: #64748b;
       margin-bottom: 16px;
     }
+    /* 주제어 확인 토글 */
+    .topic-peek-toggle {
+      width: 100%;
+      background: rgba(251,191,36,0.1);
+      border: 1.5px solid rgba(251,191,36,0.3);
+      border-radius: 10px;
+      padding: 10px 14px;
+      color: #fbbf24;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      margin-bottom: 10px;
+      transition: background 0.15s;
+    }
+    .topic-peek-toggle:hover { background: rgba(251,191,36,0.2); }
+    .topic-peek-box {
+      background: #0f172a;
+      border: 1.5px solid rgba(251,191,36,0.25);
+      border-radius: 12px;
+      padding: 12px 16px;
+      margin-bottom: 12px;
+      text-align: center;
+    }
+    .topic-peek-warn {
+      font-size: 11px;
+      color: #f87171;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .topic-peek-word {
+      font-size: 26px;
+      font-weight: 800;
+      color: #fbbf24;
+      letter-spacing: 1px;
+    }
+
     .reversal-btns {
       display: flex;
       flex-direction: column;
@@ -727,6 +764,11 @@
         <div class="reversal-title">⚡ 역전 기회!</div>
         <div class="reversal-sub">라이어에게 주제어 맞히기 기회를 주세요</div>
         <div class="reversal-hint">진행자가 결과를 판정하세요</div>
+        <button class="topic-peek-toggle" id="topic-peek-btn" onclick="toggleTopicPeek()">🔍 주제어 확인 (진행자용)</button>
+        <div class="topic-peek-box" id="topic-peek-box" style="display:none;">
+          <div class="topic-peek-warn">⚠️ 라이어가 보지 못하게 주의!</div>
+          <div class="topic-peek-word" id="topic-peek-word"></div>
+        </div>
         <div class="reversal-btns">
           <button class="reversal-btn-win" onclick="judgeResult(true)">✅ 맞혔어요 — 라이어 승!</button>
           <button class="reversal-btn-lose" onclick="judgeResult(false)">❌ 못 맞혔어요 — 시민 승!</button>
@@ -966,11 +1008,27 @@ function goToResult() {
   // 페이즈 초기화
   document.getElementById('result-phase1').style.display = 'block';
   document.getElementById('result-phase2').style.display = 'none';
+  document.getElementById('topic-peek-box').style.display = 'none';
+  document.getElementById('topic-peek-btn').textContent = '🔍 주제어 확인 (진행자용)';
 
   showScreen('result');
 }
 
 /* ══ 화면 4: 결과 ══ */
+function toggleTopicPeek() {
+  const box = document.getElementById('topic-peek-box');
+  const btn = document.getElementById('topic-peek-btn');
+  const visible = box.style.display !== 'none';
+  if (visible) {
+    box.style.display = 'none';
+    btn.textContent = '🔍 주제어 확인 (진행자용)';
+  } else {
+    document.getElementById('topic-peek-word').textContent = S.topic;
+    box.style.display = 'block';
+    btn.textContent = '🙈 주제어 숨기기';
+  }
+}
+
 function judgeResult(isLiarWin) {
   document.getElementById('result-phase1').style.display = 'none';
   const phase2 = document.getElementById('result-phase2');
