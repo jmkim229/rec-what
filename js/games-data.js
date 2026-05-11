@@ -57,17 +57,17 @@ const gamesData = [
     id: 'bingo',
     emoji: '🎰',
     title: '빙고 게임',
-    description: '서로의 이름이나 특징으로 채우는 인물 빙고! 자연스럽게 친해지는 아이스브레이킹 게임',
+    description: '주제만 바꾸면 무한 활용! 영화·성경 인물·음식 등 21개 주제를 골라 쓰는 만능 게임',
     url: 'games/bingo.html',
-    people: '15명+',
+    people: '5명+',
     time: '15~25분',
     prep: '빙고판·펜',
     tags: {
       location: ['both'],
-      groupSize: ['large'],
-      ageGroup: ['kid-young', 'kid-old', 'teen', 'adult'],
+      groupSize: ['small', 'medium', 'large', 'xlarge'],
+      ageGroup: ['young', 'kid-young', 'kid-old', 'teen', 'adult'],
       duration: 'medium',
-      situation: ['ice-break']
+      situation: ['ice-break', 'brain']
     }
   },
   {
@@ -218,23 +218,6 @@ const gamesData = [
     tags: {
       location: ['indoor'],
       groupSize: ['medium', 'large'],
-      ageGroup: ['teen', 'adult'],
-      duration: 'long',
-      situation: ['ice-break']
-    }
-  },
-  {
-    id: 'human-bingo',
-    emoji: '🎯',
-    title: '인간 빙고',
-    description: '팀원들의 특징을 빙고판에 직접 채우며 서로를 알아가는 아이스브레이킹 게임. MT·워크숍 단골 활동',
-    url: 'games/human-bingo.html',
-    people: '5~30명',
-    time: '20~30분',
-    prep: '빙고판·펜',
-    tags: {
-      location: ['indoor'],
-      groupSize: ['small', 'medium', 'large'],
       ageGroup: ['teen', 'adult'],
       duration: 'long',
       situation: ['ice-break']

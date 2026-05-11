@@ -476,6 +476,58 @@ main {
   font-size: 15px;
 }
 
+/* ── 빙고 주제 카드 ── */
+.bingo-topic-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.bingo-topic-card {
+  border-radius: 14px;
+  padding: 20px;
+  border-left: 4px solid transparent;
+}
+
+.bingo-topic-header {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.bingo-topic-sub {
+  font-size: 12px;
+  margin-bottom: 14px;
+  opacity: 0.75;
+}
+
+.bingo-topic-list {
+  padding-left: 18px;
+  margin: 0;
+  font-size: 13.5px;
+  line-height: 1.9;
+}
+
+.bingo-topic-list li {
+  margin-bottom: 2px;
+}
+
+.bingo-blue  { background: #eff6ff; border-left-color: #3b82f6; }
+.bingo-blue .bingo-topic-header  { color: #1d4ed8; }
+
+.bingo-orange { background: #fff7ed; border-left-color: #f97316; }
+.bingo-orange .bingo-topic-header { color: #c2410c; }
+
+.bingo-green  { background: #f0fdf4; border-left-color: #22c55e; }
+.bingo-green .bingo-topic-header  { color: #15803d; }
+
+.bingo-pink   { background: #fdf2f8; border-left-color: #ec4899; }
+.bingo-pink .bingo-topic-header   { color: #be185d; }
+
+@media (max-width: 600px) {
+  .bingo-topic-grid { grid-template-columns: 1fr; }
+}
+
 /* ── 섹션 타이틀 ── */
 .section-title {
   font-size: 20px;

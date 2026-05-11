@@ -29,7 +29,7 @@ const GAMES = [
   { name: '전략 보드게임 변형', emoji: '♟️', url: 'games/strategy-board.html', tag: '초등고학년' },
   { name: '팀 미션 레이스', emoji: '🚀', url: 'games/team-mission-race.html', tag: '초등고학년' },
   { name: '창작 이야기 게임', emoji: '📖', url: 'games/story-creation.html', tag: '초등고학년' },
-  { name: '인간 빙고', emoji: '🎯', url: 'games/human-bingo.html', tag: '성인·워크숍' },
+  { name: '빙고 게임', emoji: '🎰', url: 'games/bingo.html', tag: '성인·워크숍' },
   { name: '팀 포토 미션', emoji: '📸', url: 'games/photo-mission.html', tag: '성인·워크숍' },
   { name: '나는 누구일까요?', emoji: '🤔', url: 'games/guess-who.html', tag: '성인·워크숍' },
   { name: '몸으로 말해요 팀전', emoji: '🙌', url: 'games/body-talk.html', tag: '성인·워크숍' },
