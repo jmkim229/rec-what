@@ -37,23 +37,6 @@ const gamesData = [
     }
   },
   {
-    id: 'balloon-play',
-    emoji: '🎈',
-    title: '풍선 놀이',
-    description: '풍선을 땅에 닿지 않게 유지하며 다양한 미션을 수행해요! 집중력과 신체 조절 능력을 키우는 놀이',
-    url: 'games/balloon-play.html',
-    people: '4명+',
-    time: '10~20분',
-    prep: '풍선',
-    tags: {
-      location: ['indoor'],
-      groupSize: ['small'],
-      ageGroup: ['young', 'kid-young'],
-      duration: 'medium',
-      situation: ['energy']
-    }
-  },
-  {
     id: 'balloon-pop',
     emoji: '🎈',
     title: '풍선 터뜨리기',
@@ -629,6 +612,125 @@ const gamesData = [
       ageGroup: ['young', 'kid-young', 'kid-old', 'teen', 'adult'],
       duration: 'short',
       situation: ['energy', 'no-prep']
+    }
+  },
+  {
+    id: 'balloon-toss',
+    emoji: '🎈',
+    title: '풍선 튕기기',
+    description: '풍선이 바닥에 닿지 않게! 손·발·머리 규칙을 바꿔가며 도전하는 유아·어린이 인기 놀이',
+    url: 'games/balloon-toss.html',
+    people: '4명+',
+    time: '10~20분',
+    prep: '풍선',
+    tags: {
+      location: ['indoor'],
+      groupSize: ['small', 'medium'],
+      ageGroup: ['young', 'kid-young'],
+      duration: 'medium',
+      situation: ['energy']
+    }
+  },
+  {
+    id: 'balloon-basketball',
+    emoji: '🏀',
+    title: '풍선 농구',
+    description: '큰 박스를 골대로! 손으로 쳐서 풍선을 골대에 넣는 팀 대항 레크리에이션',
+    url: 'games/balloon-basketball.html',
+    people: '6명+',
+    time: '15~25분',
+    prep: '풍선, 큰 박스 2개',
+    tags: {
+      location: ['indoor'],
+      groupSize: ['medium', 'large'],
+      ageGroup: ['kid-young', 'kid-old'],
+      duration: 'medium',
+      situation: ['energy']
+    }
+  },
+  {
+    id: 'balloon-cooperate',
+    emoji: '👯',
+    title: '풍선 협동 유지',
+    description: '두 명이 신체 사이에 풍선을 끼우고 손 안 쓰고 코스 통과! 2인 협동 레크',
+    url: 'games/balloon-cooperate.html',
+    people: '6명+',
+    time: '10~15분',
+    prep: '풍선',
+    tags: {
+      location: ['both'],
+      groupSize: ['medium', 'large'],
+      ageGroup: ['kid-young', 'kid-old'],
+      duration: 'medium',
+      situation: ['energy']
+    }
+  },
+  {
+    id: 'balloon-color',
+    emoji: '🎨',
+    title: '색깔 풍선 미션',
+    description: '흩어진 풍선 중 자기 팀 색깔만 빠르게 모아라! 색깔 인지와 반응 속도를 키우는 어린이 게임',
+    url: 'games/balloon-color.html',
+    people: '5명+',
+    time: '10~15분',
+    prep: '다양한 색 풍선',
+    tags: {
+      location: ['indoor'],
+      groupSize: ['small', 'medium'],
+      ageGroup: ['young', 'kid-young'],
+      duration: 'medium',
+      situation: ['energy']
+    }
+  },
+  {
+    id: 'balloon-volleyball',
+    emoji: '🏐',
+    title: '풍선 배구',
+    description: '줄 너머로 풍선을 넘겨라! 바닥에 닿으면 실점하는 팀 대항 배구 레크리에이션',
+    url: 'games/balloon-volleyball.html',
+    people: '8명+',
+    time: '15~25분',
+    prep: '풍선, 줄 또는 의자',
+    tags: {
+      location: ['both'],
+      groupSize: ['medium', 'large'],
+      ageGroup: ['kid-old', 'teen', 'adult'],
+      duration: 'medium',
+      situation: ['energy']
+    }
+  },
+  {
+    id: 'balloon-pair-find',
+    emoji: '🔍',
+    title: '풍선 짝 찾기',
+    description: '풍선 안 쪽지를 꺼내 짝을 찾아라! 자연스러운 아이스브레이킹과 팀 구성에 딱',
+    url: 'games/balloon-pair-find.html',
+    people: '10명+',
+    time: '10~15분',
+    prep: '풍선, 쪽지',
+    tags: {
+      location: ['both'],
+      groupSize: ['medium', 'large'],
+      ageGroup: ['kid-old', 'teen', 'adult'],
+      duration: 'medium',
+      situation: ['ice-break']
+    }
+  },
+  {
+    id: 'balloon-soccer',
+    emoji: '⚽',
+    title: '풍선 축구',
+    description: '발로 굴려 골을 넣어라! 바람에 예측 불가하게 날아가는 풍선이 웃음 포인트인 팀 대항전',
+    url: 'games/balloon-soccer.html',
+    people: '8명+',
+    time: '15~25분',
+    prep: '풍선, 골대용 의자',
+    tags: {
+      location: ['indoor'],
+      groupSize: ['medium', 'large'],
+      ageGroup: ['kid-young', 'kid-old', 'teen'],
+      duration: 'medium',
+      situation: ['energy']
     }
   },
   {
