@@ -513,6 +513,23 @@ const gamesData = [
     }
   },
   {
+    id: 'throne-battle',
+    emoji: '👑',
+    title: '왕좌 쟁탈전',
+    description: '슬라임에서 왕까지! 진화하며 왕좌를 차지하는 단체 게임',
+    url: 'games/throne-battle.html',
+    people: '10명+',
+    time: '10~15분',
+    prep: '의자 1개 (선택)',
+    tags: {
+      location: ['both'],
+      groupSize: ['medium', 'large', 'xlarge'],
+      ageGroup: ['kid-young', 'kid-old', 'teen', 'adult'],
+      duration: 'medium',
+      situation: ['energy', 'no-prep']
+    }
+  },
+  {
     id: 'towel-pass',
     emoji: '🎽',
     title: '수건돌리기',

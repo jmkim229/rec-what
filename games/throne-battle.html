@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="왕좌 쟁탈전 게임 방법, 준비물, 진행 팁, 변형 방법까지. 10명+이 함께하는 진화 가위바위보 단체 레크리에이션. 수련회·캠프·야외 행사 추천.">
+  <meta name="keywords" content="레크리에이션, 단체게임, 수련회 게임, 캠프 레크, 왕좌 쟁탈전, 진화 게임, 가위바위보 게임, MT 게임, 팀빌딩, 야외 레크리에이션">
+  <title>👑 왕좌 쟁탈전 방법과 진행 팁 - 단체 레크리에이션 | 레크 뭐하지?</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    .game-header {
+      background: linear-gradient(135deg, #9b59b6 0%, #6c3483 100%);
+    }
+
+    /* 진화 단계 카드 */
+    .evolution-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 14px;
+      margin-top: 16px;
+    }
+
+    .evo-card {
+      background: white;
+      border-radius: 18px;
+      padding: 20px 14px 16px;
+      text-align: center;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+      border-top: 4px solid #9b59b6;
+      transition: transform 0.18s, box-shadow 0.18s;
+    }
+
+    .evo-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 28px rgba(155,89,182,0.18);
+    }
+
+    .evo-card .evo-emoji {
+      font-size: 38px;
+      display: block;
+      margin-bottom: 8px;
+    }
+
+    .evo-card .evo-name {
+      font-size: 15px;
+      font-weight: 800;
+      color: #6c3483;
+      margin-bottom: 6px;
+    }
+
+    .evo-card .evo-gesture {
+      font-size: 12px;
+      color: #888;
+      line-height: 1.6;
+    }
+
+    .evo-card.king {
+      border-top-color: #f1c40f;
+      background: linear-gradient(135deg, #fffde7, #fff9c4);
+    }
+
+    .evo-card.king .evo-name {
+      color: #b7950b;
+    }
+
+    /* 배지 스타일 */
+    .rank-badge {
+      display: inline-block;
+      background: #9b59b6;
+      color: white;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 10px;
+      border-radius: 20px;
+      margin-bottom: 8px;
+    }
+
+    .evo-card.king .rank-badge {
+      background: #f1c40f;
+      color: #7d6608;
+    }
+
+    /* 규칙 하이라이트 박스 */
+    .rule-highlight {
+      background: linear-gradient(135deg, #f3e5f5, #e8d5f0);
+      border-left: 4px solid #9b59b6;
+      border-radius: 0 12px 12px 0;
+      padding: 14px 18px;
+      margin: 14px 0;
+      font-size: 14px;
+      color: #4a235a;
+      line-height: 1.7;
+    }
+
+    .rule-highlight strong {
+      color: #6c3483;
+    }
+
+    /* 왕 도전 박스 */
+    .king-battle-box {
+      background: linear-gradient(135deg, #1a1a2e, #2d1b69);
+      border-radius: 18px;
+      padding: 20px 18px;
+      margin: 18px 0;
+      color: white;
+    }
+
+    .king-battle-box h3 {
+      font-size: 16px;
+      font-weight: 800;
+      color: #f1c40f;
+      margin-bottom: 12px;
+    }
+
+    .battle-result {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .battle-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 10px 14px;
+      font-size: 14px;
+    }
+
+    .battle-row .result-icon {
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
+    .battle-row .result-text {
+      color: rgba(255,255,255,0.88);
+      line-height: 1.5;
+    }
+
+    /* 점수 표 (팀전용) */
+    .score-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+      font-size: 14px;
+    }
+
+    .score-table th {
+      background: #9b59b6;
+      color: white;
+      padding: 8px 12px;
+      text-align: left;
+      font-weight: 700;
+    }
+
+    .score-table th:first-child { border-radius: 8px 0 0 0; }
+    .score-table th:last-child  { border-radius: 0 8px 0 0; }
+
+    .score-table td {
+      padding: 8px 12px;
+      border-bottom: 1px solid #f0e0ff;
+    }
+
+    .score-table tr:last-child td { border-bottom: none; }
+    .score-table tr:nth-child(even) td { background: #faf4ff; }
+
+    .score-table .king-row td {
+      background: #fffde7;
+      font-weight: 800;
+      color: #7d6608;
+    }
+
+    @media (max-width: 480px) {
+      .evolution-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+      }
+      .evo-card { padding: 16px 10px 12px; }
+      .evo-card .evo-emoji { font-size: 30px; }
+    }
+  </style>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8683975585186347"
+       crossorigin="anonymous"></script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-75JKFQWSHP"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-75JKFQWSHP');
+  </script>
+</head>
+<body>
+
+  <div class="game-header">
+    <h1>👑 왕좌 쟁탈전</h1>
+    <p class="subtitle">슬라임에서 왕까지! 진화하며 왕좌를 차지하라</p>
+    <div class="tags">
+      <span class="tag">실내·야외</span>
+      <span class="tag">10명 이상</span>
+      <span class="tag">초등~성인</span>
+      <span class="tag">에너지 폭발</span>
+    </div>
+  </div>
+
+  <div class="content">
+    <a href="../index.html" class="back-btn">← 게임 목록으로</a>
+
+    <div class="info-box">
+      <div class="info-item">
+        <div class="label">인원</div>
+        <div class="value">10명+</div>
+      </div>
+      <div class="info-item">
+        <div class="label">장소</div>
+        <div class="value">실내·야외</div>
+      </div>
+      <div class="info-item">
+        <div class="label">소요시간</div>
+        <div class="value">10~15분</div>
+      </div>
+      <div class="info-item">
+        <div class="label">준비물</div>
+        <div class="value">왕좌 의자 1개 (선택)</div>
+      </div>
+      <div class="info-item">
+        <div class="label">추천연령</div>
+        <div class="value">초등 저학년~성인</div>
+      </div>
+    </div>
+
+    <!-- 진화 단계 카드 -->
+    <div class="section">
+      <h2>⚔️ 진화 단계</h2>
+      <p style="font-size:13px;color:#888;margin-bottom:16px;padding-left:4px;">각 등급마다 정해진 제스처로 돌아다니며 같은 등급을 찾아 가위바위보!</p>
+      <div class="evolution-grid">
+        <div class="evo-card">
+          <span class="evo-emoji">🟢</span>
+          <div class="rank-badge">1단계</div>
+          <div class="evo-name">슬라임</div>
+          <div class="evo-gesture">쪼그려 앉아<br>펭귄걸음<br>"뿅뿅" 소리</div>
+        </div>
+        <div class="evo-card">
+          <span class="evo-emoji">👹</span>
+          <div class="rank-badge">2단계</div>
+          <div class="evo-name">고블린</div>
+          <div class="evo-gesture">등 굽히고<br>양손 갈고리 자세<br>"키히히" 웃음</div>
+        </div>
+        <div class="evo-card">
+          <span class="evo-emoji">🐺</span>
+          <div class="rank-badge">3단계</div>
+          <div class="evo-name">오크</div>
+          <div class="evo-gesture">가슴 두드리며<br>쿵쾅 걷기<br>"우어!" 포효</div>
+        </div>
+        <div class="evo-card">
+          <span class="evo-emoji">🐉</span>
+          <div class="rank-badge">4단계</div>
+          <div class="evo-name">드래곤</div>
+          <div class="evo-gesture">양팔 활짝 펼치고<br>천천히 걷기<br>"그아아" 포효</div>
+        </div>
+        <div class="evo-card king">
+          <span class="evo-emoji">👑</span>
+          <div class="rank-badge">5단계</div>
+          <div class="evo-name">왕</div>
+          <div class="evo-gesture">왕좌에 앉아<br>도전자를 기다림</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 게임 방법 -->
+    <div class="section">
+      <h2>🎮 게임 방법</h2>
+      <div class="step-list">
+        <div class="step">
+          <div class="step-num">1</div>
+          <p>모든 참가자는 <strong>"슬라임"</strong>으로 시작한다. 슬라임 자세(쪼그려 앉아 펭귄걸음, "뿅뿅" 소리)로 돌아다닌다.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <p>같은 등급의 다른 사람을 찾아 가위바위보를 한다. <strong>다른 등급과는 가위바위보 불가.</strong> 이긴 사람은 한 단계 진화, 진 사람은 한 단계 강등된다. (단, 슬라임은 더 강등되지 않음)</p>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <p>진화하거나 강등될 때마다 해당 등급의 제스처로 즉시 바꿔 돌아다니며 같은 등급의 상대를 찾는다. 승부 결과를 <strong>"진화!" / "강등!"</strong>이라고 크게 외치면 분위기가 산다.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <p>드래곤에서 가위바위보에 이기면 <strong>왕</strong>이 된다! 왕은 왕좌(미리 정해둔 의자)에 앉아 도전자를 기다린다. 왕은 항상 1명만 유지된다.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">5</div>
+          <p>진행자가 정한 제한시간(보통 10분)이 끝날 때 왕좌에 앉아있는 사람이 <strong>최종 우승!</strong></p>
+        </div>
+      </div>
+
+      <div class="king-battle-box">
+        <h3>👑 왕 도전 규칙</h3>
+        <div class="battle-result">
+          <div class="battle-row">
+            <span class="result-icon">⚡</span>
+            <span class="result-text">드래곤만 왕에게 도전할 수 있다.</span>
+          </div>
+          <div class="battle-row">
+            <span class="result-icon">🐉</span>
+            <span class="result-text"><strong style="color:#a8d8ff;">드래곤 승리</strong> → 기존 왕이 드래곤으로 강등, 도전자가 새 왕이 된다.</span>
+          </div>
+          <div class="battle-row">
+            <span class="result-icon">👑</span>
+            <span class="result-text"><strong style="color:#ffd700;">왕 승리</strong> → 도전한 드래곤이 오크로 강등된다.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="rule-highlight">
+        <strong>핵심 규칙 요약</strong><br>
+        • 같은 등급끼리만 가위바위보 가능<br>
+        • 이기면 한 단계 진화 → 진 사람은 한 단계 강등<br>
+        • 슬라임은 강등 없음 | 왕은 1명만 존재<br>
+        • 드래곤만 왕에게 도전 가능
+      </div>
+    </div>
+
+    <!-- 진행 팁 -->
+    <div class="section">
+      <h2>💡 진행 팁</h2>
+      <div class="tip-box">
+        <strong>제스처 사전 연습이 핵심!</strong><br>
+        각 등급 제스처는 게임 시작 전 모두 함께 연습해보세요. 멀리서도 등급이 보여야 재밌어요.
+        <ul>
+          <li>진행자는 종이나 호루라기로 게임 시작·종료를 명확히 알려주세요.</li>
+          <li>신나는 배경음악이 있으면 분위기가 두 배가 됩니다.</li>
+          <li>인원이 30명 이상일 때는 단계를 6~7단계로 늘려도 좋아요. (예: 슬라임 → 고블린 → 오크 → 트롤 → 드래곤 → 데몬 → 왕)</li>
+          <li>가위바위보 후 승부 외칠 때 "진화!" "강등!"을 큰 소리로 외치게 하면 분위기가 살아납니다.</li>
+          <li>왕좌 의자가 없다면 바닥에 원을 그려 "왕의 자리"로 표시해도 됩니다.</li>
+          <li>사람이 많을 때는 부딪힘 주의! 충분히 넓은 공간에서 진행하세요.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 변형 방법 -->
+    <div class="section">
+      <h2>🔄 변형 방법</h2>
+      <div class="variation-list">
+        <div class="variation">
+          <strong>⚔️ 팀 왕좌전</strong>
+          두 팀으로 나눠서 진행. 같은 팀끼리는 가위바위보 불가, 상대 팀과만 승부. 시간 종료 시 양 팀의 진화 점수 합계로 승부를 가린다.
+          <table class="score-table">
+            <thead>
+              <tr>
+                <th>등급</th>
+                <th>점수</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>🟢 슬라임</td><td>1점</td></tr>
+              <tr><td>👹 고블린</td><td>2점</td></tr>
+              <tr><td>🐺 오크</td><td>3점</td></tr>
+              <tr><td>🐉 드래곤</td><td>4점</td></tr>
+              <tr class="king-row"><td>👑 왕</td><td>10점</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="variation">
+          <strong>🌀 무한 강등 모드</strong>
+          강등 시 한 단계가 아닌 무조건 슬라임으로 돌아가는 하드코어 버전. 긴장감이 극대화되고 끝까지 변수가 발생한다.
+        </div>
+        <div class="variation">
+          <strong>🃏 카드 진화 버전</strong>
+          가위바위보 대신 트럼프 카드를 사용. 각자 카드 한 장씩 들고 상대와 비교해 높은 숫자가 승리. 무승부도 가능해서 더 짜릿하다.
+        </div>
+        <div class="variation">
+          <strong>⚡ 묵찌빠 진화</strong>
+          가위바위보 대신 "묵찌빠"로 진행. 한 번에 승부가 나지 않아 더 박진감 넘친다.
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <footer>
+    <p>© 2025 레크 뭐하지? | 모든 레크 진행자를 위한 아이디어 모음</p>
+  </footer>
+
+</body>
+</html>
