@@ -122,20 +122,20 @@ const gamesData = [
     }
   },
   {
-    id: 'debate-game',
-    emoji: '🗣️',
-    title: '토론 게임',
-    description: '재미있는 주제로 찬반 팀을 나눠 미니 토론! 논리력과 표현력을 자연스럽게 키우는 게임',
-    url: 'games/debate-game.html',
-    people: '6~20명',
-    time: '20~35분',
-    prep: '주제 카드',
+    id: 'liar-game',
+    emoji: '🕵️',
+    title: '라이어 게임',
+    description: '너만 모르는 그 단어! 정체를 숨기며 즐기는 심리 추리 게임. 진행자 도구 포함',
+    url: 'games/liar-game.html',
+    people: '4~15명',
+    time: '10~15분',
+    prep: '진행자 도구(폰)',
     tags: {
       location: ['indoor'],
-      groupSize: ['medium', 'large'],
+      groupSize: ['small', 'medium'],
       ageGroup: ['kid-old', 'teen', 'adult'],
-      duration: 'long',
-      situation: ['brain']
+      duration: 'medium',
+      situation: ['brain', 'no-prep']
     }
   },
   {

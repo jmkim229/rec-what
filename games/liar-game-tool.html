@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="description" content="라이어 게임 진행자 도구. 참가자 수와 카테고리를 설정하면 자동으로 역할을 배정해 줍니다.">
+  <title>🕵️ 라이어 게임 진행 도구 | 레크 뭐하지?</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif;
+      background: #0f172a;
+      color: #f1f5f9;
+      min-height: 100vh;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    }
+
+    /* ── 화면 전환 ── */
+    .screen { display: none; min-height: 100vh; flex-direction: column; }
+    .screen.active { display: flex; }
+
+    /* ── 공통 헤더 ── */
+    .tool-header {
+      display: flex;
+      align-items: center;
+      padding: 14px 16px;
+      background: rgba(255,255,255,0.05);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .back-link {
+      color: #a78bfa;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .back-link:hover { color: #c4b5fd; }
+
+    /* ══════════════════════════════
+       화면 1 — 설정
+    ══════════════════════════════ */
+    #screen-settings {
+      background: #0f172a;
+    }
+    .settings-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 24px 18px 32px;
+    }
+    .settings-title {
+      font-size: 22px;
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+    .settings-sub {
+      font-size: 13px;
+      color: #94a3b8;
+      margin-bottom: 28px;
+    }
+
+    .setting-group {
+      margin-bottom: 28px;
+    }
+    .setting-label {
+      font-size: 13px;
+      font-weight: 700;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 10px;
+    }
+    .setting-hint {
+      font-size: 12px;
+      color: #64748b;
+      margin-top: 6px;
+    }
+
+    /* 참가자 수 카운터 */
+    .counter {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      background: #1e293b;
+      border-radius: 14px;
+      overflow: hidden;
+      width: fit-content;
+    }
+    .counter-btn {
+      background: none;
+      border: none;
+      color: #a78bfa;
+      font-size: 24px;
+      font-weight: 700;
+      width: 56px;
+      height: 56px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s;
+    }
+    .counter-btn:hover { background: rgba(167,139,250,0.15); }
+    .counter-btn:disabled { color: #334155; cursor: default; }
+    .counter-num {
+      font-size: 26px;
+      font-weight: 800;
+      width: 64px;
+      text-align: center;
+    }
+
+    /* 토글 버튼 그룹 */
+    .toggle-group {
+      display: flex;
+      gap: 8px;
+    }
+    .toggle-btn {
+      flex: 1;
+      padding: 12px 8px;
+      border-radius: 10px;
+      border: 2px solid #1e293b;
+      background: #1e293b;
+      color: #94a3b8;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+      font-family: inherit;
+    }
+    .toggle-btn.selected {
+      border-color: #7c3aed;
+      background: rgba(124,58,237,0.15);
+      color: #c4b5fd;
+    }
+
+    /* 카테고리 그리드 */
+    .cat-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+    }
+    .cat-btn {
+      padding: 12px 8px;
+      border-radius: 10px;
+      border: 2px solid #1e293b;
+      background: #1e293b;
+      color: #94a3b8;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+      font-family: inherit;
+      text-align: center;
+    }
+    .cat-btn.selected {
+      border-color: #7c3aed;
+      background: rgba(124,58,237,0.15);
+      color: #c4b5fd;
+    }
+
+    /* 시작 버튼 */
+    .start-btn {
+      width: 100%;
+      padding: 18px;
+      border-radius: 16px;
+      border: none;
+      background: linear-gradient(135deg, #4f46e5, #7c3aed);
+      color: white;
+      font-size: 18px;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 6px 24px rgba(124,58,237,0.4);
+      transition: transform 0.15s, box-shadow 0.15s;
+      font-family: inherit;
+      margin-top: 8px;
+    }
+    .start-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(124,58,237,0.55);
+    }
+
+    /* ══════════════════════════════
+       화면 2 — 카드 확인
+    ══════════════════════════════ */
+    #screen-reveal {
+      background: #0f172a;
+    }
+    .reveal-progress-bar {
+      padding: 12px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(255,255,255,0.04);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .progress-label {
+      font-size: 13px;
+      color: #64748b;
+    }
+    .progress-nums {
+      font-size: 15px;
+      font-weight: 700;
+      color: #a78bfa;
+    }
+    .reveal-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 20px;
+      gap: 20px;
+    }
+    .participant-badge {
+      font-size: 16px;
+      font-weight: 700;
+      color: #94a3b8;
+      background: #1e293b;
+      padding: 8px 20px;
+      border-radius: 50px;
+    }
+
+    /* 숨겨진 카드 (탭 유도) */
+    .card-hidden-area {
+      width: 100%;
+      max-width: 320px;
+      aspect-ratio: 3/4;
+      background: #1e293b;
+      border-radius: 20px;
+      border: 2px dashed #334155;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      user-select: none;
+    }
+    .card-hidden-area:hover {
+      border-color: #7c3aed;
+      background: #1a2540;
+    }
+    .card-hidden-area:active {
+      transform: scale(0.98);
+    }
+    .tap-icon { font-size: 40px; }
+    .tap-main { font-size: 16px; font-weight: 700; color: #cbd5e1; }
+    .tap-warn { font-size: 12px; color: #64748b; }
+
+    /* 공개된 카드 */
+    .card-revealed {
+      width: 100%;
+      max-width: 320px;
+      aspect-ratio: 3/4;
+      border-radius: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 28px 20px;
+      animation: cardPop 0.3s cubic-bezier(0.34,1.56,0.64,1) forwards;
+      user-select: none;
+    }
+    @keyframes cardPop {
+      from { opacity: 0; transform: scale(0.88); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+    .card-citizen {
+      background: linear-gradient(160deg, #1e3a8a 0%, #1d4ed8 100%);
+      border: 2px solid #3b82f6;
+      box-shadow: 0 8px 32px rgba(29,78,216,0.45);
+    }
+    .card-liar {
+      background: linear-gradient(160deg, #7f1d1d 0%, #b91c1c 100%);
+      border: 2px solid #ef4444;
+      box-shadow: 0 8px 32px rgba(185,28,28,0.45);
+    }
+    .card-role-emoji { font-size: 48px; }
+    .card-role-title {
+      font-size: 22px;
+      font-weight: 800;
+      color: white;
+    }
+    .card-divider {
+      width: 48px;
+      height: 2px;
+      background: rgba(255,255,255,0.3);
+      border-radius: 2px;
+    }
+    .card-topic-label {
+      font-size: 12px;
+      color: rgba(255,255,255,0.6);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .card-topic-word {
+      font-size: 32px;
+      font-weight: 800;
+      color: white;
+      text-align: center;
+      line-height: 1.2;
+    }
+    .card-category-badge {
+      font-size: 13px;
+      color: rgba(255,255,255,0.7);
+      background: rgba(255,255,255,0.12);
+      padding: 5px 14px;
+      border-radius: 50px;
+    }
+    .card-message {
+      font-size: 13px;
+      color: rgba(255,255,255,0.65);
+      text-align: center;
+      line-height: 1.5;
+    }
+
+    /* 확인 버튼 */
+    .reveal-footer {
+      padding: 16px 20px 28px;
+    }
+    .confirm-btn {
+      width: 100%;
+      padding: 16px;
+      border-radius: 14px;
+      border: none;
+      background: #4f46e5;
+      color: white;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      transition: background 0.15s;
+    }
+    .confirm-btn:hover { background: #4338ca; }
+
+    /* ══════════════════════════════
+       화면 3 — 게임 진행
+    ══════════════════════════════ */
+    #screen-play {
+      background: #0f172a;
+    }
+    .play-body {
+      flex: 1;
+      padding: 28px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .play-title {
+      font-size: 26px;
+      font-weight: 800;
+      text-align: center;
+    }
+    .play-subtitle {
+      font-size: 14px;
+      color: #94a3b8;
+      text-align: center;
+      line-height: 1.6;
+    }
+    .play-card {
+      background: #1e293b;
+      border-radius: 16px;
+      padding: 20px;
+    }
+    .play-card-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #94a3b8;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .play-instructions {
+      font-size: 14px;
+      line-height: 1.9;
+      color: #cbd5e1;
+    }
+    .play-instructions li { margin-left: 16px; }
+
+    /* 타이머 */
+    .timer-display {
+      font-size: 52px;
+      font-weight: 800;
+      text-align: center;
+      color: #a78bfa;
+      letter-spacing: 2px;
+      padding: 12px 0;
+      display: none;
+    }
+    .timer-display.warn { color: #f87171; }
+
+    .play-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: auto;
+      padding-bottom: 8px;
+    }
+    .play-btn {
+      padding: 15px;
+      border-radius: 14px;
+      border: none;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s;
+    }
+    .play-btn-primary {
+      background: linear-gradient(135deg, #4f46e5, #7c3aed);
+      color: white;
+      box-shadow: 0 4px 16px rgba(124,58,237,0.35);
+    }
+    .play-btn-secondary {
+      background: #1e293b;
+      color: #cbd5e1;
+      border: 1.5px solid #334155;
+    }
+    .play-btn-danger {
+      background: linear-gradient(135deg, #b91c1c, #ef4444);
+      color: white;
+      box-shadow: 0 4px 16px rgba(239,68,68,0.35);
+    }
+
+    /* ══════════════════════════════
+       화면 4 — 결과
+    ══════════════════════════════ */
+    #screen-result {
+      background: #0a0a1a;
+    }
+    .result-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 32px 20px;
+      gap: 16px;
+      text-align: center;
+    }
+    .result-label {
+      font-size: 14px;
+      color: #64748b;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+    .result-reveal {
+      animation: revealIn 0.7s cubic-bezier(0.34,1.56,0.64,1) both;
+    }
+    @keyframes revealIn {
+      from { opacity: 0; transform: scale(0.5); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+    .result-liar-badge {
+      background: linear-gradient(135deg, #7f1d1d, #b91c1c);
+      border: 2px solid #ef4444;
+      border-radius: 20px;
+      padding: 24px 40px;
+      box-shadow: 0 8px 32px rgba(239,68,68,0.4);
+    }
+    .result-liar-emoji { font-size: 40px; margin-bottom: 4px; }
+    .result-liar-nums {
+      font-size: 28px;
+      font-weight: 800;
+      color: white;
+      line-height: 1.2;
+    }
+    .result-topic-box {
+      background: #1e293b;
+      border-radius: 14px;
+      padding: 16px 28px;
+      text-align: center;
+    }
+    .result-topic-label {
+      font-size: 12px;
+      color: #64748b;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+    .result-topic-word {
+      font-size: 28px;
+      font-weight: 800;
+      color: #a78bfa;
+    }
+
+    /* 역전 기회 */
+    .guess-section {
+      width: 100%;
+      max-width: 360px;
+      background: #1e293b;
+      border-radius: 16px;
+      padding: 18px;
+      display: none;
+    }
+    .guess-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #fbbf24;
+      margin-bottom: 10px;
+    }
+    .guess-input {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 10px;
+      border: 1.5px solid #334155;
+      background: #0f172a;
+      color: white;
+      font-size: 16px;
+      font-family: inherit;
+      margin-bottom: 10px;
+    }
+    .guess-input:focus { outline: none; border-color: #7c3aed; }
+    .guess-submit {
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      border: none;
+      background: #fbbf24;
+      color: #1a1a1a;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .guess-result {
+      margin-top: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      text-align: center;
+      line-height: 1.5;
+    }
+    .guess-correct { color: #4ade80; }
+    .guess-wrong   { color: #f87171; }
+
+    .result-actions {
+      width: 100%;
+      max-width: 360px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .result-btn {
+      padding: 15px;
+      border-radius: 14px;
+      border: none;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .result-btn-primary {
+      background: linear-gradient(135deg, #4f46e5, #7c3aed);
+      color: white;
+    }
+    .result-btn-secondary {
+      background: #1e293b;
+      color: #94a3b8;
+      border: 1.5px solid #334155;
+    }
+    .result-btn-guess {
+      background: rgba(251,191,36,0.12);
+      color: #fbbf24;
+      border: 1.5px solid rgba(251,191,36,0.3);
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══ 화면 1: 설정 ══ -->
+<div id="screen-settings" class="screen active">
+  <div class="tool-header">
+    <a href="liar-game.html" class="back-link">← 게임 설명으로 돌아가기</a>
+  </div>
+  <div class="settings-body">
+    <div class="settings-title">🕵️ 라이어 게임 설정</div>
+    <div class="settings-sub">참가자 수와 옵션을 선택하세요</div>
+
+    <div class="setting-group">
+      <div class="setting-label">참가자 수</div>
+      <div class="counter">
+        <button class="counter-btn" id="participants-minus">−</button>
+        <span class="counter-num" id="participants-num">6</span>
+        <button class="counter-btn" id="participants-plus">+</button>
+      </div>
+    </div>
+
+    <div class="setting-group">
+      <div class="setting-label">라이어 수</div>
+      <div class="toggle-group">
+        <button class="toggle-btn selected" data-liar="1">1명</button>
+        <button class="toggle-btn" data-liar="2">2명 (듀얼)</button>
+      </div>
+      <div class="setting-hint" id="dual-hint" style="display:none;">※ 8명 이상에서 추천</div>
+    </div>
+
+    <div class="setting-group">
+      <div class="setting-label">카테고리</div>
+      <div class="cat-grid">
+        <button class="cat-btn selected" data-cat="food">🍎 음식</button>
+        <button class="cat-btn" data-cat="movie">🎬 영화/드라마</button>
+        <button class="cat-btn" data-cat="animal">🐶 동물</button>
+        <button class="cat-btn" data-cat="job">👔 직업</button>
+        <button class="cat-btn" data-cat="sports">🏃 스포츠</button>
+        <button class="cat-btn" data-cat="bible">⛪ 성경</button>
+        <button class="cat-btn" data-cat="country">🌏 나라/도시</button>
+        <button class="cat-btn" data-cat="object">📱 일상사물</button>
+      </div>
+    </div>
+
+    <div class="setting-group">
+      <div class="setting-label">라이어 힌트 모드</div>
+      <div class="toggle-group">
+        <button class="toggle-btn selected" data-hint="none">기본</button>
+        <button class="toggle-btn" data-hint="category">카테고리 공개</button>
+      </div>
+      <div class="setting-hint" id="hint-desc">라이어에게 아무 정보도 주지 않습니다</div>
+    </div>
+
+    <button class="start-btn" id="start-btn">🎬 게임 시작</button>
+  </div>
+</div>
+
+<!-- ══ 화면 2: 카드 확인 ══ -->
+<div id="screen-reveal" class="screen">
+  <div class="reveal-progress-bar">
+    <span class="progress-label">카드 확인 중</span>
+    <span class="progress-nums" id="reveal-progress">1 / 6</span>
+  </div>
+  <div class="reveal-body">
+    <div class="participant-badge" id="reveal-badge">1번 참가자 차례</div>
+    <div id="card-area" style="width:100%;display:flex;justify-content:center;"></div>
+  </div>
+  <div class="reveal-footer">
+    <button class="confirm-btn" id="confirm-btn" style="display:none;" onclick="nextParticipant()">
+      확인했어요 →
+    </button>
+  </div>
+</div>
+
+<!-- ══ 화면 3: 게임 진행 ══ -->
+<div id="screen-play" class="screen">
+  <div class="tool-header">
+    <span style="font-size:14px;color:#64748b;">게임 진행 중</span>
+  </div>
+  <div class="play-body">
+    <div class="play-title">🎯 게임 시작!</div>
+    <div class="play-subtitle">한 명씩 돌아가며 주제어에 대해<br>한 마디씩 설명하세요</div>
+
+    <div class="play-card">
+      <div class="play-card-title">진행 순서</div>
+      <ul class="play-instructions">
+        <li>1~2바퀴 설명 → 자유 토론</li>
+        <li>동시에 손가락 투표 → 결과 공개</li>
+        <li>라이어 지목 시 → 주제 맞히기 기회</li>
+      </ul>
+    </div>
+
+    <div class="timer-display" id="timer-display">2:30</div>
+
+    <div class="play-actions">
+      <button class="play-btn play-btn-primary" id="timer-btn" onclick="toggleTimer()">
+        ⏰ 토론 타이머 시작 (2분 30초)
+      </button>
+      <button class="play-btn play-btn-danger" onclick="goToResult()">
+        🗳️ 투표 & 결과 공개
+      </button>
+      <button class="play-btn play-btn-secondary" onclick="showScreen('reveal'); reReveal()">
+        🔄 카드 확인 다시 시작
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 화면 4: 결과 ══ -->
+<div id="screen-result" class="screen">
+  <div class="tool-header">
+    <span style="font-size:14px;color:#64748b;">결과 공개</span>
+  </div>
+  <div class="result-body">
+    <div class="result-label">라이어는 바로...</div>
+    <div class="result-reveal" id="result-reveal">
+      <div class="result-liar-badge">
+        <div class="result-liar-emoji">🕵️</div>
+        <div class="result-liar-nums" id="result-liar-nums">?번</div>
+      </div>
+    </div>
+    <div class="result-topic-box">
+      <div class="result-topic-label">오늘의 주제어</div>
+      <div class="result-topic-word" id="result-topic-word">?</div>
+    </div>
+
+    <div class="result-actions">
+      <button class="result-btn result-btn-guess" onclick="toggleGuess()">
+        🎬 라이어 역전 기회 (주제 맞히기)
+      </button>
+      <div class="guess-section" id="guess-section">
+        <div class="guess-title">💡 라이어가 주제어를 맞히면 역전 승리!</div>
+        <input class="guess-input" id="guess-input" type="text" placeholder="주제어를 입력하세요" autocomplete="off">
+        <button class="guess-submit" onclick="checkGuess()">제출</button>
+        <div class="guess-result" id="guess-result"></div>
+      </div>
+      <button class="result-btn result-btn-primary" onclick="newRound()">🔄 새 라운드</button>
+      <button class="result-btn result-btn-secondary" onclick="location.href='liar-game.html'">🏠 게임 설명으로</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ── 주제어 데이터 ── */
+const WORDS = {
+  food:    ['사과','김치','떡볶이','라면','피자','햄버거','치킨','짜장면','김밥','만두','비빔밥','삼겹살','갈비','떡국','칼국수','우동','초밥','돈가스','카레라이스','오므라이스','케이크','아이스크림','도넛','와플','빵','바나나','수박','딸기','파인애플','망고'],
+  movie:   ['어벤져스','해리포터','반지의 제왕','스타워즈','인터스텔라','인셉션','매트릭스','타이타닉','라이온킹','토이스토리','겨울왕국','알라딘','미녀와 야수','인사이드아웃','코코','주토피아','모아나','라푼젤','슈렉','마다가스카','오징어게임','기생충','부산행','베테랑','명량','극한직업','신과함께','아저씨','엽기적인 그녀','친구'],
+  animal:  ['강아지','고양이','토끼','코끼리','기린','원숭이','펭귄','나비','독수리','개구리','햄스터','돌고래','곰','여우','늑대','호랑이','사자','얼룩말','악어','캥거루','앵무새','두더지','다람쥐','하마','코뿔소','치타','플라밍고','수달','너구리','판다'],
+  job:     ['의사','간호사','선생님','경찰관','소방관','군인','요리사','미용사','가수','배우','운동선수','화가','작가','기자','변호사','판사','약사','농부','어부','목수','택배기사','우체부','청소부','수의사','사진작가','아나운서','마술사','모델','디자이너','프로그래머'],
+  sports:  ['축구','야구','농구','배구','테니스','탁구','배드민턴','골프','볼링','양궁','수영','다이빙','수구','카누','조정','스키','스노보드','스케이트','컬링','봅슬레이','태권도','유도','검도','권투','레슬링','펜싱','사이클','마라톤','높이뛰기','멀리뛰기'],
+  bible:   ['아담','노아','아브라함','모세','다윗','솔로몬','다니엘','요나','엘리야','에스더','삼손','룻','마리아','요셉','베드로','바울','도마','막달라 마리아','삭개오','세례 요한','홍해','십자가','부활','오병이어','노아의 방주','바벨탑','가나안','출애굽','다윗과 골리앗','사자굴'],
+  country: ['서울','부산','제주도','도쿄','오사카','베이징','상하이','뉴욕','LA','파리','런던','베를린','로마','마드리드','시드니','멜버른','방콕','싱가포르','두바이','카이로','모스크바','이스탄불','바르셀로나','베니스','프라하','비엔나','암스테르담','하노이','발리','라스베이거스'],
+  object:  ['연필','지우개','가방','책','공책','시계','우산','양말','신발','모자','안경','휴대폰','컴퓨터','텔레비전','냉장고','의자','책상','침대','베개','이불','거울','칫솔','비누','수건','빗','컵','접시','숟가락','젓가락','가위']
+};
+
+const CAT_NAMES = {
+  food:'🍎 음식', movie:'🎬 영화/드라마', animal:'🐶 동물', job:'👔 직업',
+  sports:'🏃 스포츠', bible:'⛪ 성경', country:'🌏 나라/도시', object:'📱 일상사물'
+};
+
+/* ── 상태 ── */
+let S = {
+  participants: 6, liarCount: 1, category: 'food', hintMode: 'none',
+  topic: '', liarSet: new Set(),
+  revealIdx: 0, cardShown: false,
+  timerInterval: null, timerSecs: 0, timerRunning: false
+};
+
+/* ── 화면 전환 ── */
+function showScreen(name) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + name).classList.add('active');
+}
+
+/* ══ 화면 1: 설정 ══ */
+function initSettings() {
+  document.getElementById('participants-minus').addEventListener('click', () => {
+    if (S.participants > 4) { S.participants--; renderSettings(); }
+  });
+  document.getElementById('participants-plus').addEventListener('click', () => {
+    if (S.participants < 15) { S.participants++; renderSettings(); }
+  });
+  document.querySelectorAll('[data-liar]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      S.liarCount = parseInt(btn.dataset.liar);
+      document.querySelectorAll('[data-liar]').forEach(b => b.classList.toggle('selected', b === btn));
+      document.getElementById('dual-hint').style.display = S.liarCount === 2 ? 'block' : 'none';
+    });
+  });
+  document.querySelectorAll('[data-cat]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      S.category = btn.dataset.cat;
+      document.querySelectorAll('[data-cat]').forEach(b => b.classList.toggle('selected', b === btn));
+    });
+  });
+  document.querySelectorAll('[data-hint]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      S.hintMode = btn.dataset.hint;
+      document.querySelectorAll('[data-hint]').forEach(b => b.classList.toggle('selected', b === btn));
+      document.getElementById('hint-desc').textContent = S.hintMode === 'none'
+        ? '라이어에게 아무 정보도 주지 않습니다'
+        : '라이어에게 카테고리명을 알려줍니다';
+    });
+  });
+  document.getElementById('start-btn').addEventListener('click', startGame);
+  renderSettings();
+}
+
+function renderSettings() {
+  document.getElementById('participants-num').textContent = S.participants;
+  document.getElementById('participants-minus').disabled = S.participants <= 4;
+  document.getElementById('participants-plus').disabled = S.participants >= 15;
+}
+
+/* ══ 화면 2: 카드 확인 ══ */
+function startGame() {
+  // 주제어 선택
+  const pool = WORDS[S.category];
+  S.topic = pool[Math.floor(Math.random() * pool.length)];
+
+  // 라이어 선택
+  S.liarSet = new Set();
+  const maxLiars = Math.min(S.liarCount, Math.floor(S.participants / 2));
+  while (S.liarSet.size < maxLiars) {
+    S.liarSet.add(Math.floor(Math.random() * S.participants));
+  }
+
+  S.revealIdx = 0;
+  S.cardShown = false;
+  showScreen('reveal');
+  renderReveal();
+}
+
+function reReveal() {
+  S.revealIdx = 0;
+  S.cardShown = false;
+  renderReveal();
+}
+
+function renderReveal() {
+  const n = S.revealIdx + 1;
+  document.getElementById('reveal-progress').textContent = n + ' / ' + S.participants;
+  document.getElementById('reveal-badge').textContent = n + '번 참가자 차례';
+
+  document.getElementById('card-area').innerHTML =
+    '<div class="card-hidden-area" onclick="revealCard()">' +
+    '<div class="tap-icon">🃏</div>' +
+    '<div class="tap-main">탭하여 카드 보기</div>' +
+    '<div class="tap-warn">다른 사람은 화면을 보지 마세요</div>' +
+    '</div>';
+
+  document.getElementById('confirm-btn').style.display = 'none';
+  S.cardShown = false;
+}
+
+function revealCard() {
+  if (S.cardShown) return;
+  S.cardShown = true;
+
+  const isLiar = S.liarSet.has(S.revealIdx);
+  let html = '';
+
+  if (isLiar) {
+    const catInfo = S.hintMode === 'category'
+      ? '<div class="card-category-badge">카테고리: ' + CAT_NAMES[S.category] + '</div>'
+      : '';
+    html = '<div class="card-revealed card-liar">' +
+      '<div class="card-role-emoji">🕵️</div>' +
+      '<div class="card-role-title">라이어입니다</div>' +
+      '<div class="card-divider"></div>' +
+      catInfo +
+      '<div class="card-message">주제어를 모릅니다<br>눈치껏 거짓 설명을 하세요!</div>' +
+      '</div>';
+  } else {
+    html = '<div class="card-revealed card-citizen">' +
+      '<div class="card-role-emoji">🙂</div>' +
+      '<div class="card-role-title">시민입니다</div>' +
+      '<div class="card-divider"></div>' +
+      '<div class="card-topic-label">오늘의 주제</div>' +
+      '<div class="card-topic-word">' + S.topic + '</div>' +
+      '<div class="card-message">너무 명확하지 않게 설명하세요</div>' +
+      '</div>';
+  }
+
+  document.getElementById('card-area').innerHTML = html;
+  document.getElementById('confirm-btn').style.display = 'block';
+}
+
+function nextParticipant() {
+  S.revealIdx++;
+  if (S.revealIdx >= S.participants) {
+    // 타이머 초기화
+    clearInterval(S.timerInterval);
+    S.timerRunning = false;
+    document.getElementById('timer-display').style.display = 'none';
+    document.getElementById('timer-btn').textContent = '⏰ 토론 타이머 시작 (2분 30초)';
+    showScreen('play');
+  } else {
+    S.cardShown = false;
+    renderReveal();
+  }
+}
+
+/* ══ 화면 3: 게임 진행 ══ */
+function toggleTimer() {
+  if (S.timerRunning) {
+    clearInterval(S.timerInterval);
+    S.timerRunning = false;
+    document.getElementById('timer-btn').textContent = '⏰ 타이머 재시작';
+    return;
+  }
+
+  if (!S.timerSecs || S.timerSecs <= 0) S.timerSecs = 150;
+
+  const display = document.getElementById('timer-display');
+  display.style.display = 'block';
+  display.classList.remove('warn');
+
+  S.timerRunning = true;
+  document.getElementById('timer-btn').textContent = '⏸ 타이머 일시정지';
+
+  S.timerInterval = setInterval(() => {
+    S.timerSecs--;
+    updateTimerDisplay();
+    if (S.timerSecs <= 30) display.classList.add('warn');
+    if (S.timerSecs <= 0) {
+      clearInterval(S.timerInterval);
+      S.timerRunning = false;
+      S.timerSecs = 0;
+      display.textContent = '⏰ 종료!';
+      document.getElementById('timer-btn').textContent = '⏰ 타이머 다시 시작';
+    }
+  }, 1000);
+}
+
+function updateTimerDisplay() {
+  const m = Math.floor(S.timerSecs / 60);
+  const sec = S.timerSecs % 60;
+  document.getElementById('timer-display').textContent = m + ':' + String(sec).padStart(2, '0');
+}
+
+function goToResult() {
+  clearInterval(S.timerInterval);
+  S.timerRunning = false;
+
+  const liarList = Array.from(S.liarSet).sort().map(i => (i + 1) + '번').join(', ') + ' 참가자';
+  document.getElementById('result-liar-nums').textContent = liarList;
+  document.getElementById('result-topic-word').textContent = S.topic;
+
+  // 애니메이션 재실행
+  const el = document.getElementById('result-reveal');
+  el.style.animation = 'none';
+  void el.offsetWidth;
+  el.style.animation = 'revealIn 0.7s cubic-bezier(0.34,1.56,0.64,1) both';
+
+  // 역전 기회 초기화
+  document.getElementById('guess-section').style.display = 'none';
+  document.getElementById('guess-input').value = '';
+  document.getElementById('guess-result').textContent = '';
+
+  showScreen('result');
+}
+
+/* ══ 화면 4: 결과 ══ */
+function toggleGuess() {
+  const sec = document.getElementById('guess-section');
+  sec.style.display = sec.style.display === 'none' ? 'block' : 'none';
+  if (sec.style.display === 'block') document.getElementById('guess-input').focus();
+}
+
+function checkGuess() {
+  const input = document.getElementById('guess-input').value.trim();
+  const resultEl = document.getElementById('guess-result');
+  if (!input) return;
+
+  if (input === S.topic) {
+    resultEl.textContent = '🎉 역전 승리! 라이어가 주제어를 맞혔습니다!';
+    resultEl.className = 'guess-result guess-correct';
+  } else {
+    resultEl.textContent = '❌ 오답! 주제어는 "' + S.topic + '"였습니다. 시민 승리!';
+    resultEl.className = 'guess-result guess-wrong';
+  }
+}
+
+function newRound() {
+  S.topic = '';
+  S.liarSet = new Set();
+  S.revealIdx = 0;
+  S.cardShown = false;
+  S.timerSecs = 0;
+  showScreen('settings');
+}
+
+/* ── 초기화 ── */
+document.addEventListener('DOMContentLoaded', initSettings);
+</script>
+</body>
+</html>

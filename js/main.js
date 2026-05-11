@@ -25,7 +25,7 @@ const GAMES = [
   { name: '따라 하기 게임', emoji: '🪞', url: 'games/follow-me.html', tag: '유아' },
   { name: '노래 율동', emoji: '🎵', url: 'games/song-dance.html', tag: '유아' },
   { name: '방탈출 미션', emoji: '🔐', url: 'games/escape-mission.html', tag: '초등고학년' },
-  { name: '토론 게임', emoji: '🗣️', url: 'games/debate-game.html', tag: '초등고학년' },
+  { name: '라이어 게임', emoji: '🕵️', url: 'games/liar-game.html', tag: '초등고학년' },
   { name: '전략 보드게임 변형', emoji: '♟️', url: 'games/strategy-board.html', tag: '초등고학년' },
   { name: '팀 미션 레이스', emoji: '🚀', url: 'games/team-mission-race.html', tag: '초등고학년' },
   { name: '창작 이야기 게임', emoji: '📖', url: 'games/story-creation.html', tag: '초등고학년' },
