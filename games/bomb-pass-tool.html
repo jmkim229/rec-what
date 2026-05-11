@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="description" content="폭탄 돌리기 진행자 도구. 랜덤 타이머와 스톱워치로 게임 타이밍을 자유롭게 제어하세요.">
+  <title>💣 폭탄 돌리기 도구 | 레크 뭐하지?</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif;
+      background: #0f172a;
+      color: #f1f5f9;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    }
+
+    /* ── 화면 전환 ── */
+    .screen { display: none; }
+    .screen.active { display: flex; flex-direction: column; }
+
+    /* ══════════════════════════════
+       화면 1 — 설정
+    ══════════════════════════════ */
+    #screen-settings {
+      min-height: 100vh;
+      background: #0f172a;
+    }
+    .tool-header {
+      display: flex;
+      align-items: center;
+      padding: 14px 16px;
+      background: rgba(255,255,255,0.05);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      flex-shrink: 0;
+    }
+    .back-link {
+      color: #fbbf24;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .back-link:hover { color: #fde68a; }
+
+    .settings-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 24px 18px 48px;
+    }
+    .settings-title { font-size: 24px; font-weight: 800; margin-bottom: 4px; }
+    .settings-sub   { font-size: 13px; color: #94a3b8; margin-bottom: 28px; }
+
+    /* 모드 탭 */
+    .mode-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 28px;
+    }
+    .mode-tab {
+      padding: 18px 12px;
+      border-radius: 14px;
+      border: 2px solid #1e293b;
+      background: #1e293b;
+      color: #94a3b8;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s;
+      font-family: inherit;
+      text-align: center;
+      line-height: 1.5;
+    }
+    .mode-tab .tab-sub {
+      display: block;
+      font-size: 11px;
+      font-weight: 400;
+      opacity: 0.6;
+      margin-top: 2px;
+    }
+    .mode-tab.active {
+      border-color: #f97316;
+      background: rgba(249,115,22,0.14);
+      color: #fdba74;
+    }
+
+    /* 패널 */
+    .mode-panel { display: none; }
+    .mode-panel.active { display: block; }
+    .panel-desc {
+      font-size: 13px;
+      color: #94a3b8;
+      line-height: 1.75;
+      margin-bottom: 20px;
+      padding: 14px 16px;
+      background: rgba(255,255,255,0.04);
+      border-radius: 12px;
+      border-left: 3px solid #f97316;
+    }
+
+    /* 빠른 선택 버튼 */
+    .preset-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      margin-bottom: 10px;
+    }
+    .preset-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+    .preset-btn {
+      padding: 14px 10px;
+      border-radius: 12px;
+      border: 2px solid #1e293b;
+      background: #1e293b;
+      color: #94a3b8;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s;
+      font-family: inherit;
+      text-align: center;
+      line-height: 1.4;
+    }
+    .preset-btn .preset-range {
+      display: block;
+      font-size: 11px;
+      font-weight: 400;
+      opacity: 0.6;
+      margin-top: 2px;
+    }
+    .preset-btn.selected {
+      border-color: #f97316;
+      background: rgba(249,115,22,0.14);
+      color: #fdba74;
+    }
+
+    /* 슬라이더 */
+    .slider-group {
+      background: rgba(255,255,255,0.06);
+      border-radius: 14px;
+      padding: 16px 18px 14px;
+      margin-bottom: 24px;
+    }
+    .slider-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .slider-row:last-of-type { margin-bottom: 0; }
+    .slider-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: #64748b;
+      min-width: 26px;
+    }
+    .slider-range {
+      flex: 1;
+      -webkit-appearance: none;
+      appearance: none;
+      height: 6px;
+      border-radius: 3px;
+      background: rgba(255,255,255,0.15);
+      outline: none;
+      cursor: pointer;
+    }
+    .slider-range::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 26px; height: 26px;
+      border-radius: 50%;
+      background: #f97316;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(249,115,22,0.5);
+    }
+    .slider-range::-moz-range-thumb {
+      width: 26px; height: 26px;
+      border-radius: 50%;
+      background: #f97316;
+      cursor: pointer;
+      border: none;
+    }
+    .slider-val {
+      font-size: 14px;
+      font-weight: 800;
+      color: #f97316;
+      min-width: 42px;
+      text-align: right;
+    }
+    .slider-hint {
+      text-align: center;
+      font-size: 12px;
+      color: #64748b;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+    .slider-hint strong { color: #e2e8f0; }
+
+    /* 시작 버튼 */
+    .start-btn-bomb {
+      width: 100%;
+      padding: 20px;
+      border-radius: 16px;
+      border: none;
+      background: linear-gradient(135deg, #dc2626, #f97316);
+      color: white;
+      font-size: 20px;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 6px 24px rgba(220,38,38,0.45);
+      transition: transform 0.15s, box-shadow 0.15s;
+      font-family: inherit;
+    }
+    .start-btn-bomb:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(220,38,38,0.6);
+    }
+    .start-btn-sw {
+      width: 100%;
+      padding: 20px;
+      border-radius: 16px;
+      border: none;
+      background: linear-gradient(135deg, #4f46e5, #7c3aed);
+      color: white;
+      font-size: 20px;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 6px 24px rgba(79,70,229,0.4);
+      transition: transform 0.15s, box-shadow 0.15s;
+      font-family: inherit;
+    }
+    .start-btn-sw:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(79,70,229,0.55);
+    }
+
+    /* ══════════════════════════════
+       화면 2 — 랜덤 타이머 진행
+    ══════════════════════════════ */
+    #screen-timer {
+      position: fixed;
+      inset: 0;
+      background: #0d0d0d;
+      overflow: hidden;
+    }
+
+    /* 가장자리 진동 효과 (폭탄 진행 중) */
+    #screen-timer.ticking {
+      box-shadow: inset 0 0 80px rgba(255,60,30,0.12);
+      animation: edgePulse 0.75s ease-in-out infinite;
+    }
+    @keyframes edgePulse {
+      0%,100% { box-shadow: inset 0 0 60px rgba(255,60,30,0.08); }
+      50%     { box-shadow: inset 0 0 100px rgba(255,60,30,0.22); }
+    }
+
+    /* 화면 흔들림 */
+    #screen-timer.shaking {
+      animation: screenShake 0.8s ease both !important;
+    }
+    @keyframes screenShake {
+      0%,100% { transform: translate(0); }
+      10% { transform: translate(-10px, 5px); }
+      20% { transform: translate(10px, -5px); }
+      30% { transform: translate(-8px, 8px); }
+      40% { transform: translate(8px, -8px); }
+      50% { transform: translate(-6px, 4px); }
+      60% { transform: translate(6px, -4px); }
+      70% { transform: translate(-3px, 3px); }
+      80% { transform: translate(3px, -2px); }
+    }
+
+    .timer-top {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      z-index: 20;
+    }
+    .timer-back-link {
+      color: rgba(255,255,255,0.35);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+      transition: color 0.15s;
+    }
+    .timer-back-link:hover { color: rgba(255,255,255,0.7); }
+
+    .timer-mid {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    /* 폭탄 이모지 */
+    .bomb-emoji {
+      font-size: clamp(100px, 28vw, 160px);
+      line-height: 1;
+      user-select: none;
+      display: block;
+    }
+    .bomb-emoji.ticking {
+      animation: bombPulse 0.7s ease-in-out infinite;
+    }
+    @keyframes bombPulse {
+      0%,100% { transform: scale(1) rotate(-4deg); }
+      50%     { transform: scale(1.1) rotate(4deg); }
+    }
+
+    .bomb-status {
+      font-size: 16px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.45);
+      letter-spacing: 0.05em;
+    }
+
+    /* 폭발 오버레이 */
+    .boom-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      z-index: 15;
+      background: rgba(180,0,0,0.08);
+      pointer-events: none;
+    }
+    .boom-text {
+      font-size: clamp(56px, 18vw, 88px);
+      font-weight: 900;
+      color: #ff4444;
+      text-shadow: 0 0 40px rgba(255,68,68,0.8), 0 0 80px rgba(255,68,68,0.4);
+      animation: boomAppear 0.45s cubic-bezier(0.34,1.56,0.64,1) both;
+    }
+    @keyframes boomAppear {
+      from { transform: scale(0.2); opacity: 0; }
+      to   { transform: scale(1);   opacity: 1; }
+    }
+    .boom-sub {
+      font-size: 18px;
+      font-weight: 700;
+      color: rgba(255,150,150,0.8);
+      animation: boomAppear 0.45s 0.12s cubic-bezier(0.34,1.56,0.64,1) both;
+    }
+    .boom-wobble {
+      animation: boomWobble 0.5s 0.45s ease both;
+    }
+    @keyframes boomWobble {
+      0%,100% { transform: rotate(0); }
+      20%  { transform: rotate(-4deg) scale(1.04); }
+      40%  { transform: rotate(4deg) scale(1.04); }
+      60%  { transform: rotate(-2deg); }
+      80%  { transform: rotate(2deg); }
+    }
+
+    /* 빨간 번쩍임 오버레이 */
+    .flash-overlay {
+      position: fixed;
+      inset: 0;
+      background: #cc1111;
+      z-index: 9999;
+      pointer-events: none;
+      animation: tripleFlash 1.5s ease forwards;
+    }
+    @keyframes tripleFlash {
+      0%   { opacity: 0.85; }
+      10%  { opacity: 0; }
+      22%  { opacity: 0.75; }
+      33%  { opacity: 0; }
+      44%  { opacity: 0.6; }
+      58%  { opacity: 0; }
+      100% { opacity: 0; }
+    }
+
+    /* 하단 컨트롤 */
+    .timer-bottom {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      padding: 12px 16px 36px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      z-index: 20;
+    }
+    .ctrl-row { display: flex; gap: 10px; }
+    .ctrl-btn {
+      flex: 1;
+      padding: 16px 12px;
+      border-radius: 14px;
+      border: 1.5px solid rgba(255,255,255,0.2);
+      background: rgba(0,0,0,0.45);
+      color: rgba(255,255,255,0.85);
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      transition: transform 0.12s, background 0.15s;
+    }
+    .ctrl-btn:active { transform: scale(0.96); }
+    .ctrl-btn:hover  { background: rgba(0,0,0,0.6); }
+    .ctrl-btn-restart {
+      background: rgba(220,38,38,0.35);
+      border-color: rgba(255,80,80,0.4);
+    }
+    .ctrl-btn-restart:hover { background: rgba(220,38,38,0.55); }
+    .ctrl-btn-restart.pulsing {
+      animation: restartPulse 0.7s ease-in-out infinite;
+    }
+    @keyframes restartPulse {
+      0%,100% { box-shadow: 0 0 0 0 rgba(220,38,38,0); }
+      50%     { box-shadow: 0 0 0 8px rgba(220,38,38,0.3); }
+    }
+    .ctrl-btn-stop {
+      background: rgba(255,255,255,0.08);
+      border-color: rgba(255,255,255,0.12);
+      color: rgba(255,255,255,0.5);
+      font-size: 13px;
+    }
+
+    /* ══════════════════════════════
+       화면 3 — 스톱워치
+    ══════════════════════════════ */
+    #screen-stopwatch {
+      position: fixed;
+      inset: 0;
+      background: #0f172a;
+    }
+
+    .sw-top {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      padding: 14px 16px;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+    }
+    .sw-back-link {
+      color: rgba(255,255,255,0.35);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .sw-back-link:hover { color: rgba(255,255,255,0.7); }
+
+    .sw-mid {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .sw-display {
+      font-size: clamp(64px, 18vw, 110px);
+      font-weight: 900;
+      color: white;
+      font-family: 'Courier New', 'Consolas', monospace;
+      letter-spacing: 2px;
+      font-variant-numeric: tabular-nums;
+      user-select: none;
+      line-height: 1.1;
+    }
+    .sw-display.running { color: #a78bfa; }
+    .sw-hint {
+      font-size: 12px;
+      color: rgba(255,255,255,0.2);
+      letter-spacing: 4px;
+      margin-top: 4px;
+    }
+
+    .sw-bottom {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      padding: 12px 16px 36px;
+      display: flex;
+      gap: 10px;
+      z-index: 10;
+    }
+    .sw-btn {
+      flex: 1;
+      padding: 18px 12px;
+      border-radius: 14px;
+      border: none;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      transition: transform 0.12s, opacity 0.15s;
+    }
+    .sw-btn:active { transform: scale(0.96); }
+    .sw-btn:disabled { opacity: 0.35; cursor: not-allowed; transform: none; }
+    .sw-btn-play {
+      background: linear-gradient(135deg, #4f46e5, #7c3aed);
+      color: white;
+      box-shadow: 0 4px 16px rgba(79,70,229,0.4);
+    }
+    .sw-btn-reset {
+      background: rgba(255,255,255,0.1);
+      color: rgba(255,255,255,0.7);
+      border: 1.5px solid rgba(255,255,255,0.15);
+    }
+    .sw-btn-back-settings {
+      background: rgba(255,255,255,0.06);
+      color: rgba(255,255,255,0.4);
+      font-size: 13px;
+      border: 1.5px solid rgba(255,255,255,0.1);
+      flex: 0 0 auto;
+      padding: 18px 16px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══ 화면 1: 설정 ══ -->
+<div id="screen-settings" class="screen active">
+  <div class="tool-header">
+    <a href="bomb-pass.html" class="back-link">← 게임 설명으로 돌아가기</a>
+  </div>
+  <div class="settings-body">
+    <div class="settings-title">💣 폭탄 돌리기 도구</div>
+    <div class="settings-sub">폰 하나로 폭탄 타이머와 스톱워치 모두 해결!</div>
+
+    <!-- 모드 탭 -->
+    <div class="mode-tabs">
+      <button class="mode-tab active" data-mode="random">
+        🎲 랜덤 타이머
+        <span class="tab-sub">언제 터질지 모르는 긴장감</span>
+      </button>
+      <button class="mode-tab" data-mode="stopwatch">
+        ⏱️ 스톱워치
+        <span class="tab-sub">진행자가 직접 조절</span>
+      </button>
+    </div>
+
+    <!-- 랜덤 타이머 패널 -->
+    <div id="panel-random" class="mode-panel active">
+      <div class="panel-desc">
+        설정한 범위 안에서 <strong>랜덤한 시간</strong>에 폭탄이 터집니다.<br>언제 터질지 모르는 긴장감이 핵심!
+      </div>
+
+      <div class="preset-label">⚡ 빠른 선택</div>
+      <div class="preset-grid">
+        <button class="preset-btn" data-min="5"  data-max="15">
+          짧고 빠름
+          <span class="preset-range">5 ~ 15초</span>
+        </button>
+        <button class="preset-btn selected" data-min="10" data-max="30">
+          보통
+          <span class="preset-range">10 ~ 30초</span>
+        </button>
+        <button class="preset-btn" data-min="15" data-max="45">
+          길게
+          <span class="preset-range">15 ~ 45초</span>
+        </button>
+        <button class="preset-btn" data-min="30" data-max="60">
+          매우 길게
+          <span class="preset-range">30 ~ 60초</span>
+        </button>
+      </div>
+
+      <div class="slider-group">
+        <div class="slider-row">
+          <span class="slider-label">최소</span>
+          <input type="range" class="slider-range" id="minSlider" min="5" max="55" value="10" step="5">
+          <span class="slider-val"><span id="minDisplay">10</span>초</span>
+        </div>
+        <div class="slider-row">
+          <span class="slider-label">최대</span>
+          <input type="range" class="slider-range" id="maxSlider" min="10" max="60" value="30" step="5">
+          <span class="slider-val"><span id="maxDisplay">30</span>초</span>
+        </div>
+        <p class="slider-hint">🎯 랜덤 범위: <strong id="rangeHint">10초 ~ 30초</strong></p>
+      </div>
+
+      <button class="start-btn-bomb" id="bomb-start-btn">🔥 폭탄 시작!</button>
+    </div>
+
+    <!-- 스톱워치 패널 -->
+    <div id="panel-stopwatch" class="mode-panel">
+      <div class="panel-desc">
+        진행자가 <strong>직접 시간을 보며</strong> 음악을 멈출 때 사용하세요.<br>
+        멀리서도 잘 보이는 큰 숫자로 표시됩니다.
+      </div>
+      <button class="start-btn-sw" id="sw-start-btn">▶ 시작</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 화면 2: 랜덤 타이머 ══ -->
+<div id="screen-timer" class="screen">
+  <div class="timer-top">
+    <a href="#" class="timer-back-link" onclick="confirmTimerBack(); return false;">← 게임 설명으로</a>
+  </div>
+
+  <div class="timer-mid">
+    <span class="bomb-emoji" id="bomb-emoji">💣</span>
+    <div class="bomb-status" id="bomb-status">폭탄이 돌아가고 있어요...</div>
+  </div>
+
+  <!-- 폭발 오버레이 (폭발 시 표시) -->
+  <div class="boom-overlay" id="boom-overlay" style="display:none;">
+    <div class="boom-text boom-wobble">💥 펑!</div>
+    <div class="boom-sub">폭탄이 터졌어요!</div>
+  </div>
+
+  <div class="timer-bottom">
+    <div class="ctrl-row">
+      <button class="ctrl-btn ctrl-btn-restart" id="timer-restart-btn" onclick="timerRestart()">↺ 다시 시작</button>
+      <button class="ctrl-btn ctrl-btn-stop" onclick="goToSettings()">⏹ 정지</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 화면 3: 스톱워치 ══ -->
+<div id="screen-stopwatch" class="screen">
+  <div class="sw-top">
+    <a href="#" class="sw-back-link" onclick="confirmSwBack(); return false;">← 게임 설명으로</a>
+  </div>
+
+  <div class="sw-mid">
+    <div class="sw-display" id="sw-display">00:00.00</div>
+    <div class="sw-hint">mm : ss . cc</div>
+  </div>
+
+  <div class="sw-bottom">
+    <button class="sw-btn sw-btn-play" id="sw-play-btn" onclick="swToggle()">▶ 시작</button>
+    <button class="sw-btn sw-btn-reset" onclick="swReset()">↺ 초기화</button>
+    <button class="sw-btn sw-btn-back-settings" onclick="goToSettings()">⚙</button>
+  </div>
+</div>
+
+<script>
+/* ── 상태 ── */
+let S = {
+  mode: 'random',
+  minSec: 10,
+  maxSec: 30,
+  bombTimeout: null,
+  beepTimeout: null,
+  state: 'idle',       // idle | ticking | exploded
+  swInterval: null,
+  swStart: 0,
+  swElapsed: 0,
+  swRunning: false,
+};
+
+let audioCtx = null;
+function getAudioCtx() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  return audioCtx;
+}
+
+/* ══ 설정 화면 ══ */
+
+// 모드 탭
+document.querySelectorAll('.mode-tab').forEach(btn => {
+  btn.addEventListener('click', () => {
+    S.mode = btn.dataset.mode;
+    document.querySelectorAll('.mode-tab').forEach(b => b.classList.toggle('active', b === btn));
+    document.getElementById('panel-random').classList.toggle('active', S.mode === 'random');
+    document.getElementById('panel-stopwatch').classList.toggle('active', S.mode === 'stopwatch');
+  });
+});
+
+// 프리셋 버튼
+document.querySelectorAll('.preset-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const mn = parseInt(btn.dataset.min);
+    const mx = parseInt(btn.dataset.max);
+    S.minSec = mn;
+    S.maxSec = mx;
+    document.getElementById('minSlider').value = mn;
+    document.getElementById('maxSlider').value = mx;
+    document.querySelectorAll('.preset-btn').forEach(b => b.classList.toggle('selected', b === btn));
+    updateRangeHint();
+  });
+});
+
+// 슬라이더
+const minSlider = document.getElementById('minSlider');
+const maxSlider = document.getElementById('maxSlider');
+
+function syncSliders() {
+  let mn = parseInt(minSlider.value);
+  let mx = parseInt(maxSlider.value);
+  if (mn >= mx) { mx = Math.min(mn + 5, 60); maxSlider.value = mx; }
+  S.minSec = mn;
+  S.maxSec = mx;
+  document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('selected'));
+  updateRangeHint();
+}
+function updateRangeHint() {
+  document.getElementById('minDisplay').textContent = S.minSec;
+  document.getElementById('maxDisplay').textContent = S.maxSec;
+  document.getElementById('rangeHint').innerHTML = `<strong>${S.minSec}초 ~ ${S.maxSec}초</strong>`;
+}
+minSlider.addEventListener('input', syncSliders);
+maxSlider.addEventListener('input', syncSliders);
+
+// 폭탄 시작 버튼
+document.getElementById('bomb-start-btn').addEventListener('click', () => {
+  showScreen('timer');
+  startBomb();
+});
+
+// 스톱워치 시작 버튼
+document.getElementById('sw-start-btn').addEventListener('click', () => {
+  swReset();
+  showScreen('stopwatch');
+  swToggle();
+});
+
+/* ══ 화면 전환 ══ */
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + id).classList.add('active');
+}
+
+function goToSettings() {
+  clearTimeout(S.bombTimeout);
+  clearTimeout(S.beepTimeout);
+  clearInterval(S.swInterval);
+  S.swRunning = false;
+  S.state = 'idle';
+
+  const timerEl = document.getElementById('screen-timer');
+  timerEl.classList.remove('ticking', 'shaking');
+
+  showScreen('settings');
+}
+
+function confirmTimerBack() {
+  if (confirm('게임을 멈추고 게임 설명 페이지로 돌아갈까요?')) {
+    clearTimeout(S.bombTimeout);
+    clearTimeout(S.beepTimeout);
+    location.href = 'bomb-pass.html';
+  }
+}
+
+function confirmSwBack() {
+  if (confirm('스톱워치를 멈추고 게임 설명 페이지로 돌아갈까요?')) {
+    clearInterval(S.swInterval);
+    location.href = 'bomb-pass.html';
+  }
+}
+
+/* ══ 랜덤 타이머 ══ */
+
+function startBomb() {
+  clearTimeout(S.bombTimeout);
+  clearTimeout(S.beepTimeout);
+
+  const duration = (Math.random() * (S.maxSec - S.minSec) + S.minSec) * 1000;
+  S.state = 'ticking';
+
+  // UI: 폭탄 애니메이션 시작
+  const timerEl = document.getElementById('screen-timer');
+  timerEl.classList.add('ticking');
+  timerEl.classList.remove('shaking');
+
+  const emoji = document.getElementById('bomb-emoji');
+  emoji.textContent = '💣';
+  emoji.className = 'bomb-emoji ticking';
+
+  document.getElementById('bomb-status').textContent = '폭탄이 돌아가고 있어요...';
+  document.getElementById('boom-overlay').style.display = 'none';
+
+  const restartBtn = document.getElementById('timer-restart-btn');
+  restartBtn.classList.remove('pulsing');
+
+  // 폭발 1초 전: 빠른 삐비비빅
+  if (duration > 1200) {
+    S.beepTimeout = setTimeout(() => playPreBeeps(), duration - 1100);
+  }
+
+  // 폭발
+  S.bombTimeout = setTimeout(() => triggerExplosion(), duration);
+}
+
+function triggerExplosion() {
+  S.state = 'exploded';
+
+  const timerEl = document.getElementById('screen-timer');
+  timerEl.classList.remove('ticking');
+
+  // 화면 흔들림
+  timerEl.classList.add('shaking');
+  setTimeout(() => timerEl.classList.remove('shaking'), 900);
+
+  // 빨간 번쩍임 (3회)
+  const flash = document.createElement('div');
+  flash.className = 'flash-overlay';
+  document.body.appendChild(flash);
+  setTimeout(() => flash.remove(), 1600);
+
+  // 효과음
+  playBoomSound();
+
+  // 폭탄 → 💥
+  const emoji = document.getElementById('bomb-emoji');
+  emoji.classList.remove('ticking');
+  emoji.textContent = '💥';
+
+  document.getElementById('bomb-status').textContent = '';
+  document.getElementById('boom-overlay').style.display = 'flex';
+
+  // 2초 후 restart 버튼 강조
+  setTimeout(() => {
+    if (S.state === 'exploded') {
+      document.getElementById('timer-restart-btn').classList.add('pulsing');
+    }
+  }, 2000);
+}
+
+function timerRestart() {
+  startBomb();
+}
+
+/* ══ 효과음 ══ */
+
+function playPreBeeps() {
+  try {
+    const ctx = getAudioCtx();
+    for (let i = 0; i < 4; i++) {
+      const t    = ctx.currentTime + i * 0.22;
+      const freq = 1400 - i * 80;
+      const osc  = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.type = 'square';
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0.25, t);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.16);
+      osc.start(t);
+      osc.stop(t + 0.16);
+    }
+  } catch(e) {}
+}
+
+function playBoomSound() {
+  try {
+    const ctx = getAudioCtx();
+
+    // 저음 충격파
+    const osc1  = ctx.createOscillator();
+    const gain1 = ctx.createGain();
+    osc1.connect(gain1);
+    gain1.connect(ctx.destination);
+    osc1.type = 'sawtooth';
+    osc1.frequency.setValueAtTime(160, ctx.currentTime);
+    osc1.frequency.exponentialRampToValueAtTime(25, ctx.currentTime + 0.7);
+    gain1.gain.setValueAtTime(0.7, ctx.currentTime);
+    gain1.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.9);
+    osc1.start(ctx.currentTime);
+    osc1.stop(ctx.currentTime + 0.9);
+
+    // 고음 충격음
+    const osc2  = ctx.createOscillator();
+    const gain2 = ctx.createGain();
+    osc2.connect(gain2);
+    gain2.connect(ctx.destination);
+    osc2.type = 'square';
+    osc2.frequency.setValueAtTime(800, ctx.currentTime);
+    osc2.frequency.exponentialRampToValueAtTime(100, ctx.currentTime + 0.15);
+    gain2.gain.setValueAtTime(0.4, ctx.currentTime);
+    gain2.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.25);
+    osc2.start(ctx.currentTime);
+    osc2.stop(ctx.currentTime + 0.25);
+  } catch(e) {}
+}
+
+/* ══ 스톱워치 ══ */
+
+function swToggle() {
+  if (S.swRunning) {
+    clearInterval(S.swInterval);
+    S.swElapsed += Date.now() - S.swStart;
+    S.swRunning = false;
+    document.getElementById('sw-play-btn').textContent = '▶ 계속';
+    document.getElementById('sw-display').classList.remove('running');
+  } else {
+    S.swStart = Date.now();
+    S.swRunning = true;
+    document.getElementById('sw-play-btn').textContent = '⏸ 정지';
+    document.getElementById('sw-display').classList.add('running');
+    S.swInterval = setInterval(renderSw, 50);
+  }
+}
+
+function swReset() {
+  clearInterval(S.swInterval);
+  S.swRunning = false;
+  S.swElapsed = 0;
+  document.getElementById('sw-display').textContent = '00:00.00';
+  document.getElementById('sw-display').classList.remove('running');
+  document.getElementById('sw-play-btn').textContent = '▶ 시작';
+}
+
+function renderSw() {
+  const elapsed = S.swElapsed + (S.swRunning ? Date.now() - S.swStart : 0);
+  const cs  = Math.floor(elapsed / 10) % 100;
+  const s   = Math.floor(elapsed / 1000) % 60;
+  const m   = Math.floor(elapsed / 60000);
+  const pad = n => String(n).padStart(2, '0');
+  document.getElementById('sw-display').textContent = `${pad(m)}:${pad(s)}.${pad(cs)}`;
+}
+</script>
+</body>
+</html>
