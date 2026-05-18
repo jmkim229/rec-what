@@ -1,0 +1,1159 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="description" content="방탈출 전용 타이머. 제한시간 설정, 힌트 카운터, 긴장감 있는 경고 효과. 진행자가 폰으로 바로 사용.">
+  <title>⏱️ 방탈출 타이머 | 레크 뭐하지?</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;700;800&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-75JKFQWSHP"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-75JKFQWSHP');
+  </script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif;
+      background: #0f172a;
+      color: #f1f5f9;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+      overflow-x: hidden;
+    }
+
+    /* ── 화면 전환 ── */
+    .screen { display: none; }
+    .screen.active { display: flex; flex-direction: column; min-height: 100vh; }
+
+    /* ────────────────────────────────
+       공통 상단 바
+    ──────────────────────────────── */
+    .tool-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px;
+      background: rgba(255,255,255,0.04);
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+      flex-shrink: 0;
+      z-index: 10;
+    }
+    .back-link {
+      color: #94a3b8;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .back-link:hover { color: #e2e8f0; }
+    .header-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #e2e8f0;
+    }
+
+    /* ════════════════════════════════
+       화면 1 — 설정
+    ════════════════════════════════ */
+    #screen-setup { background: #0f172a; }
+
+    .setup-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 28px 18px 60px;
+      max-width: 480px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .setup-title {
+      font-size: 26px;
+      font-weight: 800;
+      margin-bottom: 6px;
+      text-align: center;
+    }
+    .setup-sub {
+      font-size: 13px;
+      color: #64748b;
+      text-align: center;
+      margin-bottom: 32px;
+      line-height: 1.6;
+    }
+
+    .setup-card {
+      background: #1e293b;
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+    .setup-card-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 14px;
+    }
+
+    /* 시간 빠른 선택 */
+    .time-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+    .time-btn {
+      background: #0f172a;
+      border: 2px solid #334155;
+      border-radius: 12px;
+      padding: 12px 4px;
+      color: #94a3b8;
+      font-family: inherit;
+      font-size: 16px;
+      font-weight: 800;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.15s;
+      line-height: 1.3;
+    }
+    .time-btn small {
+      display: block;
+      font-size: 10px;
+      font-weight: 500;
+      color: #64748b;
+      margin-top: 2px;
+    }
+    .time-btn.selected {
+      background: #0d9488;
+      border-color: #0d9488;
+      color: white;
+    }
+    .time-btn.selected small { color: rgba(255,255,255,0.75); }
+    .time-btn:hover:not(.selected) { border-color: #475569; color: #e2e8f0; }
+
+    .custom-time-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 4px;
+    }
+    .custom-time-label {
+      font-size: 13px;
+      color: #64748b;
+      white-space: nowrap;
+    }
+    #custom-minutes {
+      flex: 1;
+      background: #0f172a;
+      border: 2px solid #334155;
+      border-radius: 10px;
+      padding: 10px 14px;
+      color: #f1f5f9;
+      font-family: inherit;
+      font-size: 16px;
+      font-weight: 700;
+      outline: none;
+      text-align: center;
+      transition: border-color 0.15s;
+      -moz-appearance: textfield;
+    }
+    #custom-minutes::-webkit-inner-spin-button,
+    #custom-minutes::-webkit-outer-spin-button { -webkit-appearance: none; }
+    #custom-minutes:focus { border-color: #0d9488; }
+    #custom-minutes::placeholder { color: #475569; font-weight: 400; font-size: 14px; }
+    .custom-time-unit { font-size: 14px; color: #64748b; }
+
+    /* 힌트 선택 */
+    .hint-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+    .hint-btn {
+      background: #0f172a;
+      border: 2px solid #334155;
+      border-radius: 12px;
+      padding: 12px 4px;
+      color: #94a3b8;
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .hint-btn.selected {
+      background: #7c3aed;
+      border-color: #7c3aed;
+      color: white;
+    }
+    .hint-btn:hover:not(.selected) { border-color: #475569; color: #e2e8f0; }
+
+    /* 시작 버튼 */
+    #start-btn {
+      display: block;
+      width: 100%;
+      margin-top: 24px;
+      padding: 18px;
+      background: linear-gradient(135deg, #0d9488, #14b8a6);
+      border: none;
+      border-radius: 16px;
+      color: white;
+      font-family: inherit;
+      font-size: 20px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: opacity 0.15s, transform 0.1s;
+      letter-spacing: 0.5px;
+    }
+    #start-btn:active { transform: scale(0.97); }
+    #start-btn:hover { opacity: 0.9; }
+
+    /* ════════════════════════════════
+       화면 2 — 타이머
+    ════════════════════════════════ */
+    #screen-timer {
+      background: #050714;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* 가장자리 펄스 오버레이 */
+    #edge-pulse {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 5;
+      border: 0px solid transparent;
+    }
+    body.state-warning #edge-pulse {
+      animation: edgePulse 1.5s ease-in-out infinite;
+    }
+    body.state-danger #edge-pulse {
+      animation: edgePulse 0.7s ease-in-out infinite;
+    }
+    @keyframes edgePulse {
+      0%, 100% { box-shadow: inset 0 0 40px 8px rgba(239, 68, 68, 0); }
+      50%       { box-shadow: inset 0 0 80px 30px rgba(239, 68, 68, 0.55); }
+    }
+
+    /* 상단 바 */
+    #timer-topbar {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px;
+      background: rgba(255,255,255,0.03);
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    #exit-btn {
+      background: none;
+      border: none;
+      color: #475569;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 4px 0;
+      transition: color 0.15s;
+    }
+    #exit-btn:hover { color: #94a3b8; }
+
+    /* 힌트 영역 */
+    .hint-area {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    #hint-label {
+      font-size: 13px;
+      font-weight: 700;
+      color: #94a3b8;
+      white-space: nowrap;
+    }
+    #use-hint-btn {
+      background: #1e293b;
+      border: 1.5px solid #334155;
+      border-radius: 8px;
+      color: #fbbf24;
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 5px 10px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    #use-hint-btn:hover:not(:disabled) { background: #334155; }
+    #use-hint-btn:disabled { color: #475569; cursor: default; }
+    #use-hint-btn.hint-used {
+      animation: hintFlash 0.4s ease;
+    }
+    @keyframes hintFlash {
+      0%, 100% { background: #1e293b; }
+      50%       { background: #fbbf24; color: #0f172a; }
+    }
+
+    /* 메인 타이머 영역 */
+    .timer-center {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    #timer-display {
+      font-family: 'Share Tech Mono', 'Courier New', monospace;
+      font-size: clamp(88px, 24vw, 200px);
+      font-weight: 400;
+      line-height: 1;
+      letter-spacing: 4px;
+      color: #e2e8f0;
+      transition: color 0.8s ease;
+      text-shadow: 0 0 40px currentColor;
+      user-select: none;
+    }
+
+    /* 색상 상태 */
+    #timer-display.state-normal   { color: #e2e8f0; }
+    #timer-display.state-yellow   { color: #fbbf24; }
+    #timer-display.state-red      { color: #ef4444; animation: timerBlink 1s ease infinite; }
+    #timer-display.state-critical { color: #ef4444; animation: timerBlink 0.45s ease infinite; }
+
+    @keyframes timerBlink {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.15; }
+    }
+
+    /* 일시정지 표시 */
+    #pause-badge {
+      display: none;
+      margin-top: 16px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 50px;
+      padding: 6px 18px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #94a3b8;
+      letter-spacing: 1px;
+    }
+    body.is-paused #pause-badge { display: block; }
+    body.is-paused #timer-display { opacity: 0.5; }
+    body.is-paused #screen-timer { background: #020510; }
+
+    /* 컨트롤 버튼 */
+    .timer-controls {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      gap: 10px;
+      padding: 16px;
+      padding-bottom: max(20px, env(safe-area-inset-bottom, 20px));
+    }
+    .ctrl-btn {
+      flex: 1;
+      padding: 14px 8px;
+      border-radius: 14px;
+      border: 2px solid transparent;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s;
+      text-align: center;
+    }
+    .ctrl-btn:active { transform: scale(0.95); }
+
+    #pause-btn {
+      background: #1e293b;
+      border-color: #334155;
+      color: #e2e8f0;
+    }
+    #pause-btn:hover { background: #334155; }
+
+    #add-time-btn {
+      background: #1e293b;
+      border-color: #334155;
+      color: #34d399;
+    }
+    #add-time-btn:hover { background: #334155; }
+
+    #stop-btn {
+      background: #1e293b;
+      border-color: #334155;
+      color: #f87171;
+    }
+    #stop-btn:hover { background: #334155; }
+
+    /* ── 시간 종료 오버레이 ── */
+    #timeout-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(239, 68, 68, 0.15);
+      z-index: 50;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 12px;
+      text-align: center;
+    }
+    #timeout-overlay.active { display: flex; }
+    #timeout-overlay .timeout-text {
+      font-size: clamp(48px, 14vw, 96px);
+      font-weight: 800;
+      color: #ef4444;
+      animation: timeoutPulse 0.6s ease infinite alternate;
+    }
+    #timeout-overlay .timeout-sub {
+      font-size: 18px;
+      color: #fca5a5;
+    }
+    @keyframes timeoutPulse {
+      from { transform: scale(1);    text-shadow: 0 0 20px rgba(239,68,68,0.5); }
+      to   { transform: scale(1.06); text-shadow: 0 0 60px rgba(239,68,68,0.9); }
+    }
+
+    /* ── 화면 번쩍 효과 ── */
+    @keyframes screenFlash {
+      0%, 100% { background: #050714; }
+      50%       { background: rgba(239, 68, 68, 0.8); }
+    }
+    body.flashing #screen-timer {
+      animation: screenFlash 0.35s ease-in-out 3;
+    }
+
+    /* ── 타이머 흔들림 ── */
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      15%, 55%  { transform: translateX(-12px); }
+      35%, 75%  { transform: translateX(12px); }
+    }
+    #timer-display.shaking {
+      animation: shake 0.5s ease !important;
+    }
+
+    /* ════════════════════════════════
+       화면 3 — 결과
+    ════════════════════════════════ */
+    #screen-result { background: #0f172a; }
+
+    .result-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 32px 20px;
+      text-align: center;
+      gap: 16px;
+    }
+
+    #result-title {
+      font-size: clamp(28px, 8vw, 48px);
+      font-weight: 800;
+    }
+    #result-sub {
+      font-size: 15px;
+      color: #64748b;
+      line-height: 1.6;
+      max-width: 320px;
+    }
+
+    /* 결과 선택 버튼 (처음 표시) */
+    #result-choice {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      width: 100%;
+      max-width: 340px;
+      margin-top: 8px;
+    }
+    .result-choice-btn {
+      padding: 20px;
+      border-radius: 16px;
+      border: none;
+      font-family: inherit;
+      font-size: 18px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.15s;
+      letter-spacing: 0.3px;
+    }
+    .result-choice-btn:active { transform: scale(0.97); }
+    #btn-success {
+      background: linear-gradient(135deg, #16a34a, #22c55e);
+      color: white;
+      box-shadow: 0 8px 24px rgba(34, 197, 94, 0.3);
+    }
+    #btn-success:hover { opacity: 0.9; box-shadow: 0 12px 30px rgba(34, 197, 94, 0.4); }
+    #btn-fail {
+      background: #1e293b;
+      color: #94a3b8;
+      border: 2px solid #334155;
+    }
+    #btn-fail:hover { background: #334155; }
+
+    /* 결과 최종 화면 */
+    #result-final { display: none; }
+    .result-emoji {
+      font-size: clamp(56px, 16vw, 96px);
+      line-height: 1;
+      animation: resultPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    }
+    @keyframes resultPop {
+      from { transform: scale(0.3); opacity: 0; }
+      to   { transform: scale(1);   opacity: 1; }
+    }
+    .result-final-title {
+      font-size: clamp(22px, 6vw, 36px);
+      font-weight: 800;
+      margin-top: 8px;
+    }
+    .result-final-title.success { color: #22c55e; }
+    .result-final-title.fail    { color: #94a3b8; }
+    #result-time-used {
+      font-size: 15px;
+      color: #64748b;
+      margin-top: 4px;
+    }
+    .result-message {
+      font-size: 14px;
+      color: #475569;
+      line-height: 1.7;
+      max-width: 280px;
+      margin-top: 4px;
+    }
+
+    /* 하단 버튼 */
+    .result-actions {
+      display: flex;
+      gap: 10px;
+      width: 100%;
+      max-width: 340px;
+      margin-top: 16px;
+    }
+    .action-btn {
+      flex: 1;
+      padding: 14px;
+      border-radius: 12px;
+      border: 2px solid #334155;
+      background: #1e293b;
+      color: #94a3b8;
+      font-family: inherit;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      text-align: center;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s;
+    }
+    .action-btn:hover { background: #334155; color: #e2e8f0; }
+    .action-btn.new-game {
+      background: #0d9488;
+      border-color: #0d9488;
+      color: white;
+    }
+    .action-btn.new-game:hover { opacity: 0.85; }
+
+    /* ════════════════════════════════
+       색종이 컨테이너
+    ════════════════════════════════ */
+    #confetti-container {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 200;
+      overflow: hidden;
+    }
+    .confetti-p {
+      position: absolute;
+      top: -20px;
+      border-radius: 2px;
+    }
+    @keyframes confettiFall {
+      to {
+        transform: translateY(110vh) rotate(720deg);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 가장자리 펄스 오버레이 (항상 존재) -->
+  <div id="edge-pulse"></div>
+
+  <!-- 색종이 컨테이너 -->
+  <div id="confetti-container"></div>
+
+  <!-- ════════════════════════════
+       화면 1 — 설정
+  ════════════════════════════ -->
+  <div id="screen-setup" class="screen active">
+    <div class="tool-header">
+      <a href="escape-mission.html" class="back-link">← 방탈출 메인으로</a>
+      <span class="header-title">⏱️ 방탈출 타이머</span>
+      <div style="width:80px;"></div>
+    </div>
+
+    <div class="setup-body">
+      <div class="setup-title">⏱️ 방탈출 타이머</div>
+      <p class="setup-sub">제한시간을 설정하고<br>긴장감 넘치는 탈출 게임을 진행하세요</p>
+
+      <!-- 제한시간 -->
+      <div class="setup-card">
+        <div class="setup-card-title">⏰ 제한시간</div>
+        <div class="time-grid">
+          <button class="time-btn" data-minutes="20">20분<small>짧게</small></button>
+          <button class="time-btn selected" data-minutes="30">30분<small>초급 권장</small></button>
+          <button class="time-btn" data-minutes="40">40분<small>중급·성경</small></button>
+          <button class="time-btn" data-minutes="50">50분<small>길게</small></button>
+        </div>
+        <div class="custom-time-row">
+          <span class="custom-time-label">직접 입력</span>
+          <input type="number" id="custom-minutes" min="1" max="180" placeholder="분 입력">
+          <span class="custom-time-unit">분</span>
+        </div>
+      </div>
+
+      <!-- 힌트 횟수 -->
+      <div class="setup-card">
+        <div class="setup-card-title">💡 팀당 힌트 사용 횟수</div>
+        <div class="hint-grid">
+          <button class="hint-btn" data-hints="1">1회</button>
+          <button class="hint-btn selected" data-hints="2">2회</button>
+          <button class="hint-btn" data-hints="3">3회</button>
+          <button class="hint-btn" data-hints="-1">무제한</button>
+        </div>
+      </div>
+
+      <button id="start-btn">🚀 게임 시작</button>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════
+       화면 2 — 타이머 진행
+  ════════════════════════════ -->
+  <div id="screen-timer" class="screen">
+    <!-- 상단 바 -->
+    <div id="timer-topbar">
+      <button id="exit-btn" onclick="confirmExit()">← 메인으로</button>
+      <div class="hint-area">
+        <span id="hint-label">💡 힌트: <strong id="hint-count">2회</strong></span>
+        <button id="use-hint-btn" onclick="useHint()">사용</button>
+      </div>
+    </div>
+
+    <!-- 메인 타이머 -->
+    <div class="timer-center">
+      <div id="timer-display" class="state-normal">00:00</div>
+      <div id="pause-badge">⏸ 일시정지됨</div>
+    </div>
+
+    <!-- 컨트롤 -->
+    <div class="timer-controls">
+      <button class="ctrl-btn" id="pause-btn" onclick="togglePause()">⏸️ 일시정지</button>
+      <button class="ctrl-btn" id="add-time-btn" onclick="addMinute()">➕ 1분</button>
+      <button class="ctrl-btn" id="stop-btn" onclick="stopTimer()">⏹️ 종료</button>
+    </div>
+  </div>
+
+  <!-- 시간 종료 오버레이 -->
+  <div id="timeout-overlay">
+    <div class="timeout-text">⏰ 시간 종료!</div>
+    <div class="timeout-sub">결과를 선택해주세요</div>
+  </div>
+
+  <!-- ════════════════════════════
+       화면 3 — 결과
+  ════════════════════════════ -->
+  <div id="screen-result" class="screen">
+    <div class="tool-header">
+      <div style="width:80px;"></div>
+      <span class="header-title">게임 결과</span>
+      <div style="width:80px;"></div>
+    </div>
+
+    <div class="result-body">
+      <!-- 초기: 성공/실패 선택 -->
+      <div id="result-choice">
+        <div id="result-title">게임 종료</div>
+        <div id="result-sub">결과를 선택하세요</div>
+        <button class="result-choice-btn" id="btn-success" onclick="showSuccess()">🎉 탈출 성공!</button>
+        <button class="result-choice-btn" id="btn-fail"    onclick="showFail()">😢 탈출 실패</button>
+      </div>
+
+      <!-- 결과 확정 후 -->
+      <div id="result-final">
+        <div class="result-emoji" id="result-emoji">🎉</div>
+        <div class="result-final-title" id="result-final-title">탈출 성공!</div>
+        <div id="result-time-used"></div>
+        <div class="result-message" id="result-message"></div>
+        <div class="result-actions">
+          <button class="action-btn new-game" onclick="newGame()">🔄 새 게임</button>
+          <a href="escape-mission.html" class="action-btn">← 메인으로</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+/* ──────────────────────────────────
+   상태 변수
+────────────────────────────────── */
+let totalMs      = 30 * 60 * 1000; // 설정된 전체 시간(ms)
+let elapsedMs    = 0;               // 이번 세션까지 누적 경과(ms)
+let segmentStart = null;            // 현재 구간 시작 Date.now()
+let isPaused     = false;
+let isRunning    = false;
+let timedOut     = false;
+let hintCount    = 2;               // -1 = 무제한
+let timerInterval= null;
+let finalElapsedMs = 0;
+let selectedMinutes = 30;
+let selectedHints   = 2;
+
+/* ──────────────────────────────────
+   유틸
+────────────────────────────────── */
+function getRemaining() {
+  if (!isRunning || isPaused) return Math.max(0, totalMs - elapsedMs);
+  return Math.max(0, totalMs - elapsedMs - (Date.now() - segmentStart));
+}
+
+function formatTime(ms) {
+  const totalSec = Math.floor(Math.max(0, ms) / 1000);
+  const m = Math.floor(totalSec / 60);
+  const s = totalSec % 60;
+  return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+}
+
+function formatElapsed(ms) {
+  const totalSec = Math.round(ms / 1000);
+  const m = Math.floor(totalSec / 60);
+  const s = totalSec % 60;
+  if (m === 0) return `${s}초`;
+  if (s === 0) return `${m}분`;
+  return `${m}분 ${s}초`;
+}
+
+/* ──────────────────────────────────
+   화면 1 — 설정 UI
+────────────────────────────────── */
+// 시간 버튼
+document.querySelectorAll('.time-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    selectedMinutes = parseInt(btn.dataset.minutes);
+    document.getElementById('custom-minutes').value = '';
+  });
+});
+
+// 직접 입력
+document.getElementById('custom-minutes').addEventListener('input', function() {
+  const val = parseInt(this.value);
+  if (val > 0 && val <= 180) {
+    document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('selected'));
+    selectedMinutes = val;
+  }
+});
+
+// 힌트 버튼
+document.querySelectorAll('.hint-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.hint-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    selectedHints = parseInt(btn.dataset.hints);
+  });
+});
+
+/* ──────────────────────────────────
+   게임 시작
+────────────────────────────────── */
+document.getElementById('start-btn').addEventListener('click', () => {
+  // 직접 입력 확인
+  const customVal = parseInt(document.getElementById('custom-minutes').value);
+  if (!isNaN(customVal) && customVal > 0 && customVal <= 180) {
+    selectedMinutes = customVal;
+  }
+
+  totalMs      = selectedMinutes * 60 * 1000;
+  elapsedMs    = 0;
+  segmentStart = null;
+  isPaused     = false;
+  isRunning    = false;
+  timedOut     = false;
+  hintCount    = selectedHints;
+  finalElapsedMs = 0;
+
+  updateHintDisplay();
+  updateTimerDisplay(totalMs);
+
+  showScreen('screen-timer');
+
+  // 0.3초 후 카운트다운 시작 (화면 전환 후)
+  setTimeout(() => {
+    segmentStart = Date.now();
+    isRunning = true;
+    timerInterval = setInterval(tick, 100);
+    document.getElementById('pause-btn').textContent = '⏸️ 일시정지';
+  }, 300);
+});
+
+/* ──────────────────────────────────
+   타이머 루프
+────────────────────────────────── */
+function tick() {
+  const remaining = getRemaining();
+  updateTimerDisplay(remaining);
+  updateColorState(remaining);
+
+  if (remaining <= 0 && !timedOut) {
+    timedOut = true;
+    if (!isPaused) {
+      elapsedMs = totalMs;
+    }
+    finalElapsedMs = totalMs;
+    triggerTimeout();
+  }
+}
+
+function updateTimerDisplay(remaining) {
+  document.getElementById('timer-display').textContent = formatTime(remaining);
+}
+
+function updateColorState(remaining) {
+  const pct = remaining / totalMs;
+  const el  = document.getElementById('timer-display');
+
+  el.classList.remove('state-normal', 'state-yellow', 'state-red', 'state-critical');
+  document.body.classList.remove('state-warning', 'state-danger');
+
+  if (pct > 0.5) {
+    el.classList.add('state-normal');
+  } else if (pct > 0.2) {
+    el.classList.add('state-yellow');
+  } else {
+    if (remaining <= 60_000) {
+      el.classList.add('state-critical');
+      document.body.classList.add('state-danger');
+    } else {
+      el.classList.add('state-red');
+    }
+    if (remaining <= 300_000) {
+      document.body.classList.add('state-warning');
+    }
+  }
+}
+
+/* ──────────────────────────────────
+   일시정지 / 재개
+────────────────────────────────── */
+function togglePause() {
+  if (!isRunning) return;
+  if (isPaused) {
+    // 재개
+    segmentStart = Date.now();
+    isPaused = false;
+    document.body.classList.remove('is-paused');
+    document.getElementById('pause-btn').textContent = '⏸️ 일시정지';
+  } else {
+    // 일시정지
+    elapsedMs += Date.now() - segmentStart;
+    segmentStart = null;
+    isPaused = true;
+    document.body.classList.add('is-paused');
+    document.getElementById('pause-btn').textContent = '▶️ 재개';
+  }
+}
+
+/* ──────────────────────────────────
+   시간 추가
+────────────────────────────────── */
+function addMinute() {
+  totalMs += 60_000;
+  // 일시정지 상태면 표시 갱신
+  if (isPaused) {
+    updateTimerDisplay(getRemaining());
+    updateColorState(getRemaining());
+  }
+  // 버튼 피드백
+  const btn = document.getElementById('add-time-btn');
+  btn.textContent = '✅ +1분';
+  setTimeout(() => { btn.textContent = '➕ 1분'; }, 600);
+}
+
+/* ──────────────────────────────────
+   수동 종료
+────────────────────────────────── */
+function stopTimer() {
+  if (!isRunning) return;
+  // 경과 시간 기록
+  if (!isPaused) {
+    elapsedMs += Date.now() - segmentStart;
+  }
+  finalElapsedMs = Math.min(elapsedMs, totalMs);
+
+  clearInterval(timerInterval);
+  timerInterval = null;
+  isRunning = false;
+  document.body.classList.remove('is-paused', 'state-warning', 'state-danger');
+
+  prepareResultScreen(false);
+  showScreen('screen-result');
+}
+
+/* ──────────────────────────────────
+   종료 확인
+────────────────────────────────── */
+function confirmExit() {
+  if (isRunning) {
+    if (!isPaused) togglePause();
+    if (confirm('게임을 종료하고 메인으로 돌아가시겠어요?')) {
+      clearInterval(timerInterval);
+      isRunning = false;
+      document.body.classList.remove('is-paused', 'state-warning', 'state-danger');
+      window.location.href = 'escape-mission.html';
+    } else {
+      togglePause();
+    }
+  } else {
+    window.location.href = 'escape-mission.html';
+  }
+}
+
+/* ──────────────────────────────────
+   힌트 사용
+────────────────────────────────── */
+function updateHintDisplay() {
+  const btn   = document.getElementById('use-hint-btn');
+  const label = document.getElementById('hint-count');
+  if (hintCount === -1) {
+    label.textContent = '∞';
+    btn.disabled = false;
+  } else if (hintCount === 0) {
+    label.textContent = '소진';
+    btn.disabled = true;
+  } else {
+    label.textContent = `${hintCount}회`;
+    btn.disabled = false;
+  }
+}
+
+function useHint() {
+  if (hintCount === 0) return;
+  if (hintCount > 0) hintCount--;
+  updateHintDisplay();
+  // 플래시 효과
+  const btn = document.getElementById('use-hint-btn');
+  btn.classList.remove('hint-used');
+  void btn.offsetWidth; // reflow
+  btn.classList.add('hint-used');
+  setTimeout(() => btn.classList.remove('hint-used'), 400);
+}
+
+/* ──────────────────────────────────
+   시간 종료 시퀀스
+────────────────────────────────── */
+function triggerTimeout() {
+  clearInterval(timerInterval);
+  timerInterval = null;
+  isRunning = false;
+  document.body.classList.remove('is-paused', 'state-warning', 'state-danger');
+
+  // 타이머 표시 고정
+  const displayEl = document.getElementById('timer-display');
+  displayEl.textContent = '00:00';
+  displayEl.classList.remove('state-normal','state-yellow','state-red','state-critical');
+  displayEl.classList.add('state-red');
+
+  // 알람 소리
+  playAlarm();
+
+  // 1. 화면 번쩍 (3회)
+  document.body.classList.add('flashing');
+  setTimeout(() => document.body.classList.remove('flashing'), 1100);
+
+  // 2. 타이머 숫자 흔들림
+  displayEl.classList.add('shaking');
+  setTimeout(() => displayEl.classList.remove('shaking'), 500);
+
+  // 3. 오버레이 표시
+  setTimeout(() => {
+    document.getElementById('timeout-overlay').classList.add('active');
+  }, 1200);
+
+  // 4. 3초 후 결과 화면으로
+  setTimeout(() => {
+    document.getElementById('timeout-overlay').classList.remove('active');
+    prepareResultScreen(true);
+    showScreen('screen-result');
+  }, 3500);
+}
+
+/* ──────────────────────────────────
+   알람 소리 (Web Audio API)
+────────────────────────────────── */
+function playAlarm() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const beepPattern = [0, 0.45, 0.9]; // 3회 비프
+
+    beepPattern.forEach(delay => {
+      const osc  = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+
+      osc.type = 'square';
+      osc.frequency.setValueAtTime(880, ctx.currentTime + delay);
+      osc.frequency.setValueAtTime(660, ctx.currentTime + delay + 0.15);
+
+      gain.gain.setValueAtTime(0, ctx.currentTime + delay);
+      gain.gain.linearRampToValueAtTime(0.35, ctx.currentTime + delay + 0.02);
+      gain.gain.setValueAtTime(0.35, ctx.currentTime + delay + 0.3);
+      gain.gain.linearRampToValueAtTime(0, ctx.currentTime + delay + 0.42);
+
+      osc.start(ctx.currentTime + delay);
+      osc.stop(ctx.currentTime + delay + 0.45);
+    });
+  } catch(e) { /* 소리 실패는 무시 */ }
+}
+
+/* ──────────────────────────────────
+   결과 화면 준비
+────────────────────────────────── */
+function prepareResultScreen(wasTimedOut) {
+  document.getElementById('result-choice').style.display = 'flex';
+  document.getElementById('result-choice').style.flexDirection = 'column';
+  document.getElementById('result-final').style.display = 'none';
+
+  if (wasTimedOut) {
+    document.getElementById('result-title').textContent = '⏰ 시간 종료!';
+    document.getElementById('result-sub').textContent = '탈출 결과를 선택해주세요';
+  } else {
+    document.getElementById('result-title').textContent = '게임 종료';
+    document.getElementById('result-sub').textContent = '탈출 결과를 선택해주세요';
+  }
+}
+
+function showSuccess() {
+  document.getElementById('result-choice').style.display = 'none';
+  const final = document.getElementById('result-final');
+  final.style.display = 'flex';
+  final.style.flexDirection = 'column';
+  final.style.alignItems = 'center';
+  final.style.gap = '10px';
+
+  document.getElementById('result-emoji').textContent = '🎊';
+  const title = document.getElementById('result-final-title');
+  title.textContent = '탈출 성공!';
+  title.className = 'result-final-title success';
+
+  const usedMs = Math.min(finalElapsedMs, totalMs);
+  document.getElementById('result-time-used').textContent =
+    `⏱️ ${formatElapsed(usedMs)} 만에 탈출!`;
+
+  document.getElementById('result-message').textContent =
+    '대단해요! 팀원 모두 수고했습니다 🎉';
+
+  launchConfetti();
+}
+
+function showFail() {
+  document.getElementById('result-choice').style.display = 'none';
+  const final = document.getElementById('result-final');
+  final.style.display = 'flex';
+  final.style.flexDirection = 'column';
+  final.style.alignItems = 'center';
+  final.style.gap = '10px';
+
+  document.getElementById('result-emoji').textContent = '💪';
+  const title = document.getElementById('result-final-title');
+  title.textContent = '아쉽게도 탈출 실패!';
+  title.className = 'result-final-title fail';
+
+  document.getElementById('result-time-used').textContent = '';
+  document.getElementById('result-message').textContent =
+    '괜찮아요! 단서가 어디서 막혔는지 함께 돌아보고\n다음엔 꼭 성공해봐요 💪';
+}
+
+/* ──────────────────────────────────
+   색종이 🎊
+────────────────────────────────── */
+function launchConfetti() {
+  const colors = ['#ef4444','#f97316','#fbbf24','#22c55e','#3b82f6','#8b5cf6','#ec4899'];
+  const container = document.getElementById('confetti-container');
+  container.innerHTML = '';
+
+  for (let i = 0; i < 90; i++) {
+    const p = document.createElement('div');
+    const size = Math.random() * 10 + 5;
+    const isCircle = Math.random() > 0.5;
+    const delay = Math.random() * 1.8;
+    const duration = Math.random() * 2 + 2.5;
+
+    p.className = 'confetti-p';
+    p.style.cssText = `
+      left: ${Math.random() * 100}%;
+      width: ${size}px;
+      height: ${isCircle ? size : size * 0.4}px;
+      background: ${colors[Math.floor(Math.random() * colors.length)]};
+      border-radius: ${isCircle ? '50%' : '2px'};
+      animation: confettiFall ${duration}s ${delay}s linear forwards;
+      transform: rotate(${Math.random() * 360}deg);
+    `;
+    container.appendChild(p);
+  }
+
+  setTimeout(() => { container.innerHTML = ''; }, 6000);
+}
+
+/* ──────────────────────────────────
+   새 게임
+────────────────────────────────── */
+function newGame() {
+  // 상태 초기화
+  clearInterval(timerInterval);
+  timerInterval = null;
+  isRunning = false;
+  isPaused = false;
+  timedOut = false;
+  document.body.classList.remove('is-paused', 'state-warning', 'state-danger', 'flashing');
+  document.getElementById('timeout-overlay').classList.remove('active');
+  document.getElementById('confetti-container').innerHTML = '';
+
+  // 타이머 표시 초기화
+  const displayEl = document.getElementById('timer-display');
+  displayEl.classList.remove('state-normal','state-yellow','state-red','state-critical','shaking');
+  displayEl.classList.add('state-normal');
+
+  showScreen('screen-setup');
+}
+
+/* ──────────────────────────────────
+   화면 전환
+────────────────────────────────── */
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+</script>
+</body>
+</html>
