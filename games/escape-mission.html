@@ -3,14 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="방탈출 미션 게임 방법, 준비물, 진행 팁, 변형 방법까지. 8~30명이 함께하는 초등 고학년 협동 추리 실내 레크리에이션.">
-  <meta name="keywords" content="레크리에이션, 실내 레크리에이션, 야외 레크리에이션, 단체게임, 수련회 게임, 캠프 레크, 주일학교 게임, MT 게임, 팀빌딩, 소그룹 게임">
-  <title>방탈출 미션 방법과 진행 팁 - 실내 레크리에이션 | 레크 뭐하지?</title>
+  <meta name="description" content="인쇄해서 바로 쓰는 방탈출 완성 시나리오 3종! 유아부터 성인까지, 단서를 풀어 탈출하는 협동 추리 게임. 진행자 가이드 완비.">
+  <meta name="keywords" content="레크리에이션, 방탈출, 실내 레크리에이션, 단체게임, 수련회 게임, 캠프 레크, 주일학교 게임, MT 게임, 팀빌딩, 협동 추리">
+  <title>방탈출 미션 - 인쇄해서 바로 쓰는 완성 시나리오 3종 | 레크 뭐하지?</title>
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="stylesheet" href="../css/style.css">
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8683975585186347"
-       crossorigin="anonymous"></script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8683975585186347" crossorigin="anonymous"></script>
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-75JKFQWSHP"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
@@ -18,22 +16,172 @@
     gtag('js', new Date());
     gtag('config', 'G-75JKFQWSHP');
   </script>
+  <style>
+    .scenario-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 18px;
+      margin-bottom: 40px;
+    }
+    .scenario-card {
+      background: white;
+      border-radius: 18px;
+      padding: 24px 20px;
+      box-shadow: 0 3px 16px rgba(0,0,0,0.08);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      border-top: 4px solid #ccc;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .scenario-card:hover { transform: translateY(-4px); box-shadow: 0 10px 30px rgba(0,0,0,0.12); }
+    .scenario-card.beginner { border-top-color: #22c55e; }
+    .scenario-card.advanced { border-top-color: #ef4444; }
+    .scenario-card.bible    { border-top-color: #8b5cf6; }
+    .scenario-card .sc-title {
+      font-size: 17px;
+      font-weight: 800;
+      color: #1a1a2e;
+    }
+    .scenario-card .sc-meta {
+      font-size: 13px;
+      color: #666;
+      line-height: 1.7;
+    }
+    .scenario-card .sc-stars {
+      font-size: 14px;
+      letter-spacing: 2px;
+    }
+    .scenario-card .sc-feature {
+      font-size: 13px;
+      color: #888;
+      border-top: 1px solid #f0f0f0;
+      padding-top: 8px;
+      margin-top: 4px;
+    }
+    .scenario-btn {
+      display: inline-block;
+      margin-top: 8px;
+      padding: 10px 20px;
+      border-radius: 50px;
+      font-size: 14px;
+      font-weight: 700;
+      text-decoration: none;
+      text-align: center;
+      transition: opacity 0.2s, transform 0.15s;
+    }
+    .scenario-btn:hover { opacity: 0.85; transform: translateX(2px); text-decoration: none; }
+    .btn-beginner { background: #dcfce7; color: #166534; }
+    .btn-advanced { background: #fee2e2; color: #991b1b; }
+    .btn-bible    { background: #ede9fe; color: #5b21b6; }
+    .btn-disabled { background: #f3f4f6; color: #9ca3af; cursor: default; }
+    .btn-disabled:hover { transform: none; opacity: 1; }
+    .badge-coming {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      background: #f3f4f6;
+      color: #9ca3af;
+      padding: 2px 8px;
+      border-radius: 20px;
+      vertical-align: middle;
+      margin-left: 4px;
+    }
+
+    .puzzle-section {
+      background: white;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+      margin-bottom: 16px;
+    }
+    .puzzle-section h3 {
+      font-size: 15px;
+      font-weight: 700;
+      color: #1a1a2e;
+      margin-bottom: 12px;
+      padding-left: 12px;
+      border-left: 3px solid #FF6B35;
+    }
+    .puzzle-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .puzzle-item {
+      background: #fafafa;
+      border-radius: 10px;
+      padding: 12px 14px;
+      font-size: 13px;
+      line-height: 1.6;
+      color: #555;
+    }
+    .puzzle-item strong {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      color: #FF6B35;
+      margin-bottom: 4px;
+    }
+    .lock-list {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .lock-list li {
+      background: #fafafa;
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: 13px;
+      color: #555;
+      line-height: 1.6;
+    }
+    .lock-list li::before {
+      content: "•";
+      color: #FF6B35;
+      font-weight: 700;
+      margin-right: 6px;
+    }
+
+    .timer-cta {
+      display: block;
+      text-align: center;
+      background: linear-gradient(135deg, #0d9488 0%, #5eead4 100%);
+      color: white;
+      padding: 16px 28px;
+      border-radius: 14px;
+      font-size: 15px;
+      font-weight: 700;
+      text-decoration: none;
+      margin-top: 32px;
+      transition: opacity 0.2s;
+    }
+    .timer-cta:hover { opacity: 0.88; text-decoration: none; }
+
+    @media (max-width: 480px) {
+      .puzzle-grid { grid-template-columns: 1fr; }
+      .scenario-grid { grid-template-columns: 1fr; }
+    }
+  </style>
 </head>
 <body>
 
   <div class="game-header" style="background: linear-gradient(135deg, #0d9488 0%, #5eead4 100%);">
     <h1>🔐 방탈출 미션</h1>
-    <p class="subtitle">단서를 풀어라! 팀이 함께 탈출하는 추리 게임</p>
+    <p class="subtitle">단서를 풀어라! 팀이 함께 탈출하는 협동 추리 게임</p>
     <div class="tags">
-      <span class="tag">초등 고학년</span>
-      <span class="tag">10~13세</span>
+      <span class="tag">4~20명</span>
+      <span class="tag">실내</span>
+      <span class="tag">30~50분</span>
       <span class="tag">협동·추리</span>
-      <span class="tag">미션 카드</span>
+      <span class="tag">완성 시나리오 3종</span>
     </div>
   </div>
 
   <div class="content">
-    <a href="../ages-older.html" class="back-btn" style="color:#0d9488;">← 초등 고학년 레크 목록으로</a>
+    <a href="../index.html" class="back-btn" style="color:#0d9488;">← 메인으로</a>
 
     <div class="info-box">
       <div class="info-item">
@@ -50,11 +198,11 @@
       </div>
       <div class="info-item">
         <div class="label">준비물</div>
-        <div class="value">미션 카드·자물쇠</div>
+        <div class="value">인쇄물·필기구</div>
       </div>
       <div class="info-item">
         <div class="label">추천연령</div>
-        <div class="value">초등 4학년+</div>
+        <div class="value">시나리오별 상이</div>
       </div>
     </div>
 
@@ -63,37 +211,134 @@
       <div class="step-list">
         <div class="step">
           <div class="step-num">1</div>
-          <p>교사가 사전에 방탈출 시나리오를 준비한다. 기본 구조: ①도입 스토리(예: "열쇠가 사라졌어요!") → ②단서 카드 5~7개를 교실 곳곳에 숨겨 놓기 → ③각 단서가 다음 단서 위치나 숫자 코드를 암시하도록 설계 → ④최종 코드로 자물쇠(또는 봉투) 열기.</p>
+          <p>진행자가 아래 완성 시나리오 중 하나를 선택해 인쇄·준비한다.</p>
         </div>
         <div class="step">
           <div class="step-num">2</div>
-          <p>참가자를 4~5명 팀으로 나누고 시작 단서 카드를 나눠준다. 제한 시간(20~30분)을 정하고 타이머를 시작한다. 팀원들이 의논하며 단서를 풀어나간다.</p>
+          <p>참가자를 4~5명 팀으로 나눈다.</p>
         </div>
         <div class="step">
           <div class="step-num">3</div>
-          <p>각 단서를 풀면 다음 단서 위치로 이동한다. 단서 예시: 수수께끼, 간단한 암호, 성경 구절의 특정 단어 찾기, 숫자 퍼즐. 너무 어렵거나 쉽지 않게 난이도 균형을 맞추는 것이 중요하다.</p>
+          <p>스토리를 들려주고 제한시간 타이머를 시작한다.</p>
         </div>
         <div class="step">
           <div class="step-num">4</div>
-          <p>모든 단서를 풀어 최종 코드를 완성하면 자물쇠를 열고 탈출 성공을 선언한다. 제한 시간 안에 탈출에 성공하면 팀 전원에게 작은 상품을 주거나, 탈출에 실패하면 교사가 마지막 힌트를 주어 함께 마무리한다.</p>
+          <p>팀이 단서를 순서대로 풀어 최종 코드로 탈출한다.</p>
         </div>
         <div class="step">
           <div class="step-num">5</div>
-          <p>모든 팀이 마무리된 후 각 단서의 정답을 함께 공개하고, 어떤 단서가 가장 어려웠는지 이야기를 나눈다. 시나리오에 신앙적 주제를 담았다면 그 의미를 함께 나누는 시간으로 마무리한다.</p>
+          <p>모든 팀 종료 후 정답을 함께 공개하고 소감을 나눈다.</p>
         </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>📋 완성 시나리오 바로 쓰기</h2>
+      <div class="scenario-grid">
+
+        <div class="scenario-card beginner">
+          <div class="sc-title">🌱 초급</div>
+          <div class="sc-title" style="font-size:15px; margin-top:-4px;">사라진 간식을 찾아라</div>
+          <div class="sc-meta">추천: 유아·초등 저학년 (5~9세)</div>
+          <div class="sc-meta">소요시간: 약 30분</div>
+          <div class="sc-stars">⭐☆☆ 난이도 초급</div>
+          <div class="sc-feature">그림·색깔·쉬운 암호 위주</div>
+          <a href="escape-beginner.html" class="scenario-btn btn-beginner">시나리오 보기 →</a>
+        </div>
+
+        <div class="scenario-card advanced">
+          <div class="sc-title">🔥 중급</div>
+          <div class="sc-title" style="font-size:15px; margin-top:-4px;">수상한 연구소 탈출</div>
+          <div class="sc-meta">추천: 초등 고학년·청소년·성인 (10세~)</div>
+          <div class="sc-meta">소요시간: 약 40분</div>
+          <div class="sc-stars">⭐⭐⭐ 난이도 중급</div>
+          <div class="sc-feature">암호 해독·추리·협동</div>
+          <span class="scenario-btn btn-disabled">시나리오 보기 <span class="badge-coming">준비 중</span></span>
+        </div>
+
+        <div class="scenario-card bible">
+          <div class="sc-title">✝️ 성경 테마</div>
+          <div class="sc-title" style="font-size:15px; margin-top:-4px;">출애굽 대탈출</div>
+          <div class="sc-meta">추천: 주일학교·교회 수련회 (초등~청소년)</div>
+          <div class="sc-meta">소요시간: 약 40분</div>
+          <div class="sc-stars">⭐⭐☆ 난이도 중하</div>
+          <div class="sc-feature">성경 내용 기반 단서</div>
+          <span class="scenario-btn btn-disabled">시나리오 보기 <span class="badge-coming">준비 중</span></span>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>🧩 나만의 방탈출 만들기 - 퍼즐 재료 모음</h2>
+
+      <div class="puzzle-section">
+        <h3>암호 유형</h3>
+        <div class="puzzle-grid">
+          <div class="puzzle-item">
+            <strong>알파벳↔숫자</strong>
+            A=1, B=2 … Z=26 방식으로 단어를 숫자로 바꾸거나 반대로 해독
+          </div>
+          <div class="puzzle-item">
+            <strong>거꾸로 글씨</strong>
+            "출발" → "발출" 처럼 글자 순서를 뒤집어서 쓰기
+          </div>
+          <div class="puzzle-item">
+            <strong>자음/모음 분리</strong>
+            "ㅂㅏㅂ" → "밥" 처럼 분리된 자모음을 조합해 단어 찾기
+          </div>
+          <div class="puzzle-item">
+            <strong>숫자 키패드 암호</strong>
+            휴대폰 자판 위치 활용 (예: 2=ㄱㄴㄷ 자리)
+          </div>
+          <div class="puzzle-item">
+            <strong>첫 글자 모으기</strong>
+            여러 단어의 첫 글자만 조합해 숨겨진 단어 만들기
+          </div>
+        </div>
+      </div>
+
+      <div class="puzzle-section">
+        <h3>관찰·추리 유형</h3>
+        <div class="puzzle-grid">
+          <div class="puzzle-item">
+            <strong>숨은 숫자 찾기</strong>
+            그림 속에 작게 숨겨놓은 숫자를 발견해 코드 조합
+          </div>
+          <div class="puzzle-item">
+            <strong>틀린 그림 찾기</strong>
+            두 그림의 차이를 찾고, 차이 위치가 정답
+          </div>
+          <div class="puzzle-item">
+            <strong>책 속 단어 찾기</strong>
+            특정 책의 n페이지 m번째 줄 k번째 단어
+          </div>
+          <div class="puzzle-item">
+            <strong>색깔 순서 = 숫자 코드</strong>
+            빨강=1, 파랑=2 등 약속한 색깔 순서가 자물쇠 번호
+          </div>
+        </div>
+      </div>
+
+      <div class="puzzle-section">
+        <h3>자물쇠 대체법 (자물쇠 없이도 OK!)</h3>
+        <ul class="lock-list">
+          <li>봉투를 풀로 봉하고 "정답 4자리를 진행자에게 말하면 개봉"</li>
+          <li>지퍼백 + 클립으로 봉하기</li>
+          <li>진행자가 직접 정답 확인 후 다음 단서 지급</li>
+        </ul>
       </div>
     </div>
 
     <div class="section">
       <h2>💡 진행 팁</h2>
       <div class="tip-box">
-        <strong>준비 시간이 가장 중요한 게임이에요!</strong><br>
-        단서를 만드는 데 최소 1시간이 필요하지만, 아이들의 반응은 그 이상이에요.
+        <strong>가장 중요한 건 준비 시간!</strong> 완성 시나리오를 쓰면 인쇄만 하면 되니 30분이면 준비 끝.
         <ul>
-          <li>단서는 각 팀마다 동일하게 준비하되, 시작 단서를 다르게 주면 서로 겹치지 않고 탐색할 수 있어요.</li>
-          <li>자물쇠가 없다면 봉투 안에 최종 미션(답을 맞히면 열 수 있는 봉투)을 넣어도 충분해요.</li>
-          <li>단서 난이도가 너무 높으면 힌트 카드(뒤집으면 힌트가 나오는 카드)를 함께 두면 좋아요.</li>
-          <li>탈출 스토리를 성경 이야기와 연결할 수 있어요. 예: "모세처럼 이집트에서 탈출해라!", "사도행전 속 바울의 탈옥 미션".</li>
+          <li>팀마다 같은 문제, 다른 시작 위치로 배치하면 서로 안 겹쳐요.</li>
+          <li>막히는 팀을 위해 "힌트 카드"를 미리 준비하세요 (한 팀당 2~3회 사용 가능).</li>
+          <li>제한시간은 넉넉히. 초급 30분, 중급 40분 권장.</li>
+          <li>타이머는 모두가 보이는 곳에 띄우거나 아래 진행자 도구를 활용하세요.</li>
         </ul>
       </div>
     </div>
@@ -115,6 +360,11 @@
         </div>
       </div>
     </div>
+
+    <div class="bottom-back-nav">
+      <a href="escape-timer.html" class="timer-cta">⏱️ 방탈출 타이머 사용하기 <span class="badge-coming" style="background:rgba(255,255,255,0.3);color:white;">준비 중</span></a>
+    </div>
+
   </div>
 
   <footer>

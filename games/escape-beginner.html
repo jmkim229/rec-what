@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="방탈출 초급 완성 시나리오 - 사라진 간식을 찾아라. 유아·초등 저학년(5~9세)용. 인쇄해서 바로 사용하는 단서 카드 4단계 완성본.">
+  <meta name="keywords" content="방탈출 초급, 유아 방탈출, 초등 방탈출, 방탈출 시나리오, 어린이 레크리에이션">
+  <title>방탈출 초급 - 사라진 간식을 찾아라 | 레크 뭐하지?</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="../css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8683975585186347" crossorigin="anonymous"></script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-75JKFQWSHP"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-75JKFQWSHP');
+  </script>
+  <style>
+    /* ── 인쇄 친화 공통 ── */
+    .checklist {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .checklist li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 14px;
+      color: #444;
+      padding: 8px 12px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.05);
+    }
+    .checklist li::before {
+      content: "☐";
+      font-size: 16px;
+      flex-shrink: 0;
+      color: #22c55e;
+    }
+
+    /* ── 흐름도 ── */
+    .flow-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin: 16px 0;
+    }
+    .flow-node {
+      background: white;
+      border: 2px solid #22c55e;
+      border-radius: 10px;
+      padding: 8px 14px;
+      font-size: 13px;
+      font-weight: 700;
+      color: #166534;
+      white-space: nowrap;
+    }
+    .flow-start {
+      background: #22c55e;
+      color: white;
+      border-color: #22c55e;
+    }
+    .flow-end {
+      background: #fbbf24;
+      color: #78350f;
+      border-color: #fbbf24;
+    }
+    .flow-arrow {
+      font-size: 16px;
+      color: #22c55e;
+      font-weight: 700;
+    }
+
+    /* ── 단서 카드 ── */
+    .clue-card {
+      background: white;
+      border-radius: 18px;
+      padding: 24px;
+      box-shadow: 0 3px 16px rgba(0,0,0,0.08);
+      margin-bottom: 20px;
+      border-left: 5px solid #22c55e;
+    }
+    .clue-card.clue-start { border-left-color: #3b82f6; }
+    .clue-card.clue-final { border-left-color: #fbbf24; }
+
+    .clue-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .clue-badge {
+      background: #22c55e;
+      color: white;
+      border-radius: 50px;
+      padding: 4px 14px;
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .clue-badge.badge-start { background: #3b82f6; }
+    .clue-badge.badge-final { background: #fbbf24; color: #78350f; }
+    .clue-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: #1a1a2e;
+    }
+
+    .clue-body {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .clue-field {
+      background: #f9fafb;
+      border-radius: 10px;
+      padding: 12px 14px;
+    }
+    .clue-field.full-width {
+      grid-column: 1 / -1;
+    }
+    .clue-field-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: #22c55e;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+    .clue-field-label.lbl-answer { color: #ef4444; }
+    .clue-field-label.lbl-next { color: #8b5cf6; }
+    .clue-field-label.lbl-print { color: #3b82f6; }
+    .clue-field-content {
+      font-size: 14px;
+      color: #333;
+      line-height: 1.7;
+    }
+    .clue-answer {
+      font-size: 22px;
+      font-weight: 900;
+      color: #ef4444;
+      letter-spacing: 2px;
+    }
+
+    /* ── 인쇄용 카드 박스 ── */
+    .print-card {
+      border: 2.5px dashed #d1d5db;
+      border-radius: 14px;
+      padding: 18px 20px;
+      margin-top: 10px;
+      background: #fefefe;
+    }
+    .print-card-label {
+      font-size: 10px;
+      font-weight: 700;
+      color: #9ca3af;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+    .print-card-content {
+      font-size: 15px;
+      font-weight: 600;
+      color: #1a1a2e;
+      line-height: 1.8;
+    }
+
+    /* ── 정답 요약 ── */
+    .answer-summary {
+      background: linear-gradient(135deg, #fef3c7, #fde68a);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+    .answer-summary h3 {
+      font-size: 16px;
+      font-weight: 800;
+      color: #78350f;
+      margin-bottom: 14px;
+    }
+    .answer-flow {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .answer-node {
+      background: white;
+      border-radius: 10px;
+      padding: 8px 16px;
+      font-size: 14px;
+      font-weight: 700;
+      color: #1a1a2e;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+      text-align: center;
+    }
+    .answer-node small {
+      display: block;
+      font-size: 10px;
+      color: #888;
+      font-weight: 500;
+    }
+    .answer-arrow {
+      font-size: 18px;
+      color: #f59e0b;
+      font-weight: 900;
+    }
+
+    /* ── 아이콘 그림 대체 (텍스트 기반) ── */
+    .animal-box {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin: 8px 0;
+    }
+    .animal-chip {
+      background: #f0fdf4;
+      border: 1px solid #86efac;
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-size: 14px;
+      color: #166534;
+    }
+
+    .apple-display {
+      font-size: 22px;
+      letter-spacing: 4px;
+      line-height: 1.6;
+    }
+
+    /* ── 미로 표현 ── */
+    .maze-placeholder {
+      background: #f9fafb;
+      border: 2px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      font-size: 14px;
+      color: #6b7280;
+      line-height: 1.8;
+    }
+    .maze-placeholder strong {
+      display: block;
+      font-size: 15px;
+      color: #374151;
+      margin-bottom: 8px;
+    }
+
+    /* ── 버튼 그룹 ── */
+    .bottom-btn-group {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 36px;
+    }
+    .btn-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 12px 24px;
+      border: 2px solid #22c55e;
+      border-radius: 50px;
+      font-size: 14px;
+      font-weight: 700;
+      color: #166534;
+      text-decoration: none;
+      background: white;
+      transition: background 0.2s, color 0.2s;
+    }
+    .btn-back:hover { background: #22c55e; color: white; text-decoration: none; }
+
+    .btn-timer {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 12px 24px;
+      border: 2px solid #0d9488;
+      border-radius: 50px;
+      font-size: 14px;
+      font-weight: 700;
+      color: #0d9488;
+      text-decoration: none;
+      background: white;
+      transition: background 0.2s, color 0.2s;
+    }
+    .btn-timer:hover { background: #0d9488; color: white; text-decoration: none; }
+
+    .badge-coming {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      background: #f3f4f6;
+      color: #9ca3af;
+      padding: 2px 8px;
+      border-radius: 20px;
+    }
+
+    /* ── 인쇄 스타일 ── */
+    @media print {
+      .game-header, footer, .back-btn, .bottom-btn-group, .section > h2 { }
+      .clue-card { break-inside: avoid; }
+      body { background: white; }
+      .content { max-width: 100%; }
+    }
+
+    @media (max-width: 480px) {
+      .clue-body { grid-template-columns: 1fr; }
+      .answer-flow { gap: 4px; }
+      .flow-row { gap: 4px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="game-header" style="background: linear-gradient(135deg, #22c55e 0%, #86efac 100%);">
+    <h1>🌱 방탈출 초급</h1>
+    <p class="subtitle">사라진 간식을 찾아라 — 유아·초등 저학년 완성 시나리오</p>
+    <div class="tags">
+      <span class="tag">5~9세 추천</span>
+      <span class="tag">30분</span>
+      <span class="tag">⭐☆☆ 초급</span>
+      <span class="tag">인쇄해서 바로 사용</span>
+    </div>
+  </div>
+
+  <div class="content">
+    <a href="escape-mission.html" class="back-btn" style="color:#22c55e;">← 방탈출 메인으로</a>
+
+    <!-- 준비물 -->
+    <div class="section">
+      <h2>📦 준비물 체크리스트</h2>
+      <ul class="checklist">
+        <li>A4 용지 6장 (단서 카드 인쇄용)</li>
+        <li>색연필 또는 색 스티커</li>
+        <li>작은 상자 또는 봉투 1개 (최종 보물용)</li>
+        <li>간식 (보상용 — 팀 수만큼 준비)</li>
+        <li>인쇄 가능한 프린터</li>
+        <li>준비 시간: 약 20~30분</li>
+      </ul>
+    </div>
+
+    <!-- 스토리 도입 -->
+    <div class="section">
+      <h2>📖 스토리 도입 — 진행자가 읽어주세요</h2>
+      <div class="tip-box" style="background:#f0fdf4; border-left-color:#22c55e;">
+        <strong style="color:#166534; font-size:16px; display:block; margin-bottom:8px;">"여러분! 큰일 났어요. 😱"</strong>
+        오늘 먹을 간식이 사라졌어요!<br>
+        누군가 간식을 숨기고 단서를 남겨놨대요.<br>
+        여러분이 탐정이 되어서 단서를 하나하나 풀면<br>
+        사라진 간식을 찾을 수 있어요.<br><br>
+        <strong style="color:#166534;">준비됐나요? 출발!</strong>
+      </div>
+    </div>
+
+    <!-- 진행 흐름도 -->
+    <div class="section">
+      <h2>🗺️ 진행자용 전체 흐름도</h2>
+      <div class="flow-row">
+        <div class="flow-node flow-start">🚀 시작 단서 배부</div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-node">단서 1<br><small>색깔</small></div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-node">단서 2<br><small>동물 세기</small></div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-node">단서 3<br><small>사과 세기</small></div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-node">단서 4<br><small>미로</small></div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-node flow-end">🎉 보물 상자!</div>
+      </div>
+    </div>
+
+    <!-- 단서 상세 -->
+    <div class="section">
+      <h2>📄 단서별 상세 내용</h2>
+
+      <!-- 단서 1 -->
+      <div class="clue-card clue-start">
+        <div class="clue-header">
+          <span class="clue-badge badge-start">시작 단서</span>
+          <span class="clue-title">단서 1 — 색깔 찾기</span>
+        </div>
+        <div class="clue-body">
+          <div class="clue-field full-width">
+            <div class="clue-field-label lbl-print">📄 단서 카드에 인쇄할 내용</div>
+            <div class="print-card">
+              <div class="print-card-label">탐정 카드 #1</div>
+              <div class="print-card-content">
+                빨강, 노랑, 파랑…<br>
+                무지개가 <u>시작되는 색</u>을 찾아보세요!<br>
+                그 색깔 물건이 있는 곳으로 가면<br>
+                다음 단서가 기다리고 있어요! 🌈
+              </div>
+            </div>
+          </div>
+          <div class="clue-field">
+            <div class="clue-field-label lbl-answer">✅ 정답</div>
+            <div class="clue-answer">빨강</div>
+          </div>
+          <div class="clue-field">
+            <div class="clue-field-label lbl-next">➡️ 다음 행동</div>
+            <div class="clue-field-content">교실(또는 장소) 안 <strong>빨간색 물건 근처</strong>에 단서 2를 미리 숨겨 두세요.</div>
+          </div>
+          <div class="clue-field full-width" style="background:#eff6ff;">
+            <div class="clue-field-label" style="color:#3b82f6;">💡 진행자 메모</div>
+            <div class="clue-field-content">팀에게 직접 배부합니다. 팀이 여러 개면 같은 카드를 팀 수만큼 인쇄하고 색깔(빨강팀·파랑팀 등)로 구분하세요.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 단서 2 -->
+      <div class="clue-card">
+        <div class="clue-header">
+          <span class="clue-badge">단서 2</span>
+          <span class="clue-title">동물 세기</span>
+        </div>
+        <div class="clue-body">
+          <div class="clue-field full-width">
+            <div class="clue-field-label lbl-print">📄 단서 카드에 인쇄할 내용</div>
+            <div class="print-card">
+              <div class="print-card-label">탐정 카드 #2</div>
+              <div class="print-card-content">
+                아래 동물 친구들을 잘 보세요!<br>
+                <div class="animal-box" style="margin: 8px 0;">
+                  <span class="animal-chip">🐕 강아지</span>
+                  <span class="animal-chip">🐈 고양이</span>
+                  <span class="animal-chip">🐇 토끼</span>
+                  <span class="animal-chip">🐦 새</span>
+                  <span class="animal-chip">🐟 물고기</span>
+                </div>
+                <strong>다리가 4개인 동물을 모두 세어보세요.</strong><br>
+                그 숫자가 있는 곳으로 가면 다음 단서가 있어요! 🔍
+              </div>
+            </div>
+          </div>
+          <div class="clue-field">
+            <div class="clue-field-label lbl-answer">✅ 정답</div>
+            <div class="clue-answer">3</div>
+            <div class="clue-field-content" style="margin-top:4px; font-size:12px; color:#888;">강아지·고양이·토끼</div>
+          </div>
+          <div class="clue-field">
+            <div class="clue-field-label lbl-next">➡️ 다음 행동</div>
+            <div class="clue-field-content">숫자 "3"이 적힌 곳 또는 <strong>3번 책상</strong> 등에 단서 3을 숨겨두세요.</div>
+          </div>
+          <div class="clue-field full-width" style="background:#fef9c3;">
+            <div class="clue-field-label" style="color:#ca8a04;">💡 진행자 메모</div>
+            <div class="clue-field-content">글을 못 읽는 유아가 있으면 진행자가 동물 이름을 읽어주세요. 인쇄 시 동물 그림을 직접 그려 넣으면 더 좋아요.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 단서 3 -->
+      <div class="clue-card">
+        <div class="clue-header">
+          <span class="clue-badge">단서 3</span>
+          <span class="clue-title">사과 세기</span>
+        </div>
+        <div class="clue-body">
+          <div class="clue-field full-width">
+            <div class="clue-field-label lbl-print">📄 단서 카드에 인쇄할 내용</div>
+            <div class="print-card">
+              <div class="print-card-label">탐정 카드 #3</div>
+              <div class="print-card-content">
+                사과가 몇 개 있나요? 모두 세어보세요!<br>
+                <div class="apple-display" style="margin: 10px 0;">🍎🍎🍎🍎🍎🍎🍎</div>
+                그 숫자만큼 <strong>박수를 치고</strong>,<br>
+                다음 장소로 이동하세요! 👏
+              </div>
+            </div>
+          </div>
+          <div class="clue-field">
+            <div class="clue-field-label lbl-answer">✅ 정답</div>
+            <div class="clue-answer">7</div>
+          </div>
+          <div class="clue-field">
+            <div class="clue-field-label lbl-next">➡️ 다음 행동</div>
+            <div class="clue-field-content">7번 위치 또는 <strong>미리 약속한 장소</strong>에 단서 4를 숨겨두세요.</div>
+          </div>
+          <div class="clue-field full-width" style="background:#fef9c3;">
+            <div class="clue-field-label" style="color:#ca8a04;">💡 진행자 메모</div>
+            <div class="clue-field-content">박수 미션은 몸을 움직이는 즐거움을 줘요. 너무 쉽다면 "7번 박수치고 제자리 한 바퀴 돌기"처럼 조건을 추가해보세요.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 단서 4 -->
+      <div class="clue-card">
+        <div class="clue-header">
+          <span class="clue-badge">단서 4</span>
+          <span class="clue-title">미로 통과</span>
+        </div>
+        <div class="clue-body">
+          <div class="clue-field full-width">
+            <div class="clue-field-label lbl-print">📄 단서 카드에 인쇄할 내용</div>
+            <div class="print-card">
+              <div class="print-card-label">탐정 카드 #4 — 마지막 단서!</div>
+              <div class="print-card-content">
+                <div class="maze-placeholder">
+                  <strong>🌀 미로를 통과하라!</strong>
+                  출발 → (길 찾기) → 도착<br><br>
+                  <em style="font-size:12px; color:#9ca3af;">※ 아래 미로 그림을 직접 그리거나 미로 인쇄물을 붙여넣으세요.<br>
+                  네이버·구글에서 "어린이 미로 인쇄"로 검색하면 무료 미로를 구할 수 있어요.</em><br><br>
+                  도착점에 이렇게 쓰세요:<br>
+                  <strong>"보물상자는 [선생님 책상] 아래에 있어요! 🎁"</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="clue-field">
+            <div class="clue-field-label lbl-answer">✅ 정답</div>
+            <div class="clue-answer" style="font-size:15px;">미로 통과</div>
+          </div>
+          <div class="clue-field">
+            <div class="clue-field-label lbl-next">➡️ 다음 행동</div>
+            <div class="clue-field-content">미로 도착점에 쓰인 장소(예: 선생님 책상 아래)로 이동해 <strong>보물 상자</strong>를 찾습니다.</div>
+          </div>
+          <div class="clue-field full-width" style="background:#fef9c3;">
+            <div class="clue-field-label" style="color:#ca8a04;">💡 진행자 메모</div>
+            <div class="clue-field-content">미로는 직접 그리거나 온라인 무료 미로를 출력해서 붙여도 됩니다. 5세용이라면 3~4개 길이 있는 단순한 미로면 충분해요.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 최종 보물 -->
+      <div class="clue-card clue-final">
+        <div class="clue-header">
+          <span class="clue-badge badge-final">🎉 최종 보물</span>
+          <span class="clue-title">탈출 성공!</span>
+        </div>
+        <div class="clue-body">
+          <div class="clue-field full-width">
+            <div class="clue-field-label lbl-print">📦 보물 상자 안에 넣을 것</div>
+            <div class="print-card" style="border-color:#fbbf24;">
+              <div class="print-card-label">축하 메시지 (출력해서 넣기)</div>
+              <div class="print-card-content" style="text-align:center; font-size:17px;">
+                🎉 탈출 성공! 🎉<br>
+                <span style="font-size:14px; color:#6b7280;">여러분은 진짜 탐정이에요!<br>사라진 간식을 찾았습니다!</span>
+              </div>
+            </div>
+          </div>
+          <div class="clue-field full-width" style="background:#fef3c7;">
+            <div class="clue-field-label" style="color:#d97706;">💡 진행자 메모</div>
+            <div class="clue-field-content">상자(또는 봉투) 안에 간식 + 축하 메시지를 넣어두세요. 팀이 여러 개면 팀마다 보물 상자를 별도로 준비하거나, 함께 여는 방식으로 운영하세요.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 정답 요약 -->
+    <div class="section">
+      <h2>🔑 진행자용 정답 요약지</h2>
+      <div class="answer-summary">
+        <h3>📋 정답 한눈에 보기 (진행자 보관용)</h3>
+        <div class="answer-flow">
+          <div class="answer-node">
+            단서 1<br>
+            <span style="font-size:18px; color:#22c55e; font-weight:900;">빨강</span>
+          </div>
+          <span class="answer-arrow">→</span>
+          <div class="answer-node">
+            단서 2<br>
+            <span style="font-size:18px; color:#22c55e; font-weight:900;">3</span>
+          </div>
+          <span class="answer-arrow">→</span>
+          <div class="answer-node">
+            단서 3<br>
+            <span style="font-size:18px; color:#22c55e; font-weight:900;">7</span>
+          </div>
+          <span class="answer-arrow">→</span>
+          <div class="answer-node">
+            단서 4<br>
+            <span style="font-size:14px; color:#22c55e; font-weight:900;">미로통과</span>
+          </div>
+          <span class="answer-arrow">→</span>
+          <div class="answer-node" style="background:#fbbf24; color:#78350f;">
+            🎉 보물!
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 진행 팁 -->
+    <div class="section">
+      <h2>💡 이 시나리오 진행 팁</h2>
+      <div class="tip-box" style="background:#f0fdf4; border-left-color:#22c55e;">
+        <ul>
+          <li>글을 못 읽는 유아가 있으면 진행자가 단서를 읽어주세요.</li>
+          <li>색깔·그림 위주라 5세도 충분히 가능. 너무 쉬우면 단서 사이에 율동 미션을 추가해보세요.</li>
+          <li>단서를 숨길 때 너무 어려운 곳(높은 곳, 위험한 곳)은 꼭 피하세요.</li>
+          <li>팀이 여러 개면 단서 카드를 색깔로 구분(빨강팀·파랑팀)해서 섞이지 않게 해요.</li>
+          <li>각 팀마다 단서 위치를 조금씩 다르게 배치하면 서로 겹치지 않아요.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 하단 버튼 -->
+    <div class="bottom-btn-group">
+      <a href="escape-mission.html" class="btn-back">← 방탈출 메인으로</a>
+      <a href="escape-timer.html" class="btn-timer">⏱️ 방탈출 타이머 <span class="badge-coming">준비 중</span></a>
+    </div>
+
+  </div>
+
+  <footer>
+    <p>© 2025 레크 뭐하지? | 모든 레크 진행자를 위한 아이디어 모음</p>
+  </footer>
+
+  <script src="../js/ux-helpers.js"></script>
+</body>
+</html>

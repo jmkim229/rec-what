@@ -142,15 +142,15 @@ const gamesData = [
     id: 'escape-mission',
     emoji: '🔐',
     title: '방탈출 미션',
-    description: '교실이나 강당을 방탈출 공간으로! 단서를 풀고 미션을 완수하는 협동 추리 게임',
+    description: '인쇄해서 바로 쓰는 완성 시나리오 3종! 단서를 풀어 탈출하는 협동 추리 게임',
     url: 'games/escape-mission.html',
     people: '4~20명',
     time: '30~50분',
-    prep: '미션 카드',
+    prep: '인쇄물·필기구',
     tags: {
       location: ['indoor'],
       groupSize: ['small', 'medium', 'large'],
-      ageGroup: ['kid-old', 'teen', 'adult'],
+      ageGroup: ['young', 'kid-young', 'kid-old', 'teen', 'adult'],
       duration: 'long',
       situation: ['brain']
     }
