@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="description" content="너도나도 게임 주제 추천 도구. 카테고리를 선택하면 랜덤으로 주제를 뽑아드려요.">
+  <title>🙋 너도나도 주제 추천 도구 | 레크 뭐하지?</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif;
+      background: #0f172a;
+      color: #f1f5f9;
+      min-height: 100vh;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    }
+
+    .screen { display: none; min-height: 100vh; flex-direction: column; }
+    .screen.active { display: flex; }
+
+    /* ── 공통 헤더 ── */
+    .tool-header {
+      display: flex;
+      align-items: center;
+      padding: 14px 16px;
+      background: rgba(255,255,255,0.05);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .back-link {
+      color: #fb923c;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .back-link:hover { color: #fdba74; }
+
+    /* ══════════════════════════════
+       화면 1 — 카테고리 선택
+    ══════════════════════════════ */
+    #screen-select {
+      background: #0f172a;
+    }
+    .select-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 28px 18px 40px;
+    }
+    .select-title {
+      font-size: 24px;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+    .select-sub {
+      font-size: 14px;
+      color: #94a3b8;
+      margin-bottom: 32px;
+      line-height: 1.6;
+    }
+
+    .cat-section-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      margin-bottom: 12px;
+    }
+
+    .cat-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-bottom: 28px;
+    }
+    .cat-btn {
+      padding: 16px 10px;
+      border-radius: 14px;
+      border: 2px solid #1e293b;
+      background: #1e293b;
+      color: #cbd5e1;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s;
+      font-family: inherit;
+      text-align: center;
+      line-height: 1.3;
+    }
+    .cat-btn:hover {
+      border-color: #f97316;
+      background: rgba(249,115,22,0.1);
+      color: #fdba74;
+    }
+    .cat-btn.selected {
+      border-color: #f97316;
+      background: rgba(249,115,22,0.18);
+      color: #fb923c;
+    }
+    .cat-btn .cat-emoji {
+      display: block;
+      font-size: 22px;
+      margin-bottom: 4px;
+    }
+
+    .pick-btn {
+      width: 100%;
+      padding: 20px;
+      border-radius: 18px;
+      border: none;
+      background: linear-gradient(135deg, #ea580c, #f97316);
+      color: white;
+      font-size: 19px;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 6px 24px rgba(249,115,22,0.45);
+      transition: transform 0.15s, box-shadow 0.15s;
+      font-family: inherit;
+      letter-spacing: -0.3px;
+    }
+    .pick-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(249,115,22,0.55);
+    }
+    .pick-btn:active {
+      transform: scale(0.98);
+    }
+
+    /* ══════════════════════════════
+       화면 2 — 주제 표시
+    ══════════════════════════════ */
+    #screen-result {
+      background: linear-gradient(160deg, #0f172a 0%, #1a1035 100%);
+    }
+    .result-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 32px 24px;
+      gap: 0;
+      text-align: center;
+    }
+
+    .result-cat-badge {
+      font-size: 14px;
+      font-weight: 700;
+      color: #fb923c;
+      background: rgba(249,115,22,0.15);
+      border: 1.5px solid rgba(249,115,22,0.3);
+      padding: 6px 18px;
+      border-radius: 50px;
+      margin-bottom: 28px;
+    }
+
+    .topic-card {
+      width: 100%;
+      max-width: 340px;
+      background: linear-gradient(160deg, #1e1b4b, #312e81);
+      border: 2px solid rgba(167,139,250,0.35);
+      border-radius: 24px;
+      padding: 40px 28px;
+      box-shadow: 0 16px 48px rgba(99,102,241,0.35);
+      margin-bottom: 32px;
+    }
+    .topic-card.animate {
+      animation: topicReveal 0.45s cubic-bezier(0.34,1.56,0.64,1) both;
+    }
+    @keyframes topicReveal {
+      from { opacity: 0; transform: scale(0.7) rotateY(20deg); }
+      to   { opacity: 1; transform: scale(1) rotateY(0deg); }
+    }
+
+    .topic-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: rgba(167,139,250,0.7);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 16px;
+    }
+    .topic-word {
+      font-size: 30px;
+      font-weight: 800;
+      color: white;
+      line-height: 1.35;
+      word-break: keep-all;
+    }
+    .topic-deco {
+      font-size: 36px;
+      margin-top: 16px;
+    }
+
+    .result-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      width: 100%;
+      max-width: 340px;
+    }
+    .action-btn {
+      padding: 16px;
+      border-radius: 14px;
+      border: none;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s;
+    }
+    .action-btn-primary {
+      background: linear-gradient(135deg, #ea580c, #f97316);
+      color: white;
+      box-shadow: 0 4px 16px rgba(249,115,22,0.4);
+    }
+    .action-btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(249,115,22,0.5);
+    }
+    .action-btn-secondary {
+      background: #1e293b;
+      color: #94a3b8;
+      border: 1.5px solid #334155;
+    }
+    .action-btn-secondary:hover {
+      background: #263347;
+      color: #cbd5e1;
+    }
+
+    /* 스피닝 로딩 */
+    .spinning {
+      animation: spin 0.5s linear infinite;
+    }
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══ 화면 1: 카테고리 선택 ══ -->
+<div id="screen-select" class="screen active">
+  <div class="tool-header">
+    <a href="me-too.html" class="back-link">← 게임 설명으로 돌아가기</a>
+  </div>
+  <div class="select-body">
+    <div class="select-title">🙋 너도나도 주제 추천</div>
+    <div class="select-sub">카테고리를 고르면 랜덤으로 주제를 뽑아드려요</div>
+
+    <div class="cat-section-label">카테고리 선택</div>
+    <div class="cat-grid">
+      <button class="cat-btn selected" data-cat="all">
+        <span class="cat-emoji">🎲</span>전체 랜덤
+      </button>
+      <button class="cat-btn" data-cat="season">
+        <span class="cat-emoji">🌸</span>계절·날씨
+      </button>
+      <button class="cat-btn" data-cat="school">
+        <span class="cat-emoji">🏫</span>학교·일상
+      </button>
+      <button class="cat-btn" data-cat="food">
+        <span class="cat-emoji">🍔</span>음식
+      </button>
+      <button class="cat-btn" data-cat="culture">
+        <span class="cat-emoji">🎬</span>문화·연예
+      </button>
+      <button class="cat-btn" data-cat="activity">
+        <span class="cat-emoji">🏃</span>활동·취미
+      </button>
+      <button class="cat-btn" data-cat="nature">
+        <span class="cat-emoji">🐶</span>동물·자연
+      </button>
+      <button class="cat-btn" data-cat="church">
+        <span class="cat-emoji">⛪</span>교회·신앙
+      </button>
+      <button class="cat-btn" data-cat="fun">
+        <span class="cat-emoji">😂</span>재미·엉뚱
+      </button>
+    </div>
+
+    <button class="pick-btn" id="pick-btn">🎯 주제 뽑기</button>
+  </div>
+</div>
+
+<!-- ══ 화면 2: 주제 표시 ══ -->
+<div id="screen-result" class="screen">
+  <div class="tool-header">
+    <a href="#" class="back-link" id="back-to-select">← 카테고리 변경</a>
+  </div>
+  <div class="result-body">
+    <div class="result-cat-badge" id="result-cat-badge">🎲 전체 랜덤</div>
+    <div class="topic-card" id="topic-card">
+      <div class="topic-label">오늘의 주제</div>
+      <div class="topic-word" id="topic-word">주제가 여기에 표시됩니다</div>
+      <div class="topic-deco" id="topic-deco">✨</div>
+    </div>
+    <div class="result-actions">
+      <button class="action-btn action-btn-primary" id="repick-btn">🔄 다시 뽑기</button>
+      <button class="action-btn action-btn-secondary" id="change-cat-btn">📂 카테고리 변경</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const TOPICS = {
+  season: [
+    '겨울 하면 떠오르는 것',
+    '여름 하면 떠오르는 것',
+    '봄 하면 떠오르는 것',
+    '가을 하면 떠오르는 것',
+    '비 오는 날 생각나는 것',
+    '눈 오는 날 하고 싶은 것',
+    '더울 때 찾는 것',
+    '추울 때 필요한 것',
+    '장마철 떠오르는 것',
+    '첫눈 오면 생각나는 것',
+    '휴가지로 가고 싶은 곳',
+    '캠핑 갈 때 챙기는 것',
+    '소풍 가면 하는 것',
+    '날씨 좋은 날 하고 싶은 것',
+    '태풍 올 때 떠오르는 것'
+  ],
+  school: [
+    '학교에서 볼 수 있는 것',
+    '책가방에 들어있는 것',
+    '교실에 있는 물건',
+    '시험 기간에 하는 것',
+    '쉬는 시간에 하는 것',
+    '아침에 일어나서 하는 것',
+    '잠들기 전에 하는 것',
+    '화장실에 있는 것',
+    '주방에 있는 물건',
+    '청소할 때 쓰는 것',
+    '학원에서 배우는 것',
+    '방학 때 하고 싶은 것',
+    '지각했을 때 변명',
+    '책상 서랍 속 물건',
+    '등교할 때 챙기는 것'
+  ],
+  food: [
+    '치킨 시킬 때 같이 먹는 것',
+    '라면에 넣으면 맛있는 것',
+    '분식집 메뉴',
+    '생일에 먹는 음식',
+    '길거리 음식',
+    '편의점에서 사 먹는 것',
+    '매운 음식 종류',
+    '디저트 종류',
+    '한국 대표 음식',
+    '야식으로 좋은 것',
+    '소풍 도시락 반찬',
+    '명절에 먹는 음식',
+    '다이어트 할 때 먹는 것',
+    '아플 때 먹고 싶은 것',
+    '술안주로 좋은 것'
+  ],
+  culture: [
+    '유명한 영화 제목',
+    '인기 아이돌 그룹',
+    '좋아하는 가수',
+    '유명한 드라마',
+    '인기 예능 프로그램',
+    '디즈니 캐릭터',
+    '유명한 게임',
+    '웹툰 제목',
+    '유명 유튜버',
+    '인기 애니메이션',
+    '명절 특선 영화',
+    '노래방 애창곡',
+    '유행어',
+    '인기 밈',
+    '어릴 때 본 만화'
+  ],
+  activity: [
+    '주말에 하는 활동',
+    '운동 종류',
+    '실내에서 할 수 있는 취미',
+    '데이트 코스',
+    '스트레스 풀 때 하는 것',
+    '여행 가서 하는 것',
+    '친구랑 만나서 하는 것',
+    '혼자 놀 때 하는 것',
+    '비 오는 날 실내 활동',
+    '명절에 하는 놀이',
+    '어버이날 하는 것',
+    '생일에 하고 싶은 것',
+    'MT 가서 하는 것',
+    '캠핑장에서 하는 것',
+    '운동회 종목'
+  ],
+  nature: [
+    '동물원에서 볼 수 있는 동물',
+    '바다에 사는 생물',
+    '반려동물 종류',
+    '곤충 종류',
+    '무서운 동물',
+    '귀여운 동물',
+    '빠른 동물',
+    '꽃 종류',
+    '나무 종류',
+    '산에서 볼 수 있는 것',
+    '농장에 있는 동물',
+    '새 종류',
+    '공룡 종류',
+    '정글에 사는 동물',
+    '겨울잠 자는 동물'
+  ],
+  church: [
+    '성경에 나오는 인물',
+    '성경 속 사건',
+    '찬양 제목',
+    '교회에서 하는 활동',
+    '예배 때 볼 수 있는 것',
+    '성탄절 하면 떠오르는 것',
+    '부활절 하면 떠오르는 것',
+    '수련회에서 하는 것',
+    '주일학교에서 배우는 것',
+    '기도 제목',
+    '성경 속 동물',
+    '성경 속 장소',
+    '교회 절기',
+    '봉사 활동 종류',
+    '신앙 위인'
+  ],
+  fun: [
+    '무인도에 가져갈 것',
+    '로또 당첨되면 하고 싶은 것',
+    '투명인간이 되면 하고 싶은 것',
+    '타임머신 타고 가고 싶은 시대',
+    '슈퍼파워 갖고 싶은 능력',
+    '외계인에게 보여주고 싶은 것',
+    '10년 후 내 모습',
+    '다시 태어나면 되고 싶은 것',
+    '복권 1등 쓸 곳',
+    '좀비 아포칼립스 생존템',
+    '사막에서 필요한 것',
+    '우주여행 챙길 것',
+    '마법사가 되면 하고 싶은 것',
+    '동물로 변한다면',
+    '하루만 어른이 된다면'
+  ]
+};
+
+const CAT_NAMES = {
+  all:      '🎲 전체 랜덤',
+  season:   '🌸 계절·날씨',
+  school:   '🏫 학교·일상',
+  food:     '🍔 음식',
+  culture:  '🎬 문화·연예',
+  activity: '🏃 활동·취미',
+  nature:   '🐶 동물·자연',
+  church:   '⛪ 교회·신앙',
+  fun:      '😂 재미·엉뚱'
+};
+
+const CAT_DECOS = {
+  all: '🎲', season: '🌸', school: '📚', food: '🍽️',
+  culture: '🎬', activity: '🏅', nature: '🌿', church: '✝️', fun: '🤣'
+};
+
+let currentCat = 'all';
+let lastTopic = '';
+
+function getAllTopics() {
+  return Object.values(TOPICS).flat();
+}
+
+function pickTopic(cat) {
+  const pool = cat === 'all' ? getAllTopics() : TOPICS[cat];
+  let filtered = pool.filter(t => t !== lastTopic);
+  if (filtered.length === 0) filtered = pool;
+  const pick = filtered[Math.floor(Math.random() * filtered.length)];
+  lastTopic = pick;
+  return pick;
+}
+
+function showScreen(name) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + name).classList.add('active');
+}
+
+function animatePick(topic, cat) {
+  const card = document.getElementById('topic-card');
+  const wordEl = document.getElementById('topic-word');
+  const decoEl = document.getElementById('topic-deco');
+  const badgeEl = document.getElementById('result-cat-badge');
+
+  badgeEl.textContent = CAT_NAMES[cat];
+  decoEl.textContent = CAT_DECOS[cat] || '✨';
+
+  card.classList.remove('animate');
+  void card.offsetWidth;
+  wordEl.textContent = topic;
+  card.classList.add('animate');
+}
+
+document.querySelectorAll('[data-cat]').forEach(btn => {
+  btn.addEventListener('click', () => {
+    currentCat = btn.dataset.cat;
+    document.querySelectorAll('[data-cat]').forEach(b => b.classList.toggle('selected', b === btn));
+  });
+});
+
+document.getElementById('pick-btn').addEventListener('click', () => {
+  const topic = pickTopic(currentCat);
+  animatePick(topic, currentCat);
+  showScreen('result');
+});
+
+document.getElementById('repick-btn').addEventListener('click', () => {
+  const topic = pickTopic(currentCat);
+  animatePick(topic, currentCat);
+});
+
+document.getElementById('change-cat-btn').addEventListener('click', () => {
+  showScreen('select');
+});
+
+document.getElementById('back-to-select').addEventListener('click', (e) => {
+  e.preventDefault();
+  showScreen('select');
+});
+</script>
+</body>
+</html>

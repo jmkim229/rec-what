@@ -715,6 +715,23 @@ const gamesData = [
       duration: 'medium',
       situation: ['brain', 'no-prep']
     }
+  },
+  {
+    id: 'me-too',
+    emoji: '🙋',
+    title: '너도나도',
+    description: '남들과 생각이 통할까? 공감과 의외성의 단어 게임',
+    url: 'games/me-too.html',
+    people: '4~15명',
+    time: '15~25분',
+    prep: '종이, 펜',
+    tags: {
+      location: ['indoor'],
+      groupSize: ['small', 'medium'],
+      ageGroup: ['kid-old', 'teen', 'adult'],
+      duration: 'medium',
+      situation: ['ice-break', 'brain']
+    }
   }
 ];
 
