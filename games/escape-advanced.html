@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="방탈출 중급 완성 시나리오 - 수상한 연구소 탈출. 초등 고학년·청소년·성인용. 알파벳 암호·관찰 추리·협동 단서 4단계 완성본.">
+  <meta name="keywords" content="방탈출 중급, 청소년 방탈출, 방탈출 시나리오, 암호 해독 게임, 레크리에이션">
+  <title>방탈출 중급 - 수상한 연구소 탈출 | 레크 뭐하지?</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="../css/style.css">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8683975585186347" crossorigin="anonymous"></script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-75JKFQWSHP"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-75JKFQWSHP');
+  </script>
+  <style>
+    :root {
+      --accent: #ef4444;
+      --accent-light: #fee2e2;
+      --accent-dark: #991b1b;
+      --answer-color: #ef4444;
+    }
+
+    .checklist {
+      list-style: none;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .checklist li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 14px;
+      color: #444;
+      padding: 8px 12px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.05);
+    }
+    .checklist li::before {
+      content: "☐";
+      font-size: 16px;
+      flex-shrink: 0;
+      color: var(--accent);
+    }
+
+    .flow-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin: 16px 0;
+    }
+    .flow-node {
+      background: white;
+      border: 2px solid var(--accent);
+      border-radius: 10px;
+      padding: 8px 14px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--accent-dark);
+      white-space: nowrap;
+      text-align: center;
+    }
+    .flow-node small {
+      display: block;
+      font-size: 11px;
+      font-weight: 500;
+      color: #888;
+    }
+    .flow-start {
+      background: var(--accent);
+      color: white;
+      border-color: var(--accent);
+    }
+    .flow-end {
+      background: #fbbf24;
+      color: #78350f;
+      border-color: #fbbf24;
+    }
+    .flow-arrow {
+      font-size: 16px;
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    .clue-card {
+      background: white;
+      border-radius: 18px;
+      padding: 24px;
+      box-shadow: 0 3px 16px rgba(0,0,0,0.08);
+      margin-bottom: 20px;
+      border-left: 5px solid var(--accent);
+    }
+    .clue-card.clue-final { border-left-color: #fbbf24; }
+    .clue-card.clue-coop  { border-left-color: #8b5cf6; }
+
+    .clue-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .clue-badge {
+      background: var(--accent);
+      color: white;
+      border-radius: 50px;
+      padding: 4px 14px;
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .clue-badge.badge-coop  { background: #8b5cf6; }
+    .clue-badge.badge-final { background: #fbbf24; color: #78350f; }
+    .clue-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: #1a1a2e;
+    }
+
+    .clue-body {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .clue-field {
+      background: #f9fafb;
+      border-radius: 10px;
+      padding: 12px 14px;
+    }
+    .clue-field.full-width { grid-column: 1 / -1; }
+    .clue-field-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+      color: var(--accent);
+    }
+    .clue-field-label.lbl-answer { color: #ef4444; }
+    .clue-field-label.lbl-next   { color: #8b5cf6; }
+    .clue-field-label.lbl-print  { color: #3b82f6; }
+    .clue-field-label.lbl-note   { color: #f59e0b; }
+    .clue-field-content {
+      font-size: 14px;
+      color: #333;
+      line-height: 1.75;
+    }
+    .clue-answer {
+      font-size: 26px;
+      font-weight: 900;
+      color: var(--answer-color);
+      letter-spacing: 3px;
+    }
+
+    .print-card {
+      border: 2.5px dashed #d1d5db;
+      border-radius: 14px;
+      padding: 16px 20px;
+      margin-top: 8px;
+      background: #fefefe;
+    }
+    .print-card-label {
+      font-size: 10px;
+      font-weight: 700;
+      color: #9ca3af;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+    .print-card-content {
+      font-size: 14px;
+      font-weight: 600;
+      color: #1a1a2e;
+      line-height: 1.85;
+    }
+    .print-card-content code {
+      display: inline-block;
+      background: #f3f4f6;
+      border-radius: 6px;
+      padding: 2px 8px;
+      font-family: monospace;
+      font-size: 15px;
+      color: var(--accent-dark);
+      letter-spacing: 2px;
+    }
+
+    /* 도형 시각화 */
+    .shape-row {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin: 8px 0;
+      align-items: center;
+    }
+    .shape-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: #f3f4f6;
+      border-radius: 8px;
+      padding: 5px 10px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #374151;
+    }
+    .shape-chip.circle { background: #dbeafe; color: #1e40af; }
+    .shape-chip.triangle { background: #dcfce7; color: #166534; }
+    .shape-chip.square  { background: #fef3c7; color: #92400e; }
+
+    /* 수열 표시 */
+    .sequence-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin: 8px 0;
+    }
+    .seq-num {
+      background: var(--accent-light);
+      color: var(--accent-dark);
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-size: 15px;
+      font-weight: 800;
+    }
+    .seq-blank {
+      background: #1a1a2e;
+      color: white;
+      border-radius: 8px;
+      padding: 6px 16px;
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: 2px;
+    }
+    .seq-arrow { font-size: 16px; color: #888; }
+
+    /* 협동 조각 */
+    .piece-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin: 10px 0;
+    }
+    .piece-card {
+      background: #ede9fe;
+      border: 2px dashed #8b5cf6;
+      border-radius: 10px;
+      padding: 14px 10px;
+      text-align: center;
+      font-size: 13px;
+      font-weight: 700;
+      color: #5b21b6;
+      line-height: 1.6;
+    }
+    .piece-card .piece-label {
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #8b5cf6;
+      margin-bottom: 6px;
+    }
+
+    /* 정답 요약 */
+    .answer-summary {
+      background: linear-gradient(135deg, #fef3c7, #fde68a);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+    .answer-summary h3 {
+      font-size: 16px;
+      font-weight: 800;
+      color: #78350f;
+      margin-bottom: 14px;
+    }
+    .answer-flow {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+    .answer-node {
+      background: white;
+      border-radius: 10px;
+      padding: 8px 14px;
+      font-size: 14px;
+      font-weight: 700;
+      color: #1a1a2e;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+      text-align: center;
+    }
+    .answer-node small {
+      display: block;
+      font-size: 10px;
+      color: #888;
+      font-weight: 500;
+    }
+    .answer-arrow { font-size: 18px; color: #f59e0b; font-weight: 900; }
+    .final-code-box {
+      background: #1a1a2e;
+      color: white;
+      border-radius: 12px;
+      padding: 16px 24px;
+      text-align: center;
+      margin-top: 12px;
+    }
+    .final-code-box .label { font-size: 11px; color: #9ca3af; margin-bottom: 6px; }
+    .final-code {
+      font-size: 36px;
+      font-weight: 900;
+      letter-spacing: 10px;
+      color: #fbbf24;
+    }
+
+    /* 알파벳 표 */
+    .alpha-table {
+      display: grid;
+      grid-template-columns: repeat(13, 1fr);
+      gap: 4px;
+      margin: 10px 0;
+      font-size: 11px;
+    }
+    .alpha-cell {
+      background: #f3f4f6;
+      border-radius: 4px;
+      padding: 3px 2px;
+      text-align: center;
+      line-height: 1.4;
+    }
+    .alpha-cell .letter { font-weight: 700; color: #374151; }
+    .alpha-cell .number { color: #9ca3af; font-size: 10px; }
+
+    /* 하단 버튼 */
+    .bottom-btn-group {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 36px;
+    }
+    .btn-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 12px 24px;
+      border: 2px solid var(--accent);
+      border-radius: 50px;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--accent-dark);
+      text-decoration: none;
+      background: white;
+      transition: background 0.2s, color 0.2s;
+    }
+    .btn-back:hover { background: var(--accent); color: white; text-decoration: none; }
+    .btn-timer {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 12px 24px;
+      border: 2px solid #0d9488;
+      border-radius: 50px;
+      font-size: 14px;
+      font-weight: 700;
+      color: #0d9488;
+      text-decoration: none;
+      background: white;
+      transition: background 0.2s, color 0.2s;
+    }
+    .btn-timer:hover { background: #0d9488; color: white; text-decoration: none; }
+    .badge-coming {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      background: #f3f4f6;
+      color: #9ca3af;
+      padding: 2px 8px;
+      border-radius: 20px;
+    }
+
+    @media print {
+      .clue-card { break-inside: avoid; }
+      .game-header, footer, .back-btn, .bottom-btn-group { }
+      body { background: white; }
+      .content { max-width: 100%; }
+    }
+    @media (max-width: 480px) {
+      .clue-body { grid-template-columns: 1fr; }
+      .alpha-table { grid-template-columns: repeat(7, 1fr); }
+      .piece-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="game-header" style="background: linear-gradient(135deg, #dc2626 0%, #f87171 100%);">
+    <h1>🔥 방탈출 중급</h1>
+    <p class="subtitle">수상한 연구소 탈출 — 초등 고학년·청소년·성인 완성 시나리오</p>
+    <div class="tags">
+      <span class="tag">10세~ 추천</span>
+      <span class="tag">40분</span>
+      <span class="tag">⭐⭐⭐ 중급</span>
+      <span class="tag">인쇄해서 바로 사용</span>
+    </div>
+  </div>
+
+  <div class="content">
+    <a href="escape-mission.html" class="back-btn" style="color:#dc2626;">← 방탈출 메인으로</a>
+
+    <!-- 준비물 -->
+    <div class="section">
+      <h2>📦 준비물 체크리스트</h2>
+      <ul class="checklist">
+        <li>A4 용지 7장 (단서 카드 인쇄용)</li>
+        <li>펜, 메모지 (팀별 1세트)</li>
+        <li>봉투 1개 (최종 코드 확인용 — 자물쇠 없을 때 대체)</li>
+        <li>작은 자물쇠 1개 (선택 — 있으면 몰입감 극대화)</li>
+        <li>보상품 (선택)</li>
+        <li>준비 시간: 약 30분</li>
+      </ul>
+    </div>
+
+    <!-- 스토리 도입 -->
+    <div class="section">
+      <h2>📖 스토리 도입 — 진행자가 읽어주세요</h2>
+      <div class="tip-box" style="background:#fff1f2; border-left-color:#ef4444;">
+        <strong style="color:#dc2626; font-size:16px; display:block; margin-bottom:8px;">
+          "여러분은 비밀 연구소에 잠입한 요원입니다."
+        </strong>
+        그런데 연구소 보안 시스템에 갇혀버렸어요!<br>
+        <strong style="color:#dc2626;">40분</strong> 안에 4자리 보안 코드를 알아내지 못하면<br>
+        문이 영원히 잠깁니다.<br><br>
+        흩어진 단서를 모아 보안 코드를 해독하고 탈출하세요.<br>
+        <strong style="color:#dc2626;">시간이 없습니다. 시작!</strong>
+      </div>
+    </div>
+
+    <!-- 흐름도 -->
+    <div class="section">
+      <h2>🗺️ 진행자용 전체 흐름도</h2>
+      <div class="flow-row">
+        <div class="flow-node flow-start">🚀 시작 단서<br><small>팀에게 배부</small></div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-node">단서 1<br><small>알파벳 암호</small></div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-node">단서 2<br><small>관찰 추리</small></div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-node">단서 3<br><small>수열 퍼즐</small></div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-node">단서 4<br><small>협동 단서</small></div>
+        <span class="flow-arrow">→</span>
+        <div class="flow-node flow-end">🔓 보안 코드<br><small>4자리 조합</small></div>
+      </div>
+      <div class="tip-box" style="margin-top:12px; background:#fff1f2; border-left-color:#ef4444;">
+        <strong style="color:#dc2626;">핵심 구조:</strong> 각 단서가 최종 4자리 코드의 숫자를 1개씩 알려줍니다.<br>
+        최종 보안 코드 = <code style="background:#fee2e2; color:#991b1b; padding:2px 6px; border-radius:4px; font-weight:900;">[단서1][단서2][단서3][단서4]</code> → <strong>5455</strong>
+      </div>
+    </div>
+
+    <!-- 단서 상세 -->
+    <div class="section">
+      <h2>📄 단서별 상세 내용</h2>
+
+      <!-- 단서 1 -->
+      <div class="clue-card">
+        <div class="clue-header">
+          <span class="clue-badge">시작 단서 · 단서 1</span>
+          <span class="clue-title">알파벳 암호 해독</span>
+        </div>
+        <div class="clue-body">
+          <div class="clue-field full-width">
+            <div class="clue-field-label lbl-print">📄 단서 카드에 인쇄할 내용</div>
+            <div class="print-card">
+              <div class="print-card-label">기밀 문서 #1 — 보안 코드 첫 번째 자리</div>
+              <div class="print-card-content">
+                보안 코드의 <strong>첫 번째 숫자</strong>를 찾아라.<br><br>
+                다음 암호를 해독하라:<br>
+                <code>8 - 21 - 13 - 1 - 14</code><br><br>
+                힌트: <strong>A=1, B=2, C=3 … Z=26</strong><br>
+                숫자를 알파벳으로 바꿔 단어를 만들어라.<br>
+                해독한 단어의 <u>글자 수</u>가 첫 번째 숫자다.<br><br>
+                <em style="color:#6b7280; font-size:12px;">다음 단서는 시계가 있는 곳 근처에 있다.</em>
+              </div>
+            </div>
+          </div>
+          <div class="clue-field full-width">
+            <div class="clue-field-label" style="color:#6b7280;">📋 알파벳↔숫자 변환표 (힌트 카드로 제공 가능)</div>
+            <div class="alpha-table">
+              <div class="alpha-cell"><div class="letter">A</div><div class="number">1</div></div>
+              <div class="alpha-cell"><div class="letter">B</div><div class="number">2</div></div>
+              <div class="alpha-cell"><div class="letter">C</div><div class="number">3</div></div>
+              <div class="alpha-cell"><div class="letter">D</div><div class="number">4</div></div>
+              <div class="alpha-cell"><div class="letter">E</div><div class="number">5</div></div>
+              <div class="alpha-cell"><div class="letter">F</div><div class="number">6</div></div>
+              <div class="alpha-cell"><div class="letter">G</div><div class="number">7</div></div>
+              <div class="alpha-cell"><div class="letter">H</div><div class="number">8</div></div>
+              <div class="alpha-cell"><div class="letter">I</div><div class="number">9</div></div>
+              <div class="alpha-cell"><div class="letter">J</div><div class="number">10</div></div>
+              <div class="alpha-cell"><div class="letter">K</div><div class="number">11</div></div>
+              <div class="alpha-cell"><div class="letter">L</div><div class="number">12</div></div>
+              <div class="alpha-cell"><div class="letter">M</div><div class="number">13</div></div>
+              <div class="alpha-cell"><div class="letter">N</div><div class="number">14</div></div>
+              <div class="alpha-cell"><div class="letter">O</div><div class="number">15</div></div>
+              <div class="alpha-cell"><div class="letter">P</div><div class="number">16</div></div>
+              <div class="alpha-cell"><div class="letter">Q</div><div class="number">17</div></div>
+              <div class="alpha-cell"><div class="letter">R</div><div class="number">18</div></div>
+              <div class="alpha-cell"><div class="letter">S</div><div class="number">19</div></div>
+              <div class="alpha-cell"><div class="letter">T</div><div class="number">20</div></div>
+              <div class="alpha-cell"><div class="letter">U</div><div class="number">21</div></div>
+              <div class="alpha-cell"><div class="letter">V</div><div class="number">22</div></div>
+              <div class="alpha-cell"><div class="letter">W</div><div class="number">23</div></div>
+              <div class="alpha-cell"><div class="letter">X</div><div class="number">24</div></div>
+              <div class="alpha-cell"><div class="letter">Y</div><div class="number">25</div></div>
+              <div class="alpha-cell"><div class="letter">Z</div><div class="number">26</div></div>
+            </div>
+          </div>
+          <div class="clue-field">
+            <div class="clue-field-label lbl-answer">✅ 정답 풀이</div>
+            <div class="clue-field-content">
+              8=<strong>H</strong>, 21=<strong>U</strong>, 13=<strong>M</strong>, 1=<strong>A</strong>, 14=<strong>N</strong><br>
+              → <strong>"HUMAN"</strong> → 5글자
+            </div>
+            <div class="clue-answer" style="margin-top:8px;">5</div>
+          </div>
+          <div class="clue-field">
+            <div class="clue-field-label lbl-next">➡️ 다음 단서 위치</div>
+            <div class="clue-field-content"><strong>시계가 있는 곳 근처</strong>에 단서 2를 미리 숨겨두세요.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 단서 2 -->
+      <div class="clue-card">
+        <div class="clue-header">
+          <span class="clue-badge">단서 2</span>
+          <span class="clue-title">관찰 추리 — 도형 세기</span>
+        </div>
+        <div class="clue-body">
+          <div class="clue-field full-width">
+            <div class="clue-field-label lbl-print">📄 단서 카드에 인쇄할 내용</div>
+            <div class="print-card">
+              <div class="print-card-label">기밀 문서 #2 — 보안 코드 두 번째 자리</div>
+              <div class="print-card-content">
+                아래 도형들을 잘 관찰하라.<br>
+                <div class="shape-row">
+                  <span class="shape-chip circle">● 동그라미 × 3</span>
+                  <span class="shape-chip triangle">▲ 세모 × 7</span>
+                  <span class="shape-chip square">■ 네모 × 4</span>
+                </div>
+                <strong>가장 많은 도형의 개수</strong>에서<br>
+                <strong>가장 적은 도형의 개수</strong>를 빼라.<br>
+                그 숫자가 <u>두 번째 숫자</u>다.<br><br>
+                <em style="color:#6b7280; font-size:12px;">다음 단서는 책이 많은 곳에 있다.</em>
+              </div>
+            </div>
+          </div>
+          <div class="clue-field">
+            <div class="clue-field-label lbl-answer">✅ 정답 풀이</div>
+            <div class="clue-field-content">
+              세모 7개 (최다) − 동그라미 3개 (최소) = <strong>4</strong>
+            </div>
+            <div class="clue-answer" style="margin-top:8px;">4</div>
+          </div>
+          <div class="clue-field">
+            <div class="clue-field-label lbl-next">➡️ 다음 단서 위치</div>
+            <div class="clue-field-content"><strong>책장(또는 책이 많은 곳)</strong> 근처에 단서 3을 숨겨두세요.</div>
+          </div>
+          <div class="clue-field full-width" style="background:#fef9c3;">
+            <div class="clue-field-label lbl-note">💡 진행자 메모</div>
+            <div class="clue-field-content">인쇄 시 도형을 실제로 그려서 넣으면 더 실감나요. 도형 개수나 종류를 바꿔서 난이도를 조절할 수 있어요.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 단서 3 -->
+      <div class="clue-card">
+        <div class="clue-header">
+          <span class="clue-badge">단서 3</span>
+          <span class="clue-title">수열 퍼즐</span>
+        </div>
+        <div class="clue-body">
+          <div class="clue-field full-width">
+            <div class="clue-field-label lbl-print">📄 단서 카드에 인쇄할 내용</div>
+            <div class="print-card">
+              <div class="print-card-label">기밀 문서 #3 — 보안 코드 세 번째 자리</div>
+              <div class="print-card-content">
+                규칙을 찾아 빈칸의 숫자를 구하라.<br><br>
+                <div class="sequence-row">
+                  <span class="seq-num">2</span>
+                  <span class="seq-arrow">→</span>
+                  <span class="seq-num">4</span>
+                  <span class="seq-arrow">→</span>
+                  <span class="seq-num">8</span>
+                  <span class="seq-arrow">→</span>
+                  <span class="seq-num">16</span>
+                  <span class="seq-arrow">→</span>
+                  <span class="seq-blank">  ?  </span>
+                </div>
+                <br>
+                <strong>세 번째 숫자</strong>는<br>
+                빈칸에 들어갈 수의 <u>각 자릿수를 더한 값</u>이다.<br><br>
+                <em style="color:#6b7280; font-size:12px;">마지막 단서는 팀원 모두가 필요하다.<br>진행자에게 단서 4를 요청하라.</em>
+              </div>
+            </div>
+          </div>
+          <div class="clue-field">
+            <div class="clue-field-label lbl-answer">✅ 정답 풀이</div>
+            <div class="clue-field-content">
+              2배씩 증가 → 빈칸 = <strong>32</strong><br>
+              3 + 2 = <strong>5</strong>
+            </div>
+            <div class="clue-answer" style="margin-top:8px;">5</div>
+          </div>
+          <div class="clue-field">
+            <div class="clue-field-label lbl-next">➡️ 다음 행동</div>
+            <div class="clue-field-content">팀이 진행자에게 직접 와서 <strong>단서 4</strong>를 요청하게 합니다. (진행자 보관)</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 단서 4 -->
+      <div class="clue-card clue-coop">
+        <div class="clue-header">
+          <span class="clue-badge badge-coop">단서 4 — 진행자 보관</span>
+          <span class="clue-title">협동 단서 (3조각으로 분리)</span>
+        </div>
+        <div class="clue-body">
+          <div class="clue-field full-width">
+            <div class="clue-field-label lbl-print">📄 종이를 3조각으로 잘라 팀원에게 나눠주기</div>
+            <div class="piece-grid">
+              <div class="piece-card">
+                <div class="piece-label">조각 A</div>
+                "네 번째 숫자는..."
+              </div>
+              <div class="piece-card">
+                <div class="piece-label">조각 B</div>
+                "...전체 단서의 개수에..."
+              </div>
+              <div class="piece-card">
+                <div class="piece-label">조각 C</div>
+                "...1을 더한 값이다."
+              </div>
+            </div>
+            <div style="margin-top:10px; font-size:13px; color:#6b7280; text-align:center;">
+              ↑ 이 세 줄을 가위로 잘라 팀원 A·B·C에게 각각 배부
+            </div>
+          </div>
+          <div class="clue-field">
+            <div class="clue-field-label lbl-answer">✅ 정답 풀이</div>
+            <div class="clue-field-content">
+              단서 총 4개 + 1 = <strong>5</strong>
+            </div>
+            <div class="clue-answer" style="margin-top:8px;">5</div>
+          </div>
+          <div class="clue-field">
+            <div class="clue-field-label lbl-next">➡️ 다음 행동</div>
+            <div class="clue-field-content">4자리 코드를 조합해 진행자에게 말하거나 자물쇠에 입력!</div>
+          </div>
+          <div class="clue-field full-width" style="background:#ede9fe;">
+            <div class="clue-field-label" style="color:#8b5cf6;">💡 진행자 메모</div>
+            <div class="clue-field-content">조각을 합쳐야만 풀리는 구조로 팀원 간 소통을 이끌어냅니다. 세 조각을 모아 읽으면 자연스럽게 문장이 완성돼요.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 정답 요약 -->
+    <div class="section">
+      <h2>🔑 진행자용 정답 요약지</h2>
+      <div class="answer-summary">
+        <h3>📋 정답 한눈에 보기 (진행자 보관용)</h3>
+        <div class="answer-flow">
+          <div class="answer-node">
+            단서 1<br>
+            <small>HUMAN = 5글자</small><br>
+            <span style="font-size:20px; color:#ef4444; font-weight:900;">5</span>
+          </div>
+          <span class="answer-arrow">→</span>
+          <div class="answer-node">
+            단서 2<br>
+            <small>7 − 3 = 4</small><br>
+            <span style="font-size:20px; color:#ef4444; font-weight:900;">4</span>
+          </div>
+          <span class="answer-arrow">→</span>
+          <div class="answer-node">
+            단서 3<br>
+            <small>32 → 3+2 = 5</small><br>
+            <span style="font-size:20px; color:#ef4444; font-weight:900;">5</span>
+          </div>
+          <span class="answer-arrow">→</span>
+          <div class="answer-node">
+            단서 4<br>
+            <small>4+1 = 5</small><br>
+            <span style="font-size:20px; color:#ef4444; font-weight:900;">5</span>
+          </div>
+        </div>
+        <div class="final-code-box">
+          <div class="label">🔓 최종 보안 코드</div>
+          <div class="final-code">5 4 5 5</div>
+          <div style="font-size:12px; color:#9ca3af; margin-top:6px;">팀이 "5455"를 말하거나 자물쇠에 입력하면 탈출 성공!</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 진행 팁 -->
+    <div class="section">
+      <h2>💡 이 시나리오 진행 팁</h2>
+      <div class="tip-box" style="background:#fff1f2; border-left-color:#ef4444;">
+        <ul>
+          <li>알파벳↔숫자 변환표(A=1~Z=26)를 칠판에 적어두거나 힌트 카드로 준비하면 막힘이 줄어요.</li>
+          <li>단서 4는 팀원이 흩어진 조각을 모아야 풀리도록 설계됐어요. 협동 강조 포인트!</li>
+          <li>너무 빨리 푸는 팀이 있으면 보너스 단서 추가 또는 완료 시간 기록으로 순위를 매기세요.</li>
+          <li>막히는 팀에게는 힌트를 단계적으로: 1차(방향) → 2차(절반 공개) → 3차(거의 정답).</li>
+          <li>최종 코드를 자물쇠에 적용하면 몰입감 극대화. 자물쇠 없으면 진행자 확인 방식으로 대체.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 하단 버튼 -->
+    <div class="bottom-btn-group">
+      <a href="escape-mission.html" class="btn-back">← 방탈출 메인으로</a>
+      <a href="escape-timer.html" class="btn-timer">⏱️ 방탈출 타이머 <span class="badge-coming">준비 중</span></a>
+    </div>
+
+  </div>
+
+  <footer>
+    <p>© 2025 레크 뭐하지? | 모든 레크 진행자를 위한 아이디어 모음</p>
+  </footer>
+
+  <script src="../js/ux-helpers.js"></script>
+</body>
+</html>
