@@ -8,6 +8,179 @@
   <title>마피아 게임 방법과 진행 팁 - 실내 레크리에이션 | 레크 뭐하지?</title>
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="stylesheet" href="../css/style.css">
+  <style>
+    /* ── 역할 카드 ── */
+    .role-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    .role-card {
+      border-radius: 14px;
+      padding: 18px 16px;
+      border-left: 4px solid;
+    }
+    .role-card .role-title {
+      font-size: 15px;
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
+    .role-card ul {
+      padding-left: 16px;
+      font-size: 13px;
+      line-height: 1.9;
+      color: #555;
+      margin: 0;
+    }
+    .role-card li { margin-bottom: 2px; }
+    .role-mafia   { background: #fff5f5; border-left-color: #ef4444; }
+    .role-mafia   .role-title { color: #dc2626; }
+    .role-police  { background: #eff6ff; border-left-color: #3b82f6; }
+    .role-police  .role-title { color: #1d4ed8; }
+    .role-doctor  { background: #f0fdf4; border-left-color: #22c55e; }
+    .role-doctor  .role-title { color: #16a34a; }
+    .role-citizen { background: #f8fafc; border-left-color: #94a3b8; }
+    .role-citizen .role-title { color: #475569; }
+
+    /* ── 섹션 내 소제목 ── */
+    .section-sub-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #1a1a2e;
+      margin: 28px 0 12px;
+    }
+    .section-sub-title:first-child { margin-top: 0; }
+
+    /* ── 토론 단계 ── */
+    .discuss-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .discuss-step {
+      display: flex;
+      gap: 14px;
+      background: white;
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      align-items: flex-start;
+    }
+    .discuss-num {
+      background: #1a1a2e;
+      color: white;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .discuss-content {
+      font-size: 14px;
+      line-height: 1.75;
+      color: #444;
+      margin-top: 3px;
+    }
+    .discuss-content strong {
+      display: block;
+      font-size: 14px;
+      color: #1a1a2e;
+      margin-bottom: 3px;
+    }
+
+    /* ── 추리 팁 박스 ── */
+    .tip-box-dark {
+      background: #1a1a2e;
+      border-radius: 12px;
+      padding: 20px;
+      font-size: 14px;
+      color: #cbd5e1;
+      line-height: 1.8;
+    }
+    .tip-box-dark ul {
+      padding-left: 18px;
+      margin: 6px 0 0;
+    }
+    .tip-box-dark li { margin-bottom: 6px; color: #94a3b8; }
+    .tip-box-dark li strong { color: #e2e8f0; }
+
+    /* ── 밸런스 가이드 박스 ── */
+    .balance-box {
+      background: #faf5ff;
+      border-left: 4px solid #8b5cf6;
+      border-radius: 12px;
+      padding: 20px;
+      font-size: 14px;
+      color: #555;
+    }
+    .balance-box strong { color: #5b21b6; }
+    .balance-rows {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin: 12px 0 16px;
+    }
+    .balance-row {
+      display: flex;
+      gap: 12px;
+      align-items: baseline;
+    }
+    .balance-players {
+      font-size: 13px;
+      font-weight: 800;
+      color: #7c3aed;
+      min-width: 52px;
+      flex-shrink: 0;
+    }
+    .balance-roles {
+      font-size: 13px;
+      color: #555;
+      line-height: 1.5;
+    }
+    .balance-tips {
+      border-top: 1px solid #ede9fe;
+      padding-top: 12px;
+      margin-top: 4px;
+    }
+    .balance-tips ul {
+      padding-left: 18px;
+      margin: 6px 0 0;
+      font-size: 13px;
+      line-height: 1.9;
+    }
+    .balance-tips li { margin-bottom: 2px; }
+
+    /* ── 도구 CTA ── */
+    .tool-cta {
+      display: block;
+      text-align: center;
+      background: linear-gradient(135deg, #1a1a2e 0%, #374151 100%);
+      color: white;
+      padding: 18px 28px;
+      border-radius: 14px;
+      font-size: 16px;
+      font-weight: 700;
+      text-decoration: none;
+      margin-top: 36px;
+      transition: opacity 0.2s;
+    }
+    .tool-cta:hover { opacity: 0.85; text-decoration: none; }
+    .tool-cta-sub {
+      display: block;
+      font-size: 12px;
+      color: rgba(255,255,255,0.55);
+      font-weight: 400;
+      margin-top: 5px;
+    }
+
+    @media (max-width: 480px) {
+      .role-grid { grid-template-columns: 1fr; }
+    }
+  </style>
   <!-- Google tag (gtag.js) -->
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8683975585186347"
        crossorigin="anonymous"></script>
@@ -99,6 +272,140 @@
     </div>
 
     <div class="section">
+      <h2>🎯 게임 진행 가이드라인</h2>
+
+      <!-- 역할별 행동 요령 -->
+      <div class="section-sub-title">역할별 행동 요령</div>
+      <div class="role-grid">
+
+        <div class="role-card role-mafia">
+          <div class="role-title">🔪 마피아 (팀)</div>
+          <ul>
+            <li>밤에는 조용히 제거 대상을 정하세요. 말 잘하는 사람부터 노리는 게 유리해요.</li>
+            <li>낮에는 시민인 척 자연스럽게 토론에 참여하세요. 너무 조용해도, 너무 나서도 의심받아요.</li>
+            <li>동료 마피아를 대놓고 편들지 마세요. 가끔 동료를 의심하는 척하는 것도 전략이에요.</li>
+            <li>들켰을 때는 끝까지 아니라고 우기거나 다른 사람을 물고 늘어지세요.</li>
+          </ul>
+        </div>
+
+        <div class="role-card role-police">
+          <div class="role-title">🛡️ 경찰</div>
+          <ul>
+            <li>밤마다 의심스러운 사람을 조사해 마피아인지 확인하세요.</li>
+            <li>정보를 너무 빨리 공개하면 다음 밤에 마피아에게 제거당해요.</li>
+            <li>마피아 1명을 확실히 알았을 때 "나는 경찰이다"를 공개하는 게 핵심이에요.</li>
+            <li>거짓 경찰이 나타나면 진짜 정보로 반박하세요.</li>
+          </ul>
+        </div>
+
+        <div class="role-card role-doctor">
+          <div class="role-title">💉 의사</div>
+          <ul>
+            <li>밤마다 한 명을 살릴 수 있어요. 자기 자신도 살릴 수 있어요 (룰에 따라).</li>
+            <li>누가 위험한지 추리해서 살리세요. 보통 경찰이라고 밝힌 사람을 보호해요.</li>
+            <li>의사라는 걸 함부로 밝히지 마세요. 밝히면 마피아의 표적이 돼요.</li>
+          </ul>
+        </div>
+
+        <div class="role-card role-citizen">
+          <div class="role-title">👥 시민</div>
+          <ul>
+            <li>특수 능력은 없지만 관찰과 추리가 무기예요.</li>
+            <li>누가 말을 바꾸는지, 누가 너무 조용한지, 누가 누구를 자꾸 편드는지 살피세요.</li>
+            <li>적극적으로 토론에 참여하세요. 침묵하면 마피아인지 시민인지 판단받기 어려워요.</li>
+            <li>투표는 신중하게. 시민을 잘못 죽이면 마피아가 유리해져요.</li>
+          </ul>
+        </div>
+
+      </div>
+
+      <!-- 토론 진행 방법 -->
+      <div class="section-sub-title">낮 토론 진행 방법</div>
+      <div class="discuss-steps">
+        <div class="discuss-step">
+          <div class="discuss-num">1</div>
+          <div class="discuss-content">
+            <strong>상황 정리 (약 30초)</strong>
+            진행자가 밤 사이 제거된 사람을 발표해요. 그 사람의 역할을 공개할지는 진행자가 결정해요 (공개 쪽이 초보자에게 쉬워요).
+          </div>
+        </div>
+        <div class="discuss-step">
+          <div class="discuss-num">2</div>
+          <div class="discuss-content">
+            <strong>자유 발언 (1~2분)</strong>
+            한 명씩 돌아가며 자기 생각을 말해요. "나는 누가 의심스럽다, 왜냐하면..." 처음에는 정보가 없으니 직감과 관찰에 의존해요.
+          </div>
+        </div>
+        <div class="discuss-step">
+          <div class="discuss-num">3</div>
+          <div class="discuss-content">
+            <strong>집중 토론 (1~2분)</strong>
+            의심받는 사람이 변론하고, 다른 사람들이 질문 공세를 펼쳐요. "어제 왜 그 사람 편들었어요?", "당신이 경찰이라면 어제 누구를 조사했어요?"
+          </div>
+        </div>
+        <div class="discuss-step">
+          <div class="discuss-num">4</div>
+          <div class="discuss-content">
+            <strong>투표 (약 30초)</strong>
+            가장 의심스러운 사람을 손가락으로 동시에 지목해요. 최다 득표자가 탈락. 동률이면 재투표 또는 진행자 재량으로 결정해요.
+          </div>
+        </div>
+        <div class="discuss-step">
+          <div class="discuss-num">5</div>
+          <div class="discuss-content">
+            <strong>탈락자 공개</strong>
+            탈락한 사람의 역할을 공개해요. 마피아가 탈락했으면 시민 팀이 유리해지는 순간! 게임의 흐름이 크게 바뀌어요.
+          </div>
+        </div>
+      </div>
+
+      <!-- 초보자 추리 팁 -->
+      <div class="section-sub-title">초보자를 위한 추리 팁</div>
+      <div class="tip-box-dark">
+        <ul>
+          <li>"조용한 사람"을 무조건 의심하지 마세요. 진짜 시민도 정보가 없으면 조용해요.</li>
+          <li>마피아는 무의식적으로 동료를 지목하지 않아요. <strong>누가 누구를 한 번도 의심하지 않는지</strong> 관찰하세요.</li>
+          <li>경찰이 일찍 죽었다면, 그 전에 경찰이 흘린 정보를 떠올려보세요.</li>
+          <li>너무 논리적으로 완벽하게 말하는 사람도 의심 대상. 미리 변명을 준비했을 수 있어요.</li>
+          <li>투표할 때 마피아는 표를 분산시키려 해요. <strong>갑자기 엉뚱한 사람을 지목하는 사람</strong>을 주목하세요.</li>
+        </ul>
+      </div>
+
+      <!-- 밸런스 가이드 -->
+      <div class="section-sub-title">진행자를 위한 인원별 역할 구성</div>
+      <div class="balance-box">
+        <strong>추천 역할 구성</strong>
+        <div class="balance-rows">
+          <div class="balance-row">
+            <span class="balance-players">6~7명</span>
+            <span class="balance-roles">마피아 1 · 경찰 1 · 의사 1 · 시민 나머지</span>
+          </div>
+          <div class="balance-row">
+            <span class="balance-players">8~10명</span>
+            <span class="balance-roles">마피아 2 · 경찰 1 · 의사 1 · 시민 나머지</span>
+          </div>
+          <div class="balance-row">
+            <span class="balance-players">11~14명</span>
+            <span class="balance-roles">마피아 3 · 경찰 1 · 의사 1 · 시민 나머지</span>
+          </div>
+          <div class="balance-row">
+            <span class="balance-players">15명+</span>
+            <span class="balance-roles">마피아 3~4 · 경찰 1 · 의사 1 · 특수역할 1 · 시민 나머지</span>
+          </div>
+        </div>
+        <div class="balance-tips">
+          <strong>밸런스 조정 팁</strong>
+          <ul>
+            <li>마피아가 너무 쉽게 이기면 경찰을 2명으로 늘리세요.</li>
+            <li>시민이 너무 쉽게 이기면 마피아를 1명 늘리거나 의사를 빼세요.</li>
+            <li>첫 게임은 무조건 단순하게 (마피아 1, 경찰 1, 의사 1). 익숙해지면 특수역할 추가.</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="section">
       <h2>🔄 변형 방법</h2>
       <div class="variation-list">
         <div class="variation">
@@ -115,6 +422,11 @@
         </div>
       </div>
     </div>
+    <a href="mafia-tool.html" class="tool-cta">
+      🎮 마피아 진행 도구 사용하기
+      <span class="tool-cta-sub">밤/낮 진행과 효과음을 자동으로!</span>
+    </a>
+
   </div>
 
   <footer>
