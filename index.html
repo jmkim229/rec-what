@@ -38,7 +38,40 @@
   </nav>
 
   <main>
-    <p class="seo-intro" style="text-align:center; margin-bottom:40px;">레크 뭐하지?는 주일학교, 수련회, 캠프, MT, 팀빌딩 등 모든 상황에서 바로 쓸 수 있는 레크리에이션 아이디어를 실내·야외·소그룹·대규모·연령별로 정리한 사이트입니다.</p>
+
+    <!-- ── 사이트 소개 섹션 ── -->
+    <section style="background:white;border-radius:20px;padding:32px 28px;margin-bottom:40px;box-shadow:0 4px 20px rgba(0,0,0,0.07);">
+      <h2 style="font-size:20px;font-weight:800;color:#1a1a2e;margin-bottom:16px;text-align:center;">레크 뭐하지?는 어떤 사이트인가요?</h2>
+      <p style="font-size:15px;color:#555;line-height:1.95;margin-bottom:14px;text-align:center;max-width:640px;margin-left:auto;margin-right:auto;">오늘 레크 뭐 할지 매번 막막하신 분들을 위해 만들었습니다. 주일학교 교사, 캠프 진행자, 팀빌딩 담당자, 학교 선생님 — 레크리에이션을 준비해야 하는 모든 분들의 고민을 덜어드립니다.</p>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px;margin-top:20px;">
+        <div style="text-align:center;padding:16px;background:#f8fafc;border-radius:14px;">
+          <div style="font-size:28px;margin-bottom:8px;">🔍</div>
+          <h3 style="font-size:14px;font-weight:800;color:#1a1a2e;margin-bottom:6px;">조건별 바로 검색</h3>
+          <p style="font-size:12px;color:#888;line-height:1.6;">장소·인원·연령·시간으로 딱 맞는 게임을 바로 찾아보세요</p>
+        </div>
+        <div style="text-align:center;padding:16px;background:#f8fafc;border-radius:14px;">
+          <div style="font-size:28px;margin-bottom:8px;">📋</div>
+          <h3 style="font-size:14px;font-weight:800;color:#1a1a2e;margin-bottom:6px;">50개+ 게임 정리</h3>
+          <p style="font-size:12px;color:#888;line-height:1.6;">규칙, 준비물, 진행 팁, 변형 방법까지 실전 정보 수록</p>
+        </div>
+        <div style="text-align:center;padding:16px;background:#f8fafc;border-radius:14px;">
+          <div style="font-size:28px;margin-bottom:8px;">🎮</div>
+          <h3 style="font-size:14px;font-weight:800;color:#1a1a2e;margin-bottom:6px;">전용 진행 도구</h3>
+          <p style="font-size:12px;color:#888;line-height:1.6;">마피아·폭탄돌리기 등 주요 게임의 타이머·도구 제공</p>
+        </div>
+        <div style="text-align:center;padding:16px;background:#f8fafc;border-radius:14px;">
+          <div style="font-size:28px;margin-bottom:8px;">💡</div>
+          <h3 style="font-size:14px;font-weight:800;color:#1a1a2e;margin-bottom:6px;">가이드 콘텐츠</h3>
+          <p style="font-size:12px;color:#888;line-height:1.6;">연령별·상황별 가이드로 처음 진행해도 자신있게</p>
+        </div>
+      </div>
+      <div style="text-align:center;margin-top:24px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+        <a href="guide-for-leader.html" style="display:inline-block;background:#fff8f0;color:#FF6B35;font-weight:700;font-size:13px;padding:10px 18px;border-radius:20px;text-decoration:none;border:1.5px solid #fed7aa;">🎤 처음 진행자 가이드</a>
+        <a href="guide-by-age.html" style="display:inline-block;background:#fdf2f8;color:#ec4899;font-weight:700;font-size:13px;padding:10px 18px;border-radius:20px;text-decoration:none;border:1.5px solid #f9a8d4;">🎂 연령별 게임 선택</a>
+        <a href="guide-by-situation.html" style="display:inline-block;background:#f0fdf4;color:#16a34a;font-weight:700;font-size:13px;padding:10px 18px;border-radius:20px;text-decoration:none;border:1.5px solid #bbf7d0;">🗺️ 상황별 레크 구성</a>
+        <a href="about.html" style="display:inline-block;background:#eef2ff;color:#4f46e5;font-weight:700;font-size:13px;padding:10px 18px;border-radius:20px;text-decoration:none;border:1.5px solid #c7d2fe;">ℹ️ 사이트 소개</a>
+      </div>
+    </section>
 
     <!-- ── 상황별 맞춤 추천 ── -->
     <section class="smart-search">
@@ -360,9 +393,14 @@
     <div class="situation-grid" id="situationGrid"></div>
   </main>
 
-  <footer>
+    <footer>
     <p>© 2025 레크 뭐하지? | 모든 레크 진행자를 위한 아이디어 모음</p>
-    <p style="margin-top:8px;"><a href="privacy.html" style="color:#bbb;">개인정보처리방침</a> | <a href="terms.html" style="color:#bbb;">이용약관</a></p>
+    <p style="margin-top:8px;font-size:13px;">
+      <a href="/about.html" style="color:#bbb;">소개</a> |
+      <a href="/contact.html" style="color:#bbb;">문의</a> |
+      <a href="/privacy.html" style="color:#bbb;">개인정보처리방침</a> |
+      <a href="/terms.html" style="color:#bbb;">이용약관</a>
+    </p>
   </footer>
 
   <script>

@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="처음 레크리에이션을 진행하는 분을 위한 완벽 가이드. 진행자 마음가짐, 분위기 만드는 법, 자주 하는 실수, 게임 선택 요령까지 상세히 안내합니다.">
+  <meta name="keywords" content="레크리에이션 진행자 가이드, 레크 처음 진행, 레크 진행 방법, 레크 진행 팁, 단체 게임 진행법">
+  <title>처음 레크 진행하는 분을 위한 완벽 가이드 | 레크 뭐하지?</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="css/style.css">
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8683975585186347"
+       crossorigin="anonymous"></script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-75JKFQWSHP"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-75JKFQWSHP');
+  </script>
+  <style>
+    .guide-header {
+      background: linear-gradient(135deg, #4f46e5 0%, #818cf8 100%);
+      color: white;
+      padding: 48px 20px 36px;
+      text-align: center;
+    }
+    .guide-header h1 { font-size: 28px; margin-bottom: 10px; text-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    .guide-header p { font-size: 15px; opacity: 0.9; }
+    .guide-content {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 40px 16px 64px;
+    }
+    .guide-section {
+      background: white;
+      border-radius: 18px;
+      padding: 32px 28px;
+      margin-bottom: 28px;
+      box-shadow: 0 3px 14px rgba(0,0,0,0.07);
+    }
+    .guide-section h2 {
+      font-size: 21px;
+      font-weight: 800;
+      color: #1a1a2e;
+      margin-bottom: 16px;
+      padding-left: 14px;
+      border-left: 4px solid #4f46e5;
+    }
+    .guide-section > p {
+      font-size: 15px;
+      color: #555;
+      line-height: 1.95;
+      margin-bottom: 14px;
+    }
+    .guide-section > p:last-child { margin-bottom: 0; }
+    .do-dont {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin: 16px 0;
+    }
+    @media (max-width: 600px) { .do-dont { grid-template-columns: 1fr; } }
+    .do-box, .dont-box {
+      border-radius: 12px;
+      padding: 18px;
+    }
+    .do-box {
+      background: #f0fdf4;
+      border-left: 4px solid #22c55e;
+    }
+    .dont-box {
+      background: #fff5f5;
+      border-left: 4px solid #ef4444;
+    }
+    .do-box h3 { font-size: 14px; font-weight: 800; color: #16a34a; margin-bottom: 10px; }
+    .dont-box h3 { font-size: 14px; font-weight: 800; color: #dc2626; margin-bottom: 10px; }
+    .do-box ul, .dont-box ul { padding-left: 18px; }
+    .do-box li, .dont-box li { font-size: 13px; line-height: 1.85; margin-bottom: 4px; color: #555; }
+    .tip-box-purple {
+      background: #f5f3ff;
+      border-left: 4px solid #4f46e5;
+      border-radius: 12px;
+      padding: 18px 20px;
+      margin: 14px 0;
+      font-size: 14px;
+      color: #555;
+      line-height: 1.85;
+    }
+    .tip-box-purple strong { color: #3730a3; }
+    .mistake-list {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin: 14px 0;
+    }
+    .mistake-item {
+      background: #f8fafc;
+      border-radius: 12px;
+      padding: 18px 20px;
+      border-left: 3px solid #94a3b8;
+    }
+    .mistake-item h3 { font-size: 14px; font-weight: 800; color: #1a1a2e; margin-bottom: 8px; }
+    .mistake-item p { font-size: 14px; color: #555; line-height: 1.75; margin-bottom: 0; }
+    .mistake-item .solution {
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px solid #e2e8f0;
+      font-size: 13px;
+      color: #4f46e5;
+      font-weight: 600;
+    }
+    .checklist {
+      background: #f8fafc;
+      border-radius: 12px;
+      padding: 20px;
+      margin: 14px 0;
+    }
+    .checklist h3 { font-size: 14px; font-weight: 700; color: #1a1a2e; margin-bottom: 14px; }
+    .checklist ul { padding-left: 0; list-style: none; }
+    .checklist li {
+      font-size: 14px;
+      color: #444;
+      line-height: 1.75;
+      padding-left: 28px;
+      position: relative;
+      margin-bottom: 8px;
+    }
+    .checklist li::before {
+      content: "☐";
+      position: absolute;
+      left: 0;
+      color: #94a3b8;
+    }
+    .intro-box {
+      background: #eef2ff;
+      border-radius: 14px;
+      padding: 24px;
+      margin-bottom: 28px;
+      border-left: 4px solid #4f46e5;
+    }
+    .intro-box p {
+      font-size: 15px;
+      color: #444;
+      line-height: 1.95;
+      margin-bottom: 10px;
+    }
+    .intro-box p:last-child { margin-bottom: 0; }
+  </style>
+</head>
+<body>
+
+  <div class="guide-header">
+    <h1>🎤 처음 레크 진행하는 분을 위한 완벽 가이드</h1>
+    <p>마음가짐부터 실전 팁까지, 첫 레크를 성공으로 이끄는 방법</p>
+  </div>
+
+  <div class="guide-content">
+    <a href="index.html" class="back-btn">← 홈으로 돌아가기</a>
+
+    <div class="intro-box">
+      <p>"레크를 처음 맡았는데 어떻게 해야 할지 모르겠어요." 이런 고민을 가진 분들이 정말 많아요. 게임을 고르는 것부터, 어떻게 설명해야 할지, 분위기가 죽으면 어떡하지, 사람들이 참여를 안 하면 어떡하지…</p>
+      <p>이 가이드는 바로 그런 고민에서 시작했습니다. 처음 레크를 진행하는 분들이 가장 많이 불안해하는 포인트를 짚어드릴게요. 걱정 마세요 — 준비만 잘 하면 누구나 좋은 레크 진행자가 될 수 있습니다.</p>
+    </div>
+
+    <!-- 진행자의 마음가짐 -->
+    <div class="guide-section">
+      <h2>🧠 진행자의 마음가짐</h2>
+      <p>레크리에이션에서 진행자의 에너지와 태도는 게임 자체보다 더 중요합니다. 아무리 좋은 게임도 진행자가 떨거나 어색하면 참여자들도 어색해져요. 반대로 진행자가 즐겁고 자신 있으면, 약간 평범한 게임도 재밌어집니다.</p>
+
+      <div class="tip-box-purple">
+        <strong>"제가 먼저 즐기자"</strong> — 이것이 진행자의 제1원칙입니다. 참여자들이 즐거운지 걱정하기 전에, 진행자 본인이 먼저 신나야 해요. 그 에너지가 전염되는 것이 레크의 핵심입니다.
+      </div>
+
+      <p>처음 진행할 때 가장 많이 하는 실수가 바로 <strong>"잘 해야 한다"는 압박감</strong>입니다. 레크는 완벽한 공연이 아니에요. 실수가 생겨도 함께 웃어넘기고, 규칙이 조금 헷갈려도 같이 풀어가면서 진행하면 됩니다. 오히려 그 과정에서 더 친밀해지기도 해요.</p>
+
+      <div class="do-dont">
+        <div class="do-box">
+          <h3>✅ 이렇게 하세요</h3>
+          <ul>
+            <li>큰 목소리로 또렷하게 설명하기</li>
+            <li>게임에 먼저 열정적으로 참여하기</li>
+            <li>참여자들의 이름을 불러가며 진행하기</li>
+            <li>작은 참여에도 아낌없이 칭찬하기</li>
+            <li>예상치 못한 상황도 유연하게 넘기기</li>
+            <li>눈을 마주치며 참여를 유도하기</li>
+          </ul>
+        </div>
+        <div class="dont-box">
+          <h3>❌ 이건 피하세요</h3>
+          <ul>
+            <li>설명이 너무 길어지는 것</li>
+            <li>규칙 설명 도중 혼자 당황하기</li>
+            <li>참여 안 하는 사람 무시하기</li>
+            <li>한 사람만 계속 호명하기</li>
+            <li>게임 실패 시 참여자 탓하기</li>
+            <li>너무 복잡한 게임 선택하기</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- 분위기 만드는 법 -->
+    <div class="guide-section">
+      <h2>🔥 분위기 만드는 3단계</h2>
+      <p>레크리에이션의 분위기는 처음 3분에 결정됩니다. 시작이 잘 되면 나머지는 자연스럽게 흘러가요. 반대로 처음에 어색하게 시작되면 회복하기가 어렵습니다. 이 3단계 방법을 기억해두세요.</p>
+
+      <div class="mistake-list">
+        <div class="mistake-item" style="border-left-color: #4f46e5;">
+          <h3>1단계 — 호기심 자극 (게임 시작 전)</h3>
+          <p>게임 이름이나 규칙을 설명하기 전에, 먼저 호기심을 자극하세요. "지금부터 오늘 중에 가장 웃기는 순간이 나올 게임을 할 거예요"라고 시작하면 분위기가 달라집니다. 규칙 설명을 먼저 하면 사람들은 미리 판단해버려요 — "이거 재밌겠다, 재없겠다".</p>
+        </div>
+        <div class="mistake-item" style="border-left-color: #4f46e5;">
+          <h3>2단계 — 참여 허들 낮추기 (게임 초반)</h3>
+          <p>첫 라운드에서는 쉽게 참여할 수 있도록 진입 허들을 낮춰야 해요. "이번에는 연습 라운드예요, 점수 없어요"라고 하거나, 진행자가 먼저 시범을 보이면서 "저도 못해요, 같이 해봐요!" 같은 멘트로 부담감을 줄여요.</p>
+        </div>
+        <div class="mistake-item" style="border-left-color: #4f46e5;">
+          <h3>3단계 — 에너지 증폭 (게임 중반)</h3>
+          <p>게임이 어느 정도 진행되면 의도적으로 에너지를 끌어올리세요. "지금 0점이에요? 다음 라운드에서 역전 가능해요!" 같은 멘트, 박수 유도, 응원 구호 등을 통해 분위기를 계속 고조시켜요.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 자주 하는 실수 -->
+    <div class="guide-section">
+      <h2>⚠️ 처음 진행자가 자주 하는 실수 TOP 5</h2>
+      <p>많은 분들이 처음 레크를 진행하면서 비슷한 실수를 합니다. 미리 알고 준비하면 같은 실수를 피할 수 있어요.</p>
+
+      <div class="mistake-list">
+        <div class="mistake-item">
+          <h3>🔴 실수 1 — 게임 설명이 너무 길다</h3>
+          <p>규칙을 완벽하게 이해시키려다 보면 설명이 5분을 넘어가기도 해요. 사람들은 설명 중에 집중력을 잃고, 분위기가 가라앉아요.</p>
+          <div class="solution">✅ 해결책: "해보면서 배워요"를 원칙으로 하세요. 핵심 규칙 3가지만 설명하고 시작해요. 헷갈리면 그때 추가 설명해도 늦지 않아요.</div>
+        </div>
+        <div class="mistake-item">
+          <h3>🔴 실수 2 — 연속 탈락 게임을 처음에 한다</h3>
+          <p>탈락 방식의 게임을 처음부터 하면, 먼저 탈락한 사람들이 지루해지고 분위기가 쪼개져요. 특히 소극적인 사람이 먼저 탈락하면 전체 분위기에 영향을 줍니다.</p>
+          <div class="solution">✅ 해결책: 처음에는 모두가 끝까지 참여하는 게임으로 시작해요. 탈락 게임은 분위기가 충분히 올라왔을 때 사용하세요.</div>
+        </div>
+        <div class="mistake-item">
+          <h3>🔴 실수 3 — 너무 어려운 게임을 선택한다</h3>
+          <p>게임이 재밌어 보여서 선택했는데, 막상 진행해보면 참여자들이 규칙을 이해 못 하거나 즐기지 못하는 경우가 있어요. 특히 처음 보는 사람들이 많을 때 이런 일이 자주 생겨요.</p>
+          <div class="solution">✅ 해결책: 처음 진행할 때는 본인이 직접 해봤거나 아주 단순한 게임으로 시작하세요. 검증된 게임 2~3개를 깊이 있게 준비하는 게, 새 게임 10개를 대충 준비하는 것보다 훨씬 낫습니다.</div>
+        </div>
+        <div class="mistake-item">
+          <h3>🔴 실수 4 — 참여 안 하는 사람을 당황스러워한다</h3>
+          <p>게임을 진행하다 보면 반드시 소극적인 참여자가 있어요. 그 사람을 무리하게 끌어내려 하다 보면 서로 불편해지고 전체 분위기도 어색해져요.</p>
+          <div class="solution">✅ 해결책: 소극적인 참여자를 억지로 끌어내지 마세요. 대신 옆에서 관찰하는 것도 참여의 형태라고 인정해주세요. 게임이 재밌어지면 자연스럽게 참여하게 되어 있어요.</div>
+        </div>
+        <div class="mistake-item">
+          <h3>🔴 실수 5 — 마무리를 대충 한다</h3>
+          <p>게임이 끝나면 "자, 이상입니다!"로 마치는 경우가 많아요. 레크는 마무리가 중요합니다. 좋은 마무리가 전체 경험을 기억에 남게 만들어요.</p>
+          <div class="solution">✅ 해결책: 마지막에 30초라도 "오늘 가장 재밌었던 장면은?" 같은 질문으로 마무리하세요. 다 같이 박수를 치거나, 파이팅 구호로 끝내는 것도 좋은 마무리입니다.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 게임 전 체크리스트 -->
+    <div class="guide-section">
+      <h2>📋 레크 진행 전 체크리스트</h2>
+      <p>레크를 시작하기 전, 아래 항목들을 미리 체크해두면 현장에서 당황하는 일을 크게 줄일 수 있어요.</p>
+
+      <div class="checklist">
+        <h3>사전 준비</h3>
+        <ul>
+          <li>게임 규칙을 완벽하게 이해했는가? (직접 해봤다면 더욱 좋음)</li>
+          <li>오늘 인원수와 연령대를 확인했는가?</li>
+          <li>필요한 준비물을 모두 갖췄는가? (풍선, 카드, 상품 등)</li>
+          <li>게임 순서와 시간 배분을 계획했는가?</li>
+          <li>돌발 상황을 대비한 대체 게임을 준비했는가?</li>
+        </ul>
+      </div>
+
+      <div class="checklist">
+        <h3>현장 확인</h3>
+        <ul>
+          <li>공간이 게임에 적합한지 확인했는가? (크기, 장애물, 바닥 상태)</li>
+          <li>마이크나 음향이 필요하다면 테스트했는가?</li>
+          <li>참여자들이 잘 들릴 수 있는 위치에 서 있는가?</li>
+          <li>긴급 상황(부상 등)에 대비한 조치를 알고 있는가?</li>
+        </ul>
+      </div>
+
+      <div class="checklist">
+        <h3>진행 중 체크</h3>
+        <ul>
+          <li>모든 참여자가 규칙을 이해했는지 확인했는가?</li>
+          <li>소외되는 사람 없이 모두가 참여하고 있는가?</li>
+          <li>게임 시간이 너무 길어지지 않도록 조절하고 있는가?</li>
+          <li>분위기가 과열되거나 불쾌한 상황은 없는가?</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 첫 진행을 위한 추천 게임 -->
+    <div class="guide-section">
+      <h2>🎮 처음 진행자에게 추천하는 게임 3선</h2>
+      <p>처음 레크를 진행할 때는 규칙이 간단하고, 직접 해보지 않아도 설명하기 쉬운 게임이 좋습니다. 아래 세 가지 게임은 처음 진행자도 자신 있게 할 수 있는 검증된 게임들이에요.</p>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; margin-top: 16px;">
+        <a href="games/bomb-pass.html" style="display:block; background:#fff8f0; border-radius:14px; padding:20px; text-decoration:none; color:inherit; border: 2px solid #fed7aa;">
+          <div style="font-size:28px; margin-bottom:10px;">💣</div>
+          <h3 style="font-size:15px; font-weight:800; color:#1a1a2e; margin-bottom:8px;">폭탄 돌리기</h3>
+          <p style="font-size:13px; color:#666; line-height:1.7;">준비물 없음, 규칙 10초, 누구나 바로 이해. 어떤 자리에도 사용 가능한 만능 오프닝 게임.</p>
+        </a>
+        <a href="games/ox-quiz.html" style="display:block; background:#f0fdf4; border-radius:14px; padding:20px; text-decoration:none; color:inherit; border: 2px solid #bbf7d0;">
+          <div style="font-size:28px; margin-bottom:10px;">⭕</div>
+          <h3 style="font-size:15px; font-weight:800; color:#1a1a2e; margin-bottom:8px;">OX 퀴즈</h3>
+          <p style="font-size:13px; color:#666; line-height:1.7;">모든 연령, 모든 인원. 주제를 상황에 맞게 바꿀 수 있어서 활용도가 매우 높아요.</p>
+        </a>
+        <a href="games/bingo.html" style="display:block; background:#eef2ff; border-radius:14px; padding:20px; text-decoration:none; color:inherit; border: 2px solid #c7d2fe;">
+          <div style="font-size:28px; margin-bottom:10px;">🎰</div>
+          <h3 style="font-size:15px; font-weight:800; color:#1a1a2e; margin-bottom:8px;">빙고 게임</h3>
+          <p style="font-size:13px; color:#666; line-height:1.7;">이름 빙고 방식으로 진행하면 서로 이름을 외우게 돼요. 첫 만남 모임에서 최고의 효과.</p>
+        </a>
+      </div>
+    </div>
+
+  </div>
+
+  <footer>
+    <p>© 2025 레크 뭐하지? | 모든 레크 진행자를 위한 아이디어 모음</p>
+    <p style="margin-top:8px;font-size:13px;">
+      <a href="/about.html" style="color:#bbb;">소개</a> |
+      <a href="/contact.html" style="color:#bbb;">문의</a> |
+      <a href="/privacy.html" style="color:#bbb;">개인정보처리방침</a> |
+      <a href="/terms.html" style="color:#bbb;">이용약관</a>
+    </p>
+  </footer>
+
+</body>
+</html>
