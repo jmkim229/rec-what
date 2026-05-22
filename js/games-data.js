@@ -23,11 +23,11 @@ const gamesData = [
     id: 'animal-imitate',
     emoji: '🐘',
     title: '동물 흉내 게임',
-    description: '진행자가 외치는 동물처럼 온몸으로 표현해요! 웃음과 신체 표현력을 키우는 놀이',
+    description: '진행자가 외치는 동물처럼 온몸으로 표현해요! 웃음과 신체 표현력을 키우는 놀이. 진행자 도구 포함',
     url: 'games/animal-imitate.html',
     people: '5명+',
     time: '10~20분',
-    prep: '준비물 없음',
+    prep: '진행자 도구(폰)',
     tags: {
       location: ['both'],
       groupSize: ['small'],
