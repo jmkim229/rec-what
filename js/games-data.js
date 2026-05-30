@@ -732,6 +732,23 @@ const gamesData = [
       duration: 'medium',
       situation: ['ice-break', 'brain']
     }
+  },
+  {
+    id: 'iguseong',
+    emoji: '🎤',
+    title: '이구동성',
+    description: '4명이 동시에 한 글자씩 외치면 무슨 단어일까? 목소리가 겹쳐 들리는 웃음 폭발 팀 대항 게임. 진행자 도구 포함',
+    url: 'games/iguseong.html',
+    people: '8명 이상',
+    time: '10~20분',
+    prep: '진행자 도구(폰)',
+    tags: {
+      location: ['both'],
+      groupSize: ['medium', 'large'],
+      ageGroup: ['kid-old', 'teen', 'adult'],
+      duration: 'medium',
+      situation: ['energy', 'brain']
+    }
   }
 ];
 
