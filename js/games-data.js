@@ -783,6 +783,23 @@ const gamesData = [
       duration: 'medium',
       situation: ['energy', 'brain']
     }
+  },
+  {
+    id: 'balance-game',
+    emoji: '⚖️',
+    title: '밸런스게임',
+    description: '치킨 vs 피자? 산 vs 바다? 취향과 가치관을 나누는 양자택일 대화 게임. 질문 36개 + 랜덤 뽑기 도구 포함',
+    url: 'games/balance-game.html',
+    people: '2명 이상',
+    time: '5~15분',
+    prep: '없음',
+    tags: {
+      location: ['both'],
+      groupSize: ['small', 'medium', 'large', 'xlarge'],
+      ageGroup: ['kid-young', 'kid-old', 'teen', 'adult'],
+      duration: 'short',
+      situation: ['ice-break', 'no-prep']
+    }
   }
 ];
 

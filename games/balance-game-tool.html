@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="description" content="밸런스게임 랜덤 질문 뽑기 도구. 카테고리별 질문 자동 출제, 즉석 득표 집계, 직접 질문 추가 기능 제공.">
+  <title>⚖️ 밸런스게임 질문 뽑기 도구 | 레크 뭐하지?</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif;
+      background: #0f172a;
+      color: #f1f5f9;
+      min-height: 100vh;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+      overflow-x: hidden;
+    }
+
+    /* ── 상단 헤더 ── */
+    .tool-header {
+      display: flex;
+      align-items: center;
+      padding: 12px 16px;
+      background: rgba(255,255,255,0.04);
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+      gap: 12px;
+    }
+    .back-link {
+      color: #ec4899;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .back-link:hover { color: #f9a8d4; }
+    .header-title {
+      font-size: 15px;
+      font-weight: 800;
+      color: #f1f5f9;
+    }
+
+    /* ── 카테고리 탭 ── */
+    .cat-tabs {
+      display: flex;
+      gap: 6px;
+      padding: 12px 14px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .cat-tabs::-webkit-scrollbar { display: none; }
+    .cat-tab {
+      flex-shrink: 0;
+      padding: 7px 14px;
+      border-radius: 20px;
+      border: 1.5px solid #1e293b;
+      background: #1e293b;
+      color: #94a3b8;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+    .cat-tab.active {
+      border-color: #ec4899;
+      background: rgba(236,72,153,0.15);
+      color: #f9a8d4;
+    }
+
+    /* ── 메인 질문 영역 ── */
+    .question-area {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px 16px;
+      min-height: calc(100vh - 270px);
+    }
+
+    .question-counter {
+      font-size: 12px;
+      color: #475569;
+      font-weight: 600;
+      margin-bottom: 16px;
+      text-align: center;
+    }
+
+    /* A vs B 카드 */
+    .question-card {
+      width: 100%;
+      max-width: 500px;
+    }
+    .vs-row {
+      display: grid;
+      grid-template-columns: 1fr 52px 1fr;
+      gap: 8px;
+      align-items: stretch;
+      min-height: 120px;
+    }
+    .side-a, .side-b {
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 18px 14px;
+      font-size: 18px;
+      font-weight: 800;
+      text-align: center;
+      line-height: 1.3;
+      word-break: keep-all;
+      animation: sideIn 0.35s cubic-bezier(0.34,1.4,0.64,1) both;
+      cursor: default;
+      user-select: none;
+    }
+    @keyframes sideIn {
+      from { opacity: 0; transform: scale(0.85); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+    .side-a {
+      background: linear-gradient(160deg, #1e3a8a 0%, #2563eb 100%);
+      border: 2px solid #3b82f6;
+      box-shadow: 0 6px 24px rgba(37,99,235,0.35);
+      color: white;
+    }
+    .side-b {
+      background: linear-gradient(160deg, #831843 0%, #ec4899 100%);
+      border: 2px solid #ec4899;
+      box-shadow: 0 6px 24px rgba(236,72,153,0.35);
+      color: white;
+      animation-delay: 0.05s;
+    }
+    .vs-center {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .vs-badge {
+      background: #1e293b;
+      border: 2px solid #334155;
+      border-radius: 12px;
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 900;
+      color: #f1f5f9;
+      letter-spacing: 1px;
+    }
+
+    /* 빈 상태 */
+    .no-question {
+      width: 100%;
+      max-width: 500px;
+      background: #1e293b;
+      border-radius: 20px;
+      padding: 48px 24px;
+      text-align: center;
+    }
+    .no-question-emoji { font-size: 52px; margin-bottom: 14px; }
+    .no-question-title { font-size: 18px; font-weight: 800; color: #f1f5f9; margin-bottom: 8px; }
+    .no-question-sub { font-size: 13px; color: #64748b; }
+
+    /* ── 득표 집계 ── */
+    .vote-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 12px;
+      width: 100%;
+      max-width: 500px;
+    }
+    .vote-box {
+      background: #1e293b;
+      border-radius: 14px;
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .vote-label {
+      font-size: 11px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .vote-label.a-label { color: #60a5fa; }
+    .vote-label.b-label { color: #f472b6; }
+    .vote-num {
+      font-size: 22px;
+      font-weight: 800;
+      min-width: 28px;
+      text-align: center;
+      flex: 1;
+    }
+    .vote-btn {
+      background: none;
+      border: 1.5px solid #334155;
+      border-radius: 8px;
+      color: #94a3b8;
+      font-size: 18px;
+      font-weight: 700;
+      width: 36px;
+      height: 36px;
+      cursor: pointer;
+      font-family: inherit;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.12s;
+      flex-shrink: 0;
+    }
+    .vote-btn:hover { background: #334155; color: #f1f5f9; }
+    .vote-btn:active { transform: scale(0.93); }
+
+    /* ── 버튼 영역 ── */
+    .action-area {
+      padding: 0 16px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-width: 532px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    .next-btn {
+      width: 100%;
+      padding: 18px;
+      border-radius: 16px;
+      border: none;
+      background: linear-gradient(135deg, #be185d, #ec4899);
+      color: white;
+      font-size: 18px;
+      font-weight: 800;
+      cursor: pointer;
+      font-family: inherit;
+      box-shadow: 0 6px 24px rgba(236,72,153,0.4);
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .next-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(236,72,153,0.55);
+    }
+    .next-btn:active { transform: scale(0.97); }
+
+    .reset-btn {
+      width: 100%;
+      padding: 12px;
+      border-radius: 12px;
+      border: 1.5px solid #334155;
+      background: transparent;
+      color: #64748b;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s;
+    }
+    .reset-btn:hover { border-color: #475569; color: #94a3b8; }
+
+    /* ── 직접 질문 추가 ── */
+    .add-section {
+      padding: 0 16px 24px;
+      max-width: 532px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    .add-toggle {
+      width: 100%;
+      padding: 12px;
+      border-radius: 12px;
+      border: 1.5px dashed #334155;
+      background: transparent;
+      color: #64748b;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s;
+    }
+    .add-toggle:hover { border-color: #ec4899; color: #f472b6; }
+
+    .add-form {
+      display: none;
+      margin-top: 10px;
+      background: #1e293b;
+      border-radius: 14px;
+      padding: 16px;
+    }
+    .add-form.open { display: block; }
+    .add-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 8px;
+    }
+    .add-inputs {
+      display: grid;
+      grid-template-columns: 1fr 32px 1fr;
+      gap: 6px;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .add-input {
+      background: #0f172a;
+      border: 1.5px solid #334155;
+      border-radius: 10px;
+      padding: 10px 12px;
+      color: #f1f5f9;
+      font-size: 13px;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .add-input:focus { border-color: #ec4899; }
+    .add-input::placeholder { color: #475569; }
+    .add-vs-label {
+      text-align: center;
+      font-size: 10px;
+      font-weight: 800;
+      color: #ec4899;
+    }
+    .add-submit {
+      width: 100%;
+      padding: 11px;
+      border-radius: 10px;
+      border: none;
+      background: #ec4899;
+      color: white;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      transition: background 0.15s;
+    }
+    .add-submit:hover { background: #db2777; }
+    .custom-count {
+      font-size: 11px;
+      color: #64748b;
+      text-align: center;
+      margin-top: 8px;
+    }
+
+    /* ── 반응형 ── */
+    @media (min-width: 480px) {
+      .side-a, .side-b { font-size: 22px; min-height: 140px; }
+      .vs-badge { width: 52px; height: 52px; font-size: 14px; }
+    }
+  </style>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-75JKFQWSHP"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-75JKFQWSHP');
+  </script>
+</head>
+<body>
+
+<div class="tool-header">
+  <a href="balance-game.html" class="back-link">← 게임 설명</a>
+  <span class="header-title">⚖️ 밸런스게임 질문 뽑기</span>
+</div>
+
+<div class="cat-tabs" id="catTabs">
+  <button class="cat-tab active" data-cat="all">전체</button>
+  <button class="cat-tab" data-cat="pref">☀️ 취향·일상</button>
+  <button class="cat-tab" data-cat="food">🍗 음식</button>
+  <button class="cat-tab" data-cat="relation">🤝 관계</button>
+  <button class="cat-tab" data-cat="funny">🤪 엉뚱</button>
+  <button class="cat-tab" data-cat="work">🏫 학교·직장</button>
+</div>
+
+<div class="question-area" id="questionArea">
+  <div class="question-counter" id="questionCounter">질문을 뽑아 시작하세요!</div>
+
+  <div class="no-question" id="noQuestion">
+    <div class="no-question-emoji">⚖️</div>
+    <div class="no-question-title">아래 버튼을 눌러 질문을 뽑으세요</div>
+    <div class="no-question-sub">카테고리를 선택하면 해당 질문만 나와요</div>
+  </div>
+
+  <div class="question-card" id="questionCard" style="display:none;">
+    <div class="vs-row" id="vsRow">
+      <div class="side-a" id="sideA"></div>
+      <div class="vs-center"><div class="vs-badge">VS</div></div>
+      <div class="side-b" id="sideB"></div>
+    </div>
+  </div>
+
+  <div class="vote-row" id="voteRow" style="display:none;">
+    <div class="vote-box">
+      <span class="vote-label a-label">A 선택</span>
+      <button class="vote-btn" onclick="vote('a',-1)">−</button>
+      <span class="vote-num" id="voteA">0</span>
+      <button class="vote-btn" onclick="vote('a',1)">+</button>
+    </div>
+    <div class="vote-box">
+      <span class="vote-label b-label">B 선택</span>
+      <button class="vote-btn" onclick="vote('b',-1)">−</button>
+      <span class="vote-num" id="voteB">0</span>
+      <button class="vote-btn" onclick="vote('b',1)">+</button>
+    </div>
+  </div>
+</div>
+
+<div class="action-area">
+  <button class="next-btn" id="nextBtn" onclick="nextQuestion()">질문 뽑기</button>
+  <button class="reset-btn" id="resetBtn" onclick="resetPool()" style="display:none;">🔄 처음부터 다시 (모든 질문)</button>
+</div>
+
+<div class="add-section">
+  <button class="add-toggle" onclick="toggleAddForm()">＋ 직접 질문 추가하기</button>
+  <div class="add-form" id="addForm">
+    <div class="add-label">A vs B 형식으로 입력하세요</div>
+    <div class="add-inputs">
+      <input class="add-input" id="inputA" placeholder="A 선택지" maxlength="30">
+      <div class="add-vs-label">VS</div>
+      <input class="add-input" id="inputB" placeholder="B 선택지" maxlength="30">
+    </div>
+    <button class="add-submit" onclick="addCustomQuestion()">추가하기</button>
+    <div class="custom-count" id="customCount"></div>
+  </div>
+</div>
+
+<script>
+/* ── 질문 데이터 ── */
+const Q = {
+  pref: [
+    { a: '평생 여름만 살기', b: '평생 겨울만 살기' },
+    { a: '아침형 인간', b: '저녁형 인간' },
+    { a: '산', b: '바다' },
+    { a: '도시', b: '시골' },
+    { a: '여행은 계획파', b: '여행은 즉흥파' },
+    { a: '과거로 시간여행', b: '미래로 시간여행' },
+    { a: '하늘 날기', b: '투명인간 되기' },
+    { a: '복권 1억 한 번', b: '매달 50만원 평생' },
+    { a: '돈 많고 바쁜 삶', b: '돈 적고 여유로운 삶' },
+    { a: '평생 핸드폰 없이', b: '평생 라면만 먹기' }
+  ],
+  food: [
+    { a: '치킨', b: '피자' },
+    { a: '짜장면', b: '짬뽕' },
+    { a: '탕수육 부먹', b: '탕수육 찍먹' },
+    { a: '민트초코 좋아', b: '민트초코 싫어' },
+    { a: '물복숭아', b: '딱복숭아' },
+    { a: '라면 꼬들꼬들', b: '라면 퍼진 면' },
+    { a: '양념치킨', b: '후라이드' },
+    { a: '아이스아메리카노', b: '따뜻한 아메리카노' },
+    { a: '단 음식', b: '짠 음식' },
+    { a: '비 오는 날 파전', b: '비 오는 날 라면' }
+  ],
+  relation: [
+    { a: '말 잘하는 친구', b: '잘 들어주는 친구' },
+    { a: '연락 자주 자주', b: '가끔 깊게' },
+    { a: '친구 100명 얕게', b: '친구 1명 깊게' },
+    { a: '약속 1시간 일찍', b: '약속 1시간 늦게' },
+    { a: '비밀 잘 지키는 친구', b: '뭐든 솔직한 친구' }
+  ],
+  funny: [
+    { a: '평생 반말만', b: '평생 존댓말만' },
+    { a: '평생 같은 옷만', b: '평생 같은 음식만' },
+    { a: '말할 때 노래로만', b: '말할 때 춤추면서만' },
+    { a: '1년 동안 못 씻기', b: '1년 동안 말 못하기' },
+    { a: '평생 점프하며 이동', b: '평생 뒤로 걷기' },
+    { a: '손이 발만큼 커지기', b: '발이 손만큼 작아지기' }
+  ],
+  work: [
+    { a: '일 잘하는 까칠한 상사', b: '일 못하는 착한 상사' },
+    { a: '재택근무', b: '출근' },
+    { a: '월요일 없애기', b: '금요일 두 번' },
+    { a: '시험 없는 학교', b: '숙제 없는 학교' },
+    { a: '점심시간 2시간', b: '퇴근 1시간 빨리' }
+  ]
+};
+
+/* ── 상태 ── */
+let S = {
+  cat: 'all',
+  pool: [],      // 아직 안 나온 질문 인덱스 모음
+  allItems: [],  // 현재 카테고리 전체 질문 배열
+  shown: 0,
+  total: 0,
+  voteA: 0,
+  voteB: 0,
+  customQuestions: [],
+  hasQuestion: false
+};
+
+function getItems(cat) {
+  const base = cat === 'all'
+    ? [].concat(Q.pref, Q.food, Q.relation, Q.funny, Q.work)
+    : (Q[cat] || []);
+  return base.concat(S.customQuestions.filter(q => cat === 'all' || q.cat === cat));
+}
+
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function buildPool() {
+  S.allItems = getItems(S.cat);
+  S.pool = shuffle(S.allItems.map((_, i) => i));
+  S.shown = 0;
+  S.total = S.allItems.length;
+}
+
+/* ── 카테고리 변경 ── */
+document.querySelectorAll('.cat-tab').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.cat-tab').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    S.cat = btn.dataset.cat;
+    buildPool();
+    S.hasQuestion = false;
+    S.voteA = 0; S.voteB = 0;
+    document.getElementById('noQuestion').style.display = 'block';
+    document.getElementById('questionCard').style.display = 'none';
+    document.getElementById('voteRow').style.display = 'none';
+    document.getElementById('resetBtn').style.display = 'none';
+    document.getElementById('questionCounter').textContent = '질문을 뽑아 시작하세요!';
+    document.getElementById('nextBtn').textContent = '질문 뽑기';
+    document.getElementById('noQuestion').querySelector('.no-question-sub').textContent =
+      '카테고리를 선택하면 해당 질문만 나와요';
+  });
+});
+
+/* ── 다음 질문 ── */
+function nextQuestion() {
+  if (S.pool.length === 0) {
+    buildPool();
+    document.getElementById('resetBtn').style.display = 'none';
+  }
+
+  const idx = S.pool.pop();
+  const q = S.allItems[idx];
+  S.shown++;
+  S.voteA = 0; S.voteB = 0;
+
+  document.getElementById('noQuestion').style.display = 'none';
+  document.getElementById('questionCard').style.display = 'block';
+  document.getElementById('voteRow').style.display = 'grid';
+  S.hasQuestion = true;
+
+  const sideA = document.getElementById('sideA');
+  const sideB = document.getElementById('sideB');
+  sideA.style.animation = 'none'; sideB.style.animation = 'none';
+  void sideA.offsetWidth;
+  sideA.style.animation = ''; sideB.style.animation = '';
+
+  sideA.textContent = q.a;
+  sideB.textContent = q.b;
+  document.getElementById('voteA').textContent = '0';
+  document.getElementById('voteB').textContent = '0';
+
+  const remaining = S.pool.length;
+  const total = S.allItems.length;
+  document.getElementById('questionCounter').textContent =
+    remaining === 0
+      ? `✅ ${total}개 모두 완료! 다시 뽑으면 처음부터`
+      : `${S.shown} / ${total}번째 질문 (${remaining}개 남음)`;
+
+  document.getElementById('nextBtn').textContent = remaining === 0 ? '🔄 처음부터 다시' : '다음 질문 뽑기';
+
+  if (remaining === 0) {
+    document.getElementById('resetBtn').style.display = 'none';
+  } else if (S.shown > 1) {
+    document.getElementById('resetBtn').style.display = 'block';
+  }
+}
+
+/* ── 득표 집계 ── */
+function vote(side, delta) {
+  if (side === 'a') {
+    S.voteA = Math.max(0, S.voteA + delta);
+    document.getElementById('voteA').textContent = S.voteA;
+  } else {
+    S.voteB = Math.max(0, S.voteB + delta);
+    document.getElementById('voteB').textContent = S.voteB;
+  }
+}
+
+/* ── 전체 초기화 ── */
+function resetPool() {
+  buildPool();
+  S.hasQuestion = false;
+  S.voteA = 0; S.voteB = 0;
+  document.getElementById('noQuestion').style.display = 'block';
+  document.getElementById('questionCard').style.display = 'none';
+  document.getElementById('voteRow').style.display = 'none';
+  document.getElementById('resetBtn').style.display = 'none';
+  document.getElementById('questionCounter').textContent = '질문을 뽑아 시작하세요!';
+  document.getElementById('nextBtn').textContent = '질문 뽑기';
+}
+
+/* ── 직접 질문 추가 ── */
+function toggleAddForm() {
+  const form = document.getElementById('addForm');
+  form.classList.toggle('open');
+}
+
+function addCustomQuestion() {
+  const a = document.getElementById('inputA').value.trim();
+  const b = document.getElementById('inputB').value.trim();
+  if (!a || !b) {
+    alert('A와 B 선택지를 모두 입력해주세요.');
+    return;
+  }
+  S.customQuestions.push({ a, b, cat: S.cat === 'all' ? 'custom' : S.cat });
+  document.getElementById('inputA').value = '';
+  document.getElementById('inputB').value = '';
+
+  const cnt = S.customQuestions.length;
+  document.getElementById('customCount').textContent = `직접 추가한 질문 ${cnt}개`;
+
+  // 풀 재생성
+  buildPool();
+  alert(`"${a} vs ${b}" 추가 완료! 다음 뽑기에 포함됩니다.`);
+}
+
+/* ── 초기화 ── */
+buildPool();
+</script>
+</body>
+</html>
