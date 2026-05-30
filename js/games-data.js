@@ -734,6 +734,23 @@ const gamesData = [
     }
   },
   {
+    id: 'jjimpigu',
+    emoji: '🏐',
+    title: '찜피구',
+    description: '공을 든 채 발을 고정! 패스로 공을 옮겨 상대를 터치로 잡는 독특한 공수 교대 게임. 진행자 도구 포함',
+    url: 'games/jjimpigu.html',
+    people: '10명+',
+    time: '15~25분',
+    prep: '말랑한 공·팀 띠',
+    tags: {
+      location: ['both'],
+      groupSize: ['medium', 'large'],
+      ageGroup: ['kid-old', 'teen', 'adult'],
+      duration: 'medium',
+      situation: ['energy']
+    }
+  },
+  {
     id: 'iguseong',
     emoji: '🎤',
     title: '이구동성',
