@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <meta name="description" content="이구동성 진행자 도구. 4·5·6글자 단어를 랜덤으로 뽑아 글자별로 표시해드려요.">
+  <meta name="description" content="이구동성 진행자 도구. 팀원 수(글자 수)를 정하면 그 인원에 맞는 단어만 랜덤 출제해드려요.">
   <title>🎤 이구동성 도구 | 레크 뭐하지?</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -58,6 +58,22 @@
       color: #64748b;
       text-transform: uppercase;
       letter-spacing: 0.07em;
+    }
+    .ctrl-note {
+      font-size: 11px;
+      color: #475569;
+      margin-top: 2px;
+    }
+    .person-badge {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 700;
+      color: #f9a8d4;
+      background: rgba(236,72,153,0.12);
+      border: 1px solid rgba(236,72,153,0.25);
+      border-radius: 8px;
+      padding: 3px 10px;
+      margin-top: 2px;
     }
     .btn-group {
       display: flex;
@@ -241,20 +257,22 @@
 <!-- 컨트롤 -->
 <div class="controls">
   <div class="ctrl-row">
-    <span class="ctrl-label">글자 수</span>
+    <span class="ctrl-label">참가 인원 (글자 수)</span>
     <div class="btn-group" id="lenGroup">
-      <button class="seg-btn active" data-len="4">4글자</button>
-      <button class="seg-btn" data-len="5">5글자</button>
-      <button class="seg-btn" data-len="6">6글자</button>
+      <button class="seg-btn active" data-len="4">4명 (4글자)</button>
+      <button class="seg-btn" data-len="5">5명 (5글자)</button>
+      <button class="seg-btn" data-len="6">6명 (6글자)</button>
     </div>
+    <span class="person-badge">필요 인원: <span id="personCount">4</span>명</span>
+    <p class="ctrl-note">고른 인원에 맞는 글자 수만 출제돼요. 게임 중 사람 수가 바뀌지 않아요.</p>
   </div>
   <div class="ctrl-row">
-    <span class="ctrl-label">카테고리</span>
-    <div class="btn-group" id="catGroup">
-      <button class="seg-btn active" data-cat="전체">전체</button>
-      <button class="seg-btn" data-cat="동물">동물</button>
-      <button class="seg-btn" data-cat="음식">음식</button>
-      <button class="seg-btn" data-cat="일상어">일상어</button>
+    <span class="ctrl-label">난이도</span>
+    <div class="btn-group" id="levelGroup">
+      <button class="seg-btn active" data-level="전체">전체</button>
+      <button class="seg-btn" data-level="쉬움">쉬움</button>
+      <button class="seg-btn" data-level="보통">보통</button>
+      <button class="seg-btn" data-level="어려움">어려움</button>
     </div>
   </div>
 </div>
@@ -281,80 +299,130 @@
 
 <script>
 const WORDS = [
-  // 4글자 일상어
-  {word:"사랑해요", len:4, cat:"일상어"},
-  {word:"대한민국", len:4, cat:"일상어"},
-  {word:"가나다라", len:4, cat:"일상어"},
-  {word:"행복하다", len:4, cat:"일상어"},
-  {word:"즐거워요", len:4, cat:"일상어"},
-  {word:"감사해요", len:4, cat:"일상어"},
-  {word:"파이팅해", len:4, cat:"일상어"},
-  {word:"잘지내요", len:4, cat:"일상어"},
-  {word:"힘내세요", len:4, cat:"일상어"},
-  {word:"좋아해요", len:4, cat:"일상어"},
-  // 4글자 동물
-  {word:"무당벌레", len:4, cat:"동물"},
-  {word:"고슴도치", len:4, cat:"동물"},
-  {word:"반딧불이", len:4, cat:"동물"},
-  {word:"호랑나비", len:4, cat:"동물"},
-  // 4글자 음식
-  {word:"김치찌개", len:4, cat:"음식"},
-  {word:"된장찌개", len:4, cat:"음식"},
-  {word:"순대국밥", len:4, cat:"음식"},
-  {word:"돼지국밥", len:4, cat:"음식"},
-  {word:"오징어회", len:4, cat:"음식"},
-  {word:"비빔냉면", len:4, cat:"음식"},
-  // 5글자 일상어
-  {word:"생일축하해", len:5, cat:"일상어"},
-  {word:"즐거운하루", len:5, cat:"일상어"},
-  {word:"친구사랑해", len:5, cat:"일상어"},
-  {word:"힘차게달려", len:5, cat:"일상어"},
-  {word:"하나둘셋넷", len:5, cat:"일상어"},
-  // 5글자 동물
-  {word:"장수풍뎅이", len:5, cat:"동물"},
-  {word:"바다거북이", len:5, cat:"동물"},
-  {word:"황금독수리", len:5, cat:"동물"},
-  {word:"무지개송어", len:5, cat:"동물"},
-  // 5글자 음식
-  {word:"닭갈비볶음", len:5, cat:"음식"},
-  {word:"계란후라이", len:5, cat:"음식"},
-  {word:"쌀국수요리", len:5, cat:"음식"},
-  // 6글자 일상어
-  {word:"대한민국만세", len:6, cat:"일상어"},
-  {word:"행복한우리들", len:6, cat:"일상어"},
-  {word:"모두함께해요", len:6, cat:"일상어"},
-  {word:"오늘도파이팅", len:6, cat:"일상어"},
-  // 6글자 동물
-  {word:"귀여운다람쥐", len:6, cat:"동물"},
-  {word:"아기공룡둘리", len:6, cat:"동물"},
-  // 6글자 음식
-  {word:"맛있는밥먹자", len:6, cat:"음식"},
-  {word:"맛있게드세요", len:6, cat:"음식"},
+  // ── 4글자 ──
+  {word:"횡단보도", len:4, level:"쉬움"},
+  {word:"손톱깎이", len:4, level:"쉬움"},
+  {word:"연필깎이", len:4, level:"쉬움"},
+  {word:"김치찌개", len:4, level:"쉬움"},
+  {word:"된장찌개", len:4, level:"쉬움"},
+  {word:"비빔국수", len:4, level:"쉬움"},
+  {word:"바람개비", len:4, level:"쉬움"},
+  {word:"무지개떡", len:4, level:"쉬움"},
+  {word:"호랑나비", len:4, level:"쉬움"},
+  {word:"무당벌레", len:4, level:"쉬움"},
+  {word:"사슴벌레", len:4, level:"쉬움"},
+  {word:"고슴도치", len:4, level:"쉬움"},
+  {word:"해바라기", len:4, level:"쉬움"},
+  {word:"코스모스", len:4, level:"쉬움"},
+  {word:"강아지풀", len:4, level:"쉬움"},
+
+  {word:"수학여행", len:4, level:"보통"},
+  {word:"졸업여행", len:4, level:"보통"},
+  {word:"졸업사진", len:4, level:"보통"},
+  {word:"화산폭발", len:4, level:"보통"},
+  {word:"단풍놀이", len:4, level:"보통"},
+  {word:"불꽃놀이", len:4, level:"보통"},
+  {word:"봄나들이", len:4, level:"보통"},
+  {word:"소방대원", len:4, level:"보통"},
+  {word:"등대지기", len:4, level:"보통"},
+  {word:"갯벌체험", len:4, level:"보통"},
+  {word:"운동경기", len:4, level:"보통"},
+  {word:"가족여행", len:4, level:"보통"},
+
+  {word:"일석이조", len:4, level:"어려움"},
+  {word:"십중팔구", len:4, level:"어려움"},
+  {word:"우왕좌왕", len:4, level:"어려움"},
+  {word:"동분서주", len:4, level:"어려움"},
+  {word:"이심전심", len:4, level:"어려움"},
+  {word:"천고마비", len:4, level:"어려움"},
+  {word:"죽마고우", len:4, level:"어려움"},
+  {word:"청출어람", len:4, level:"어려움"},
+  {word:"작심삼일", len:4, level:"어려움"},
+  {word:"새옹지마", len:4, level:"어려움"},
+  {word:"어부지리", len:4, level:"어려움"},
+  {word:"금상첨화", len:4, level:"어려움"},
+  {word:"권선징악", len:4, level:"어려움"},
+  {word:"화룡점정", len:4, level:"어려움"},
+  {word:"다다익선", len:4, level:"어려움"},
+  {word:"유비무환", len:4, level:"어려움"},
+  {word:"대기만성", len:4, level:"어려움"},
+  {word:"동고동락", len:4, level:"어려움"},
+  {word:"견물생심", len:4, level:"어려움"},
+  {word:"일사천리", len:4, level:"어려움"},
+
+  // ── 5글자 ──
+  {word:"전자레인지", len:5, level:"쉬움"},
+  {word:"자동판매기", len:5, level:"쉬움"},
+  {word:"계란후라이", len:5, level:"쉬움"},
+  {word:"김치볶음밥", len:5, level:"쉬움"},
+  {word:"소고기국밥", len:5, level:"쉬움"},
+  {word:"세발자전거", len:5, level:"쉬움"},
+  {word:"칠판지우개", len:5, level:"쉬움"},
+  {word:"종이비행기", len:5, level:"쉬움"},
+  {word:"색종이접기", len:5, level:"쉬움"},
+  {word:"고무줄놀이", len:5, level:"쉬움"},
+
+  {word:"우주비행사", len:5, level:"보통"},
+  {word:"국악연주회", len:5, level:"보통"},
+  {word:"미술전시회", len:5, level:"보통"},
+  {word:"과학실험실", len:5, level:"보통"},
+  {word:"종합운동장", len:5, level:"보통"},
+  {word:"야구경기장", len:5, level:"보통"},
+  {word:"국립도서관", len:5, level:"보통"},
+
+  {word:"상대성이론", len:5, level:"어려움"},
+  {word:"헌법재판소", len:5, level:"어려움"},
+  {word:"광합성작용", len:5, level:"어려움"},
+  {word:"원자력발전", len:5, level:"어려움"},
+  {word:"유전자조작", len:5, level:"어려움"},
+  {word:"지구온난화", len:5, level:"어려움"},
+
+  // ── 6글자 ──
+  {word:"어린이놀이터", len:6, level:"쉬움"},
+  {word:"비눗방울놀이", len:6, level:"쉬움"},
+  {word:"종이접기놀이", len:6, level:"쉬움"},
+  {word:"술래잡기놀이", len:6, level:"쉬움"},
+  {word:"숨바꼭질놀이", len:6, level:"쉬움"},
+  {word:"풍선불기놀이", len:6, level:"쉬움"},
+
+  {word:"어린이대공원", len:6, level:"보통"},
+  {word:"자연사박물관", len:6, level:"보통"},
+  {word:"시민체육센터", len:6, level:"보통"},
+  {word:"전통문화체험", len:6, level:"보통"},
+  {word:"종합복지센터", len:6, level:"보통"},
+
+  {word:"인공지능기술", len:6, level:"어려움"},
+  {word:"양자역학이론", len:6, level:"어려움"},
+  {word:"블록체인기술", len:6, level:"어려움"},
+  {word:"가상현실세계", len:6, level:"어려움"},
+  {word:"빅데이터분석", len:6, level:"어려움"},
+  {word:"면역체계반응", len:6, level:"어려움"},
 ];
 
 let S = {
   len: 4,
-  cat: '전체',
+  level: '전체',
   currentWord: null,
-  highlightedIdx: [],  // 힌트로 강조된 글자 인덱스
+  highlightedIdx: [],
   hintActive: false,
 };
 
-/* ── 컨트롤 이벤트 ── */
+/* ── 인원(글자 수) 선택 ── */
 document.getElementById('lenGroup').addEventListener('click', e => {
   const btn = e.target.closest('.seg-btn');
   if (!btn) return;
   S.len = parseInt(btn.dataset.len);
+  document.getElementById('personCount').textContent = S.len;
   setActive('lenGroup', btn);
   resetDisplay();
 });
 
-document.getElementById('catGroup').addEventListener('click', e => {
+/* ── 난이도 선택 ── */
+document.getElementById('levelGroup').addEventListener('click', e => {
   const btn = e.target.closest('.seg-btn');
   if (!btn) return;
-  S.cat = btn.dataset.cat;
-  setActive('catGroup', btn);
-  resetDisplay();
+  S.level = btn.dataset.level;
+  setActive('levelGroup', btn);
 });
 
 function setActive(groupId, activeBtn) {
@@ -367,9 +435,9 @@ function setActive(groupId, activeBtn) {
 document.getElementById('drawBtn').addEventListener('click', drawWord);
 
 function drawWord() {
-  const pool = WORDS.filter(w => w.len === S.len && (S.cat === '전체' || w.cat === S.cat));
+  const pool = WORDS.filter(w => w.len === S.len && (S.level === '전체' || w.level === S.level));
   if (pool.length === 0) {
-    alert('해당 조건에 맞는 단어가 없어요. 글자 수나 카테고리를 바꿔보세요.');
+    alert('해당 조건에 맞는 단어가 없어요. 난이도를 바꿔보세요.');
     return;
   }
   let picked = pool[Math.floor(Math.random() * pool.length)];
