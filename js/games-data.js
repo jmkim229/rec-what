@@ -734,6 +734,23 @@ const gamesData = [
     }
   },
   {
+    id: 'card-flip',
+    emoji: '🃏',
+    title: '카드 뒤집기',
+    description: '짝이 맞는 카드를 찾아라! 기억력을 겨루는 짝맞추기 팀 대항 게임. 학습용 커스텀 카드·난이도·미리보기 지원. 진행자 도구 포함',
+    url: 'games/card-flip.html',
+    people: '2명+',
+    time: '10~15분',
+    prep: '진행자 도구(화면)',
+    tags: {
+      location: ['indoor'],
+      groupSize: ['small', 'medium', 'large'],
+      ageGroup: ['young', 'kid-young', 'kid-old', 'teen', 'adult'],
+      duration: 'medium',
+      situation: ['brain', 'ice-break']
+    }
+  },
+  {
     id: 'jjimpigu',
     emoji: '🏐',
     title: '찜피구',

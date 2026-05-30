@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="description" content="카드 뒤집기 진행자 도구. 팀별 점수, 난이도 선택, 미리보기, 직접 입력 기능이 있는 기억력 짝맞추기 게임.">
+  <title>🃏 카드 뒤집기 도구 | 레크 뭐하지?</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif;
+      background: #0f172a;
+      color: #f1f5f9;
+      min-height: 100vh;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    }
+
+    /* ── 헤더 ── */
+    .tool-header {
+      display: flex;
+      align-items: center;
+      padding: 14px 16px;
+      background: rgba(255,255,255,0.05);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .back-link { color: #ec4899; text-decoration: none; font-size: 14px; font-weight: 600; }
+    .back-link:hover { color: #f9a8d4; }
+
+    /* ── 컨트롤 ── */
+    .controls {
+      padding: 14px 16px 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .ctrl-row { display: flex; flex-direction: column; gap: 5px; }
+    .ctrl-label {
+      font-size: 10px;
+      font-weight: 700;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+    }
+    .btn-group { display: flex; gap: 6px; }
+    .seg-btn {
+      flex: 1;
+      padding: 9px 4px;
+      border-radius: 10px;
+      border: 2px solid #1e293b;
+      background: #1e293b;
+      color: #94a3b8;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      text-align: center;
+      transition: all 0.15s;
+    }
+    .seg-btn.active {
+      border-color: #ec4899;
+      background: rgba(236,72,153,0.15);
+      color: #f9a8d4;
+    }
+
+    /* ── 게임 상태 ── */
+    .game-status {
+      padding: 10px 16px 8px;
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .scores-row { display: flex; gap: 6px; }
+    .score-chip {
+      flex: 1;
+      padding: 8px 6px;
+      border-radius: 10px;
+      border: 2px solid #334155;
+      text-align: center;
+      font-size: 11px;
+      font-weight: 700;
+      line-height: 1.4;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .score-chip .chip-score { font-size: 20px; font-weight: 800; display: block; }
+    .score-chip.active-turn { box-shadow: 0 0 12px rgba(236,72,153,0.4); }
+
+    .turn-bar {
+      padding: 9px 14px;
+      border-radius: 10px;
+      background: #1e293b;
+      border: 2px solid #334155;
+      font-size: 14px;
+      font-weight: 700;
+      text-align: center;
+      transition: border-color 0.2s, color 0.2s;
+    }
+
+    /* ── 액션 ── */
+    .action-section {
+      padding: 10px 16px;
+      display: flex;
+      gap: 10px;
+      align-items: flex-end;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .preview-ctrl { flex: 1; display: flex; flex-direction: column; gap: 5px; }
+    .action-btns { display: flex; flex-direction: column; gap: 6px; flex-shrink: 0; }
+
+    .pink-btn {
+      padding: 10px 14px;
+      border-radius: 12px;
+      border: none;
+      background: linear-gradient(135deg, #ec4899, #f43f5e);
+      color: white;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      white-space: nowrap;
+      box-shadow: 0 3px 10px rgba(236,72,153,0.35);
+      transition: transform 0.15s;
+    }
+    .pink-btn:hover { transform: translateY(-1px); }
+    .pink-btn:active { transform: scale(0.97); }
+    .pink-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+
+    .ghost-btn {
+      padding: 10px 14px;
+      border-radius: 12px;
+      border: 2px solid #334155;
+      background: #1e293b;
+      color: #94a3b8;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      white-space: nowrap;
+      transition: all 0.15s;
+    }
+    .ghost-btn:hover { border-color: #ec4899; color: #f9a8d4; }
+    .ghost-btn:active { transform: scale(0.97); }
+
+    /* ── 카드 격자 ── */
+    .grid-wrapper { padding: 10px 14px 4px; }
+    .card-grid {
+      display: grid;
+      gap: 7px;
+    }
+
+    /* 카드 3D 플립 */
+    .card {
+      aspect-ratio: 1;
+      cursor: pointer;
+      border-radius: 10px;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+    .card-inner {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.32s ease;
+      border-radius: 10px;
+    }
+    .card-inner.up { transform: rotateY(180deg); }
+
+    .card-face {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .card-back-face {
+      background: #1e293b;
+      border: 2px solid rgba(236,72,153,0.2);
+      color: rgba(236,72,153,0.25);
+      font-size: clamp(16px, 4vw, 30px);
+      font-weight: 900;
+    }
+    .card-front-face {
+      background: #1e293b;
+      border: 2px solid #475569;
+      transform: rotateY(180deg);
+      font-size: clamp(20px, 6vw, 44px);
+      line-height: 1;
+      padding: 4px;
+      text-align: center;
+      word-break: break-all;
+    }
+    .card.matched .card-front-face {
+      background: rgba(34,197,94,0.12);
+      border-color: #22c55e;
+    }
+
+    /* ── 직접 입력 ── */
+    .custom-section { padding: 8px 16px 16px; }
+    .toggle-custom-btn {
+      width: 100%;
+      padding: 11px;
+      border-radius: 12px;
+      border: 2px solid #334155;
+      background: transparent;
+      color: #64748b;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s;
+    }
+    .toggle-custom-btn:hover { border-color: #475569; color: #94a3b8; }
+    .custom-body {
+      display: none;
+      padding-top: 10px;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .custom-body.open { display: flex; }
+    .custom-hint { font-size: 11px; color: #64748b; line-height: 1.6; }
+    .custom-textarea {
+      width: 100%;
+      height: 130px;
+      background: #1e293b;
+      border: 2px solid #334155;
+      border-radius: 12px;
+      color: #f1f5f9;
+      font-family: inherit;
+      font-size: 14px;
+      padding: 12px;
+      resize: none;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .custom-textarea:focus { border-color: #ec4899; }
+    .custom-textarea::placeholder { color: #475569; line-height: 1.8; }
+    .apply-btn {
+      padding: 12px;
+      border-radius: 12px;
+      border: none;
+      background: linear-gradient(135deg, #ec4899, #f43f5e);
+      color: white;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      box-shadow: 0 3px 10px rgba(236,72,153,0.35);
+      transition: transform 0.15s;
+    }
+    .apply-btn:hover { transform: translateY(-1px); }
+    .apply-btn:active { transform: scale(0.97); }
+    .custom-active-note {
+      font-size: 11px;
+      color: #f9a8d4;
+      text-align: center;
+      display: none;
+    }
+
+    /* ── 미리보기 카운트다운 ── */
+    .preview-countdown {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(15,23,42,0.93);
+      border: 2px solid #ec4899;
+      border-radius: 20px;
+      padding: 20px 44px;
+      z-index: 200;
+      text-align: center;
+      display: none;
+      pointer-events: none;
+    }
+    .preview-countdown.visible { display: block; }
+    .countdown-num {
+      font-size: 64px;
+      font-weight: 800;
+      color: #f9a8d4;
+      line-height: 1;
+    }
+    .countdown-label {
+      font-size: 13px;
+      color: #94a3b8;
+      margin-top: 6px;
+    }
+
+    /* ── 결과 오버레이 ── */
+    .result-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15,23,42,0.93);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .result-overlay.visible { display: flex; }
+    .result-card {
+      background: #1e293b;
+      border: 2px solid rgba(236,72,153,0.4);
+      border-radius: 24px;
+      padding: 32px 24px;
+      text-align: center;
+      max-width: 420px;
+      width: 100%;
+      box-shadow: 0 24px 64px rgba(0,0,0,0.6);
+    }
+    .result-emoji { font-size: 52px; margin-bottom: 10px; }
+    .result-title { font-size: 22px; font-weight: 800; margin-bottom: 18px; }
+    .result-scores { display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
+    .result-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 16px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.05);
+      border-left: 4px solid;
+    }
+    .result-row.winner-row { background: rgba(236,72,153,0.12); }
+    .result-row-name { font-weight: 700; font-size: 15px; }
+    .result-row-score { font-weight: 800; font-size: 18px; }
+    .result-winner-text {
+      font-size: 19px;
+      font-weight: 800;
+      color: #f9a8d4;
+      margin-bottom: 22px;
+    }
+    .replay-btn {
+      width: 100%;
+      padding: 16px;
+      border-radius: 16px;
+      border: none;
+      background: linear-gradient(135deg, #ec4899, #f43f5e);
+      color: white;
+      font-size: 16px;
+      font-weight: 800;
+      cursor: pointer;
+      font-family: inherit;
+      box-shadow: 0 4px 16px rgba(236,72,153,0.4);
+      transition: transform 0.15s;
+    }
+    .replay-btn:hover { transform: translateY(-2px); }
+    .replay-btn:active { transform: scale(0.97); }
+  </style>
+</head>
+<body>
+
+<!-- 미리보기 카운트다운 -->
+<div class="preview-countdown" id="previewCountdown">
+  <div class="countdown-num" id="countdownNum">5</div>
+  <div class="countdown-label">초 후 덮힙니다</div>
+</div>
+
+<!-- 결과 오버레이 -->
+<div class="result-overlay" id="resultOverlay">
+  <div class="result-card">
+    <div class="result-emoji">🎉</div>
+    <h2 class="result-title">게임 종료!</h2>
+    <div class="result-scores" id="resultScores"></div>
+    <div class="result-winner-text" id="resultWinner"></div>
+    <button class="replay-btn" id="replayBtn">🔀 다시 하기</button>
+  </div>
+</div>
+
+<!-- 헤더 -->
+<div class="tool-header">
+  <a href="card-flip.html" class="back-link">← 게임 설명으로 돌아가기</a>
+</div>
+
+<!-- 설정 -->
+<div class="controls">
+  <div class="ctrl-row">
+    <span class="ctrl-label">난이도 (카드 수)</span>
+    <div class="btn-group" id="diffGroup">
+      <button class="seg-btn active" data-diff="easy">쉬움 · 6짝</button>
+      <button class="seg-btn" data-diff="medium">보통 · 8짝</button>
+      <button class="seg-btn" data-diff="hard">어려움 · 10짝</button>
+    </div>
+  </div>
+  <div class="ctrl-row">
+    <span class="ctrl-label">팀 수</span>
+    <div class="btn-group" id="teamGroup">
+      <button class="seg-btn" data-teams="1">1팀</button>
+      <button class="seg-btn active" data-teams="2">2팀</button>
+      <button class="seg-btn" data-teams="3">3팀</button>
+      <button class="seg-btn" data-teams="4">4팀</button>
+    </div>
+  </div>
+</div>
+
+<!-- 게임 상태 -->
+<div class="game-status">
+  <div class="scores-row" id="scoresRow"></div>
+  <div class="turn-bar" id="turnBar"></div>
+</div>
+
+<!-- 액션 -->
+<div class="action-section">
+  <div class="preview-ctrl">
+    <span class="ctrl-label">미리보기 시간</span>
+    <div class="btn-group" id="previewGroup">
+      <button class="seg-btn" data-sec="3">3초</button>
+      <button class="seg-btn active" data-sec="5">5초</button>
+      <button class="seg-btn" data-sec="10">10초</button>
+    </div>
+  </div>
+  <div class="action-btns">
+    <button class="pink-btn" id="previewBtn">👁 미리보기</button>
+    <button class="ghost-btn" id="newGameBtn">🔀 새 게임</button>
+  </div>
+</div>
+
+<!-- 카드 격자 -->
+<div class="grid-wrapper">
+  <div class="card-grid" id="cardGrid"></div>
+</div>
+
+<!-- 직접 입력 -->
+<div class="custom-section">
+  <div class="custom-active-note" id="customNote">✏️ 직접 입력 적용 중</div>
+  <button class="toggle-custom-btn" id="toggleCustomBtn">✏️ 직접 입력하기 ▼</button>
+  <div class="custom-body" id="customBody">
+    <p class="custom-hint">짝 항목을 한 줄에 하나씩 입력하세요. 각 줄이 카드 한 쌍이 됩니다. (최소 4줄)<br>예: 사자성어, 영단어, 성경 구절 등 무엇이든 OK!</p>
+    <textarea class="custom-textarea" id="customTextarea"
+      placeholder="예시)&#10;사과&#10;포도&#10;딸기&#10;바나나&#10;체리&#10;수박"></textarea>
+    <button class="apply-btn" id="applyBtn">✔ 적용하기</button>
+  </div>
+</div>
+
+<script>
+/* ═══ 상수 ═══ */
+const TEAM_COLORS = ['#ec4899', '#3b82f6', '#22c55e', '#f97316'];
+const TEAM_NAMES  = ['1팀', '2팀', '3팀', '4팀'];
+
+const EMOJI_POOL = [
+  '🐶','🐱','🐰','🦊','🐻','🐼','🐸','🦁','🐯','🐮',
+  '🐷','🐵','🦆','🐬','🦋','🐢','🍎','🍊','🍋','🍇',
+  '🍓','🎈','🌸','🌻','🌈','🎵','⭐','🍕','🎃','🏆'
+];
+
+const DIFF = {
+  easy:   { pairs: 6,  cols: 4 },
+  medium: { pairs: 8,  cols: 4 },
+  hard:   { pairs: 10, cols: 4 },
+};
+
+/* ═══ 상태 ═══ */
+const S = {
+  difficulty: 'easy',
+  numTeams: 2,
+  previewSec: 5,
+  useCustom: false,
+  customPairs: null,
+
+  cards: [],       // { pairId, content, flipped, matched }
+  firstIdx: -1,    // 이번 차례 첫 번째로 뒤집은 카드 인덱스
+  locked: false,
+  previewActive: false,
+
+  teams: [],       // { name, color, score }
+  currentTeam: 0,
+  gameOver: false,
+};
+
+/* ═══ 유틸 ═══ */
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function setActiveBtn(groupId, activeBtn) {
+  document.getElementById(groupId).querySelectorAll('.seg-btn').forEach(b => {
+    b.classList.toggle('active', b === activeBtn);
+  });
+}
+
+/* ═══ 초기화 ═══ */
+function initTeams() {
+  S.teams = [];
+  for (let i = 0; i < S.numTeams; i++) {
+    S.teams.push({ name: TEAM_NAMES[i], color: TEAM_COLORS[i], score: 0 });
+  }
+  S.currentTeam = 0;
+}
+
+function buildDeck() {
+  const pairs = S.useCustom && S.customPairs
+    ? S.customPairs
+    : EMOJI_POOL.slice(0, DIFF[S.difficulty].pairs);
+
+  const deck = [];
+  pairs.forEach((content, pairId) => {
+    deck.push({ pairId, content, flipped: false, matched: false });
+    deck.push({ pairId, content, flipped: false, matched: false });
+  });
+  return shuffle(deck);
+}
+
+function newGame() {
+  initTeams();
+  S.cards = buildDeck();
+  S.firstIdx = -1;
+  S.locked = false;
+  S.previewActive = false;
+  S.gameOver = false;
+  document.getElementById('resultOverlay').classList.remove('visible');
+  renderAll();
+}
+
+/* ═══ 렌더링 ═══ */
+function renderAll() {
+  renderScores();
+  renderTurn();
+  renderGrid();
+}
+
+function renderScores() {
+  document.getElementById('scoresRow').innerHTML = S.teams.map((t, i) => {
+    const isActive = i === S.currentTeam && !S.gameOver;
+    return `<div class="score-chip ${isActive ? 'active-turn' : ''}"
+      style="color:${t.color}; border-color:${isActive ? t.color : '#334155'};">
+      ${t.name}<span class="chip-score">${t.score}</span>
+    </div>`;
+  }).join('');
+}
+
+function renderTurn() {
+  const el = document.getElementById('turnBar');
+  if (S.gameOver) {
+    el.textContent = '🎉 게임 종료!';
+    el.style.color = '#f9a8d4';
+    el.style.borderColor = '#ec4899';
+    return;
+  }
+  if (S.previewActive) {
+    el.textContent = '👁 미리보기 중 — 카드 위치를 외우세요!';
+    el.style.color = '#fbbf24';
+    el.style.borderColor = '#fbbf24';
+    return;
+  }
+  const t = S.teams[S.currentTeam];
+  el.innerHTML = `현재 차례: <strong style="color:${t.color}">${t.name}</strong>`;
+  el.style.color = '#f1f5f9';
+  el.style.borderColor = t.color;
+}
+
+function renderGrid() {
+  const grid = document.getElementById('cardGrid');
+  const cols = S.useCustom && S.customPairs
+    ? (S.cards.length > 16 ? 5 : 4)
+    : DIFF[S.difficulty].cols;
+
+  grid.style.gridTemplateColumns = `repeat(${cols}, 1fr)`;
+
+  grid.innerHTML = S.cards.map((card, i) => {
+    const faceUp = card.flipped || card.matched || S.previewActive;
+    return `<div class="card${card.matched ? ' matched' : ''}"
+        onclick="handleCardClick(${i})" data-idx="${i}">
+      <div class="card-inner${faceUp ? ' up' : ''}">
+        <div class="card-face card-back-face">?</div>
+        <div class="card-face card-front-face">${card.content}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+/* ═══ 카드 클릭 ═══ */
+function handleCardClick(i) {
+  if (S.locked || S.gameOver || S.previewActive) return;
+  const card = S.cards[i];
+  if (card.matched || card.flipped) return;
+  if (S.firstIdx === i) return;
+
+  card.flipped = true;
+
+  if (S.firstIdx === -1) {
+    S.firstIdx = i;
+    renderGrid();
+    return;
+  }
+
+  // 두 번째 카드
+  const second = i;
+  renderGrid();
+  S.locked = true;
+
+  setTimeout(() => {
+    const first = S.cards[S.firstIdx];
+    const sec   = S.cards[second];
+
+    if (first.pairId === sec.pairId) {
+      // 짝 성공
+      first.matched = true;
+      sec.matched   = true;
+      first.flipped = false;
+      sec.flipped   = false;
+      S.teams[S.currentTeam].score++;
+      S.firstIdx = -1;
+      S.locked = false;
+      renderAll();
+
+      if (S.cards.every(c => c.matched)) {
+        S.gameOver = true;
+        renderTurn();
+        setTimeout(showResults, 600);
+      }
+      // 같은 팀이 한 번 더 진행 (currentTeam 유지)
+    } else {
+      // 짝 실패 — 다시 덮고 다음 팀
+      first.flipped = false;
+      sec.flipped   = false;
+      S.firstIdx = -1;
+      S.currentTeam = (S.currentTeam + 1) % S.numTeams;
+      S.locked = false;
+      renderAll();
+    }
+  }, 1000);
+}
+
+/* ═══ 미리보기 ═══ */
+function startPreview() {
+  if (S.locked || S.previewActive || S.gameOver) return;
+  document.getElementById('previewBtn').disabled = true;
+
+  S.previewActive = true;
+  S.locked = true;
+  renderAll();
+
+  let remaining = S.previewSec;
+  const countdown = document.getElementById('previewCountdown');
+  const numEl     = document.getElementById('countdownNum');
+  numEl.textContent = remaining;
+  countdown.classList.add('visible');
+
+  const timer = setInterval(() => {
+    remaining--;
+    if (remaining <= 0) {
+      clearInterval(timer);
+      countdown.classList.remove('visible');
+      S.previewActive = false;
+      S.locked = false;
+      document.getElementById('previewBtn').disabled = false;
+      renderAll();
+    } else {
+      numEl.textContent = remaining;
+    }
+  }, 1000);
+}
+
+/* ═══ 결과 표시 ═══ */
+function showResults() {
+  const maxScore = Math.max(...S.teams.map(t => t.score));
+  const winners  = S.teams.filter(t => t.score === maxScore);
+
+  document.getElementById('resultScores').innerHTML = S.teams.map(t => `
+    <div class="result-row${t.score === maxScore ? ' winner-row' : ''}"
+         style="border-left-color:${t.color}">
+      <span class="result-row-name" style="color:${t.color}">${t.name}</span>
+      <span class="result-row-score">${t.score}쌍</span>
+    </div>`).join('');
+
+  let winText;
+  if (S.numTeams === 1) {
+    winText = `🎉 총 ${maxScore}쌍 완성!`;
+  } else if (winners.length > 1) {
+    winText = `🤝 ${winners.map(w => w.name).join(' · ')} 공동 우승!`;
+  } else {
+    winText = `🏆 ${winners[0].name} 승리!`;
+  }
+  document.getElementById('resultWinner').textContent = winText;
+  document.getElementById('resultOverlay').classList.add('visible');
+}
+
+/* ═══ 이벤트 리스너 ═══ */
+document.getElementById('diffGroup').addEventListener('click', e => {
+  const btn = e.target.closest('.seg-btn');
+  if (!btn) return;
+  S.difficulty = btn.dataset.diff;
+  setActiveBtn('diffGroup', btn);
+  if (!S.useCustom) newGame();
+});
+
+document.getElementById('teamGroup').addEventListener('click', e => {
+  const btn = e.target.closest('.seg-btn');
+  if (!btn) return;
+  S.numTeams = parseInt(btn.dataset.teams);
+  setActiveBtn('teamGroup', btn);
+  initTeams();
+  renderScores();
+  renderTurn();
+});
+
+document.getElementById('previewGroup').addEventListener('click', e => {
+  const btn = e.target.closest('.seg-btn');
+  if (!btn) return;
+  S.previewSec = parseInt(btn.dataset.sec);
+  setActiveBtn('previewGroup', btn);
+});
+
+document.getElementById('previewBtn').addEventListener('click', startPreview);
+document.getElementById('newGameBtn').addEventListener('click', newGame);
+document.getElementById('replayBtn').addEventListener('click', newGame);
+
+// 직접 입력 토글
+document.getElementById('toggleCustomBtn').addEventListener('click', () => {
+  const body = document.getElementById('customBody');
+  const open = body.classList.toggle('open');
+  document.getElementById('toggleCustomBtn').textContent =
+    `✏️ 직접 입력하기 ${open ? '▲' : '▼'}`;
+});
+
+// 직접 입력 적용
+document.getElementById('applyBtn').addEventListener('click', () => {
+  const raw = document.getElementById('customTextarea').value;
+  const lines = raw.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+  if (lines.length < 4) {
+    alert('최소 4줄 이상 입력해주세요.');
+    return;
+  }
+  S.customPairs = lines;
+  S.useCustom = true;
+
+  // 패널 닫기
+  document.getElementById('customBody').classList.remove('open');
+  document.getElementById('toggleCustomBtn').textContent = '✏️ 직접 입력하기 ▼';
+  document.getElementById('customNote').style.display = 'block';
+
+  newGame();
+});
+
+/* ═══ 시작 ═══ */
+newGame();
+</script>
+</body>
+</html>
