@@ -1070,6 +1070,49 @@ footer {
   box-shadow: 0 6px 20px rgba(255, 107, 53, 0.55);
 }
 
+/* ── 추천 게임 섹션 ── */
+.recommended-section {
+  padding: 44px 16px 36px;
+  border-top: 1px solid #f0e8e0;
+  background: #fffbf7;
+}
+
+.recommended-inner {
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.recommended-title {
+  font-size: 20px;
+  font-weight: 800;
+  color: #1a1a2e;
+  margin-bottom: 20px;
+  letter-spacing: -0.3px;
+}
+
+.recommended-cta {
+  text-align: center;
+  margin-top: 28px;
+}
+
+.recommended-all-btn {
+  display: inline-block;
+  padding: 13px 32px;
+  background: #FF6B35;
+  color: white;
+  border-radius: 50px;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background 0.2s, transform 0.15s;
+}
+
+.recommended-all-btn:hover {
+  background: #e85d20;
+  transform: translateX(3px);
+  text-decoration: none;
+}
+
 /* ── 모바일 대응 ── */
 @media (max-width: 480px) {
   header h1 { font-size: 28px; }
