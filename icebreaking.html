@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="아이스브레이킹 게임 추천 모음. 처음 만난 자리, 직장 워크샵, 학교 MT, 소규모·대규모 상황별로 검증된 아이스브레이킹 게임을 한눈에 확인하세요. 어색할 때 바로 쓰는 레크리에이션.">
+  <meta name="keywords" content="아이스브레이킹 게임 추천, 아이스브레이킹 게임 모음, 어색할 때 게임, 처음 만난 게임, 아이스브레이킹 레크리에이션, 팀빌딩 게임, 워크샵 게임">
+  <title>아이스브레이킹 게임 추천 모음 - 어색할 때 바로 쓰는 레크리에이션 | 레크 뭐하지?</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/games-data.js"></script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8683975585186347"
+       crossorigin="anonymous"></script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-75JKFQWSHP"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-75JKFQWSHP');
+  </script>
+  <style>
+    /* ── 가이드 헤더 ── */
+    .guide-header {
+      background: linear-gradient(135deg, #0ea5e9 0%, #6366f1 100%);
+      color: white;
+      padding: 48px 20px 36px;
+      text-align: center;
+    }
+    .guide-header h1 { font-size: 28px; margin-bottom: 10px; text-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    .guide-header p  { font-size: 15px; opacity: 0.9; }
+    .guide-header .tags { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-top: 14px; }
+    .guide-header .tag { background: rgba(255,255,255,0.25); padding: 4px 14px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+
+    /* ── 본문 레이아웃 ── */
+    .guide-content {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 40px 16px 64px;
+    }
+
+    /* ── 소개 박스 ── */
+    .intro-box {
+      background: #f0f9ff;
+      border-radius: 14px;
+      padding: 24px;
+      margin-bottom: 28px;
+      border-left: 4px solid #0ea5e9;
+    }
+    .intro-box p { font-size: 15px; color: #444; line-height: 1.95; margin-bottom: 0; }
+
+    /* ── 상황 섹션 ── */
+    .sit-section {
+      background: white;
+      border-radius: 18px;
+      padding: 28px 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 3px 14px rgba(0,0,0,0.07);
+    }
+    .sit-badge {
+      display: inline-block;
+      padding: 5px 16px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 800;
+      margin-bottom: 12px;
+      color: white;
+    }
+    .sit-section h2 {
+      font-size: 20px;
+      font-weight: 800;
+      color: #1a1a2e;
+      margin-bottom: 10px;
+    }
+    .sit-section > p {
+      font-size: 14px;
+      color: #555;
+      line-height: 1.9;
+      margin-bottom: 16px;
+    }
+
+    /* ── 게임카드 + 추천 이유 래퍼 ── */
+    .ic-wrapper { display: flex; flex-direction: column; }
+    .ic-wrapper .game-card {
+      border-radius: 18px 18px 0 0;
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+      flex: 1;
+    }
+    .ic-reason {
+      background: #fffbeb;
+      border: 2px solid #fde68a;
+      border-top: none;
+      border-radius: 0 0 18px 18px;
+      padding: 8px 18px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #92400e;
+      line-height: 1.5;
+    }
+    .ic-wrapper:hover .game-card {
+      box-shadow: 0 12px 30px rgba(255,107,53,0.15);
+      border-color: #FF6B35;
+    }
+    .ic-wrapper:hover .ic-reason {
+      border-color: #FF6B35;
+      background: #fff7ed;
+      color: #c2410c;
+    }
+
+    /* ── 도구 섹션 ── */
+    .tool-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 12px;
+      margin-top: 16px;
+    }
+    .tool-card {
+      display: block;
+      background: linear-gradient(160deg, #1e293b 0%, #0f172a 100%);
+      border-radius: 16px;
+      padding: 18px 16px;
+      text-decoration: none;
+      color: white;
+      border: 2px solid #334155;
+      transition: all 0.2s;
+    }
+    .tool-card:hover {
+      border-color: #ec4899;
+      transform: translateY(-3px);
+      box-shadow: 0 8px 24px rgba(236,72,153,0.28);
+      text-decoration: none;
+      color: white;
+    }
+    .tool-card-emoji { font-size: 26px; margin-bottom: 8px; display: block; }
+    .tool-card-name  { font-size: 14px; font-weight: 800; margin-bottom: 2px; }
+    .tool-card-game  { font-size: 11px; color: #94a3b8; margin-bottom: 8px; }
+    .tool-card-desc  { font-size: 12px; color: #cbd5e1; line-height: 1.6; margin-bottom: 12px; }
+    .tool-card-btn {
+      display: inline-block;
+      background: linear-gradient(135deg, #ec4899, #f43f5e);
+      color: white;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 5px 12px;
+      border-radius: 20px;
+    }
+
+    /* ── 전체보기 배너 ── */
+    .all-games-banner {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: white;
+      border-radius: 18px;
+      padding: 22px 24px;
+      margin-top: 32px;
+      box-shadow: 0 3px 14px rgba(0,0,0,0.07);
+      text-decoration: none;
+      color: inherit;
+      border: 2px solid transparent;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .all-games-banner:hover { border-color: #FF6B35; box-shadow: 0 6px 20px rgba(255,107,53,0.15); text-decoration: none; }
+    .all-games-icon { font-size: 32px; }
+    .all-games-text { flex: 1; }
+    .all-games-text strong { display: block; font-size: 15px; color: #1a1a2e; margin-bottom: 3px; }
+    .all-games-text span { font-size: 13px; color: #888; }
+    .all-games-arrow { font-size: 14px; font-weight: 700; color: #FF6B35; white-space: nowrap; }
+
+    /* ── 로딩 placeholder ── */
+    .ic-grid { min-height: 60px; }
+  </style>
+</head>
+<body>
+
+  <div class="guide-header">
+    <h1>🤝 아이스브레이킹 게임 추천</h1>
+    <p>어색한 분위기를 단번에 풀어주는 상황별 게임 모음</p>
+    <div class="tags">
+      <span class="tag">처음 만난 자리</span>
+      <span class="tag">직장·워크샵</span>
+      <span class="tag">학교·MT</span>
+      <span class="tag">소규모·대규모</span>
+    </div>
+  </div>
+
+  <div class="guide-content">
+    <a href="index.html" class="back-btn">← 홈으로 돌아가기</a>
+
+    <div class="intro-box">
+      <p><strong>아이스브레이킹(Icebreaking)</strong>은 처음 만난 자리나 어색한 분위기에서 긴장을 풀고 참여자들이 자연스럽게 서로를 알아가도록 돕는 활동입니다. 처음 만난 자리뿐 아니라 직장 워크샵, 학교 오리엔테이션, 팀빌딩 행사 등 <strong>분위기 전환이 필요한 모든 자리</strong>에서 활용할 수 있어요. 보통 15~20분이면 충분히 효과를 볼 수 있고, 준비물 없이도 바로 시작할 수 있는 게임이 많습니다. 아래에서 상황에 맞는 아이스브레이킹 게임을 골라보세요.</p>
+    </div>
+
+    <!-- ── 섹션 1: 처음 만난 어색한 사이 ── -->
+    <div class="sit-section">
+      <div class="sit-badge" style="background:#3b82f6;">처음 만난 어색한 사이</div>
+      <h2>👋 처음 만난 자리에서 분위기 풀기</h2>
+      <p>서로 이름도 모르는 자리에서는 <strong>부담 없이 동시에 참여</strong>할 수 있는 게임이 최고예요. 정답이 없고 누구나 쉽게 할 수 있는 게임부터 시작하면 어색함이 빠르게 녹아듭니다. 아이스브레이킹 게임 모음 중에서 가장 인기 있는 추천 게임들입니다.</p>
+      <div class="game-grid ic-grid" id="grid-first"></div>
+    </div>
+
+    <!-- ── 섹션 2: 직장·워크샵 ── -->
+    <div class="sit-section">
+      <div class="sit-badge" style="background:#6366f1;">직장·워크샵</div>
+      <h2>💼 직장·워크샵 아이스브레이킹 게임 추천</h2>
+      <p>직장 워크샵에서는 너무 유치하거나 신체 활동이 과도한 게임은 피하는 게 좋아요. <strong>대화와 추리·공감</strong>을 중심으로 한 게임이 자연스럽게 팀원끼리 이야기를 나누게 만들어 줍니다. 어색함을 게임이 대신 풀어주는 동안, 팀워크는 저절로 쌓입니다.</p>
+      <div class="game-grid ic-grid" id="grid-work"></div>
+    </div>
+
+    <!-- ── 섹션 3: 학교·MT·동아리 ── -->
+    <div class="sit-section">
+      <div class="sit-badge" style="background:#f97316;">학교·MT·동아리</div>
+      <h2>🏫 학교·MT·동아리 아이스브레이킹</h2>
+      <p>신입생 환영식, MT, 동아리 오리엔테이션 같은 자리에서는 <strong>에너지를 발산</strong>하면서도 서로를 알아가는 게임이 좋아요. 준비물이 없거나 간단할수록 진행 부담이 줄어들고 게임에 더 집중할 수 있습니다.</p>
+      <div class="game-grid ic-grid" id="grid-school"></div>
+    </div>
+
+    <!-- ── 섹션 4: 소규모 4~10명 ── -->
+    <div class="sit-section">
+      <div class="sit-badge" style="background:#8b5cf6;">소규모 4~10명</div>
+      <h2>👥 소규모 소그룹 아이스브레이킹</h2>
+      <p>4~10명의 소그룹에서는 <strong>모두가 서로 눈을 마주치고 이야기</strong>하는 게임이 친밀감을 빠르게 높여줍니다. 심리 게임, 추리 게임이 소규모에서 특히 빛을 발해요. 한 사람도 소외되지 않고 모두가 주인공이 될 수 있습니다.</p>
+      <div class="game-grid ic-grid" id="grid-small"></div>
+    </div>
+
+    <!-- ── 섹션 5: 대규모 20명 이상 ── -->
+    <div class="sit-section">
+      <div class="sit-badge" style="background:#22c55e;">대규모 20명 이상</div>
+      <h2>🏟️ 대규모 단체 아이스브레이킹 게임 추천</h2>
+      <p>20명이 넘는 대규모 자리에서는 <strong>모두가 동시에 참여</strong>할 수 있는 게임이 필요해요. 일부만 참여하고 나머지는 구경하는 구조는 아이스브레이킹 효과가 떨어집니다. 인원이 많을수록 팀을 나눠 경쟁 구도를 만들면 더 빨리 분위기가 달아오릅니다.</p>
+      <div class="game-grid ic-grid" id="grid-large"></div>
+    </div>
+
+    <!-- ── 섹션 6: 바로 쓰는 진행자 도구 ── -->
+    <div class="sit-section">
+      <div class="sit-badge" style="background:#ec4899;">진행자 도구</div>
+      <h2>🎮 바로 쓰는 아이스브레이킹 진행자 도구</h2>
+      <p>스마트폰 하나로 질문을 자동으로 뽑거나 역할을 자동 배정해주는 도구예요. 진행자가 준비 부담 없이 <strong>화면 한 장으로</strong> 게임을 이끌 수 있습니다.</p>
+      <div class="tool-grid">
+        <a href="games/balance-game-tool.html" class="tool-card">
+          <span class="tool-card-emoji">⚖️</span>
+          <div class="tool-card-name">밸런스게임 질문 뽑기</div>
+          <div class="tool-card-game">밸런스게임 전용 도구</div>
+          <div class="tool-card-desc">카테고리별 랜덤 질문 출제, 즉석 득표 집계. 취향·음식·커플·어린이 36개 이상 수록.</div>
+          <span class="tool-card-btn">도구 열기 →</span>
+        </a>
+        <a href="games/chosung-quiz-tool.html" class="tool-card">
+          <span class="tool-card-emoji">🔤</span>
+          <div class="tool-card-name">초성퀴즈 출제기</div>
+          <div class="tool-card-game">초성퀴즈 전용 도구</div>
+          <div class="tool-card-desc">단어 입력 시 초성 자동 추출. 단계별 힌트, 팀 점수 집계, 프로젝터 대응.</div>
+          <span class="tool-card-btn">도구 열기 →</span>
+        </a>
+        <a href="games/liar-game-tool.html" class="tool-card">
+          <span class="tool-card-emoji">🕵️</span>
+          <div class="tool-card-name">라이어 게임 도구</div>
+          <div class="tool-card-game">라이어 게임 전용 도구</div>
+          <div class="tool-card-desc">참가자별 단어 자동 배정. 라이어는 다른 단어가 주어져요. 카테고리 8종 내장.</div>
+          <span class="tool-card-btn">도구 열기 →</span>
+        </a>
+        <a href="games/mafia-tool.html" class="tool-card">
+          <span class="tool-card-emoji">🎭</span>
+          <div class="tool-card-name">마피아 게임 도구</div>
+          <div class="tool-card-game">마피아 게임 전용 도구</div>
+          <div class="tool-card-desc">역할 자동 배정, 밤/낮 전환 타이머. 처음 진행하는 진행자도 쉽게 사용.</div>
+          <span class="tool-card-btn">도구 열기 →</span>
+        </a>
+        <a href="games/bomb-pass-tool.html" class="tool-card">
+          <span class="tool-card-emoji">💣</span>
+          <div class="tool-card-name">폭탄 돌리기 타이머</div>
+          <div class="tool-card-game">폭탄 돌리기 전용 도구</div>
+          <div class="tool-card-desc">랜덤 타이머로 폭탄 폭발 시점 불예측. 음악과 효과음으로 긴장감 극대화.</div>
+          <span class="tool-card-btn">도구 열기 →</span>
+        </a>
+        <a href="games/card-flip-tool.html" class="tool-card">
+          <span class="tool-card-emoji">🃏</span>
+          <div class="tool-card-name">카드 뒤집기 도구</div>
+          <div class="tool-card-game">카드 뒤집기 전용 도구</div>
+          <div class="tool-card-desc">학습용 커스텀 카드·난이도·팀 점수 지원. 화면으로 바로 진행하는 기억력 게임.</div>
+          <span class="tool-card-btn">도구 열기 →</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- ── 전체 게임 보기 ── -->
+    <a href="all-games.html" class="all-games-banner">
+      <span class="all-games-icon">📚</span>
+      <div class="all-games-text">
+        <strong>더 많은 게임을 찾고 싶다면?</strong>
+        <span>전체 게임 목록 · 장소·인원·연령 필터 지원</span>
+      </div>
+      <span class="all-games-arrow">전체 게임 보기 →</span>
+    </a>
+
+  </div>
+
+  <footer>
+    <p>© 2025 레크 뭐하지? | 모든 레크 진행자를 위한 아이디어 모음</p>
+    <p style="margin-top:8px;font-size:13px;">
+      <a href="/about.html" style="color:#bbb;">소개</a> |
+      <a href="/contact.html" style="color:#bbb;">문의</a> |
+      <a href="/privacy.html" style="color:#bbb;">개인정보처리방침</a> |
+      <a href="/terms.html" style="color:#bbb;">이용약관</a>
+    </p>
+  </footer>
+
+  <script>
+  // ── 게임 ID → 추천 이유 매핑 + 섹션 정의 ──
+  const SECTIONS = [
+    {
+      gridId: 'grid-first',
+      games: [
+        { id: 'bingo',        reason: '이름 빙고로 이름을 외우며 자연스럽게 대화가 시작돼요' },
+        { id: 'truth-or-lie', reason: '서로를 알아가는 가장 편하고 부담 없는 방법' },
+        { id: 'balance-game', reason: '선택 하나로 상대방의 취향을 즉시 알 수 있어요' },
+        { id: 'mind-match',   reason: '얼마나 생각이 통하는지 확인하는 공감 게임' },
+        { id: 'chosung-quiz', reason: '준비물 없이 바로, 누구나 쉽게 참여할 수 있어요' }
+      ]
+    },
+    {
+      gridId: 'grid-work',
+      games: [
+        { id: 'truth-or-lie', reason: '너무 사적이지 않게 서로를 알아가기에 딱 좋아요' },
+        { id: 'guess-who',    reason: '팀원 정보를 맞히며 자연스럽게 친해지는 성인 게임' },
+        { id: 'mafia',        reason: '소통과 신뢰를 자연스럽게 쌓는 심리·추리 게임' },
+        { id: 'body-talk',    reason: '과장 몸짓으로 직급의 벽을 허무는 웃음 보장 게임' },
+        { id: 'me-too',       reason: '공감대를 빠르게 형성하는 성인 추천 단어 게임' }
+      ]
+    },
+    {
+      gridId: 'grid-school',
+      games: [
+        { id: 'bingo',          reason: '신입생 환영식·오리엔테이션의 단골 게임' },
+        { id: 'bomb-pass',      reason: '준비물 없이 30초 안에 시작, 어색함 즉시 해소' },
+        { id: 'balance-game',   reason: '취향 공유로 빠르게 친해지는 대화형 게임' },
+        { id: 'ox-quiz',        reason: '인원 제한 없이 전체가 한 번에 참여할 수 있어요' },
+        { id: 'chosung-quiz',   reason: '카테고리 선택으로 난이도 조절이 자유로워요' }
+      ]
+    },
+    {
+      gridId: 'grid-small',
+      games: [
+        { id: 'mafia',          reason: '6~15명 소그룹의 심리전, 깊은 대화가 자연스럽게' },
+        { id: 'liar-game',      reason: '4~15명 추리 게임, 진행자 도구가 진행을 도와줘요' },
+        { id: 'telestrations',  reason: '4~10명 그림+글 전달 게임, 웃음이 끊이지 않아요' },
+        { id: 'truth-or-lie',   reason: '소그룹에서 서로의 숨겨진 이야기를 알아가기에 최고' },
+        { id: 'story-creation', reason: '4~15명이 함께 엉뚱한 이야기를 만드는 순발력 게임' }
+      ]
+    },
+    {
+      gridId: 'grid-large',
+      games: [
+        { id: 'bingo',           reason: '인원 제한 없이 전체가 동시에 참여할 수 있어요' },
+        { id: 'ox-quiz',         reason: '100명도 OK! 주제를 행사 맞춤으로 만들어 쓰면 최고' },
+        { id: 'balloon-pair-find', reason: '풍선으로 자연스럽게 팀 구성까지 해결' },
+        { id: 'wave',            reason: '30명 이상 전체가 하나 되는 협동 게임' },
+        { id: 'photo-mission',   reason: '팀 단위 창의적 미션으로 자연스럽게 친해져요' }
+      ]
+    }
+  ];
+
+  function renderIcCard(id, reason) {
+    const g = gamesData.find(g => g.id === id);
+    if (!g) return '';
+    return `<div class="ic-wrapper">
+      ${renderGameCard(g)}
+      <div class="ic-reason">💡 ${reason}</div>
+    </div>`;
+  }
+
+  try {
+    SECTIONS.forEach(({ gridId, games }) => {
+      const el = document.getElementById(gridId);
+      if (!el) return;
+      el.innerHTML = games.map(({ id, reason }) => renderIcCard(id, reason)).join('');
+    });
+  } catch(e) {
+    console.error('아이스브레이킹 페이지 게임 카드 오류:', e);
+  }
+  </script>
+  <script src="js/ux-helpers.js"></script>
+</body>
+</html>
