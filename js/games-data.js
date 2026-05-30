@@ -785,6 +785,23 @@ const gamesData = [
     }
   },
   {
+    id: 'chosung-quiz',
+    emoji: '🔤',
+    title: '초성퀴즈',
+    description: '초성만 보고 단어를 맞혀라! 동물·음식·사자성어 등 68문제 수록. 초성 자동 출제 도구 포함',
+    url: 'games/chosung-quiz.html',
+    people: '2명 이상',
+    time: '10~20분',
+    prep: '없음',
+    tags: {
+      location: ['both'],
+      groupSize: ['small', 'medium', 'large', 'xlarge'],
+      ageGroup: ['kid-young', 'kid-old', 'teen', 'adult'],
+      duration: 'medium',
+      situation: ['ice-break', 'brain', 'no-prep']
+    }
+  },
+  {
     id: 'balance-game',
     emoji: '⚖️',
     title: '밸런스게임',

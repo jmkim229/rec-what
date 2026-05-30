@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="description" content="초성퀴즈 자동 출제기. 단어를 입력하면 초성을 자동 추출해 큰 화면에 표시. 카테고리 선택, 단계별 힌트, 팀 점수 집계 기능 제공.">
+  <title>🔤 초성퀴즈 출제기 | 레크 뭐하지?</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif;
+      background: #0f172a;
+      color: #f1f5f9;
+      min-height: 100vh;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+      overflow-x: hidden;
+    }
+
+    /* ── 헤더 ── */
+    .tool-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 11px 14px;
+      background: rgba(255,255,255,0.04);
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+    }
+    .back-link {
+      color: #a78bfa;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .back-link:hover { color: #c4b5fd; }
+    .header-title {
+      font-size: 15px;
+      font-weight: 800;
+      color: #f1f5f9;
+      flex: 1;
+    }
+
+    /* ── 팀 점수 ── */
+    .score-wrap {
+      display: flex;
+      gap: 8px;
+    }
+    .score-team {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      background: #1e293b;
+      border-radius: 10px;
+      padding: 5px 8px;
+    }
+    .score-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: #94a3b8;
+    }
+    .score-btn {
+      background: none;
+      border: none;
+      color: #a78bfa;
+      font-size: 16px;
+      font-weight: 700;
+      width: 24px;
+      height: 24px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 6px;
+      transition: background 0.12s;
+    }
+    .score-btn:hover { background: rgba(167,139,250,0.2); }
+    .score-num {
+      font-size: 16px;
+      font-weight: 800;
+      min-width: 22px;
+      text-align: center;
+    }
+    #scoreA { color: #60a5fa; }
+    #scoreB { color: #f472b6; }
+
+    /* ── 카테고리 탭 ── */
+    .cat-tabs {
+      display: flex;
+      gap: 6px;
+      padding: 10px 12px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .cat-tabs::-webkit-scrollbar { display: none; }
+    .cat-tab {
+      flex-shrink: 0;
+      padding: 6px 13px;
+      border-radius: 20px;
+      border: 1.5px solid #1e293b;
+      background: #1e293b;
+      color: #94a3b8;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+    .cat-tab.active {
+      border-color: #a78bfa;
+      background: rgba(167,139,250,0.15);
+      color: #c4b5fd;
+    }
+
+    /* ── 질문 영역 ── */
+    .question-area {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      min-height: calc(100vh - 320px);
+    }
+
+    /* 빈 상태 */
+    .no-question {
+      text-align: center;
+      padding: 40px 20px;
+    }
+    .no-q-emoji { font-size: 56px; margin-bottom: 14px; }
+    .no-q-title { font-size: 18px; font-weight: 800; color: #f1f5f9; margin-bottom: 6px; }
+    .no-q-sub { font-size: 13px; color: #64748b; }
+
+    /* 질문 메타 */
+    .q-meta-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .q-meta-badge {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 20px;
+      padding: 4px 12px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #94a3b8;
+    }
+    .q-meta-badge.highlight { color: #a78bfa; border-color: rgba(167,139,250,0.4); }
+    .q-counter {
+      font-size: 11px;
+      color: #475569;
+      font-weight: 600;
+      text-align: center;
+      margin-bottom: 14px;
+    }
+
+    /* ── 초성 타일 ── */
+    .chosung-display {
+      display: flex;
+      gap: clamp(8px, 2vw, 14px);
+      justify-content: center;
+      flex-wrap: wrap;
+      padding: 8px 0;
+      max-width: 480px;
+    }
+    .c-tile {
+      width: clamp(60px, 13vmin, 92px);
+      height: clamp(60px, 13vmin, 92px);
+      background: #1e293b;
+      border: 2px solid #334155;
+      border-radius: clamp(12px, 2vmin, 18px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: clamp(28px, 6vmin, 46px);
+      font-weight: 900;
+      color: #a78bfa;
+      animation: tileIn 0.3s cubic-bezier(0.34,1.4,0.64,1) both;
+      user-select: none;
+    }
+    .c-tile:nth-child(2) { animation-delay: 0.05s; }
+    .c-tile:nth-child(3) { animation-delay: 0.10s; }
+    .c-tile:nth-child(4) { animation-delay: 0.15s; }
+    .c-tile:nth-child(5) { animation-delay: 0.20s; }
+    @keyframes tileIn {
+      from { opacity: 0; transform: scale(0.7) translateY(10px); }
+      to   { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    .c-tile.revealed {
+      background: rgba(236,72,153,0.15);
+      border-color: #ec4899;
+      color: #f9a8d4;
+    }
+    .c-tile.answer-tile {
+      background: rgba(52,211,153,0.15);
+      border-color: #34d399;
+      color: #a7f3d0;
+      animation: tileReveal 0.35s cubic-bezier(0.34,1.4,0.64,1) both;
+    }
+    @keyframes tileReveal {
+      from { transform: rotateY(90deg) scale(0.8); opacity: 0; }
+      to   { transform: rotateY(0deg) scale(1); opacity: 1; }
+    }
+
+    /* ── 힌트 / 정답 텍스트 ── */
+    .hint-text {
+      margin-top: 14px;
+      background: rgba(251,191,36,0.1);
+      border: 1.5px solid rgba(251,191,36,0.3);
+      border-radius: 12px;
+      padding: 10px 20px;
+      font-size: 14px;
+      font-weight: 700;
+      color: #fbbf24;
+      text-align: center;
+      animation: fadeUp 0.25s ease both;
+    }
+    .answer-text {
+      margin-top: 14px;
+      font-size: clamp(32px, 8vmin, 56px);
+      font-weight: 900;
+      color: #34d399;
+      text-align: center;
+      letter-spacing: 2px;
+      animation: fadeUp 0.3s cubic-bezier(0.34,1.4,0.64,1) both;
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── 액션 버튼 ── */
+    .action-area {
+      padding: 0 14px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-width: 520px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    .main-btn {
+      width: 100%;
+      padding: 17px;
+      border-radius: 16px;
+      border: none;
+      background: linear-gradient(135deg, #6d28d9, #a78bfa);
+      color: white;
+      font-size: 18px;
+      font-weight: 800;
+      cursor: pointer;
+      font-family: inherit;
+      box-shadow: 0 6px 24px rgba(139,92,246,0.4);
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .main-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(139,92,246,0.55); }
+    .main-btn:active { transform: scale(0.97); }
+
+    .hint-action-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .hint-btn {
+      padding: 14px;
+      border-radius: 12px;
+      border: 1.5px solid #334155;
+      background: #1e293b;
+      color: #fbbf24;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s;
+    }
+    .hint-btn:hover { border-color: #fbbf24; background: rgba(251,191,36,0.1); }
+    .hint-btn:disabled { opacity: 0.35; cursor: default; }
+
+    .answer-btn {
+      padding: 14px;
+      border-radius: 12px;
+      border: none;
+      background: linear-gradient(135deg, #065f46, #34d399);
+      color: white;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      box-shadow: 0 4px 14px rgba(52,211,153,0.3);
+      transition: all 0.15s;
+    }
+    .answer-btn:hover { transform: translateY(-1px); }
+
+    .secondary-btn {
+      padding: 11px;
+      border-radius: 11px;
+      border: 1.5px solid #1e293b;
+      background: transparent;
+      color: #475569;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s;
+    }
+    .secondary-btn:hover { border-color: #334155; color: #64748b; }
+  </style>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-75JKFQWSHP"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-75JKFQWSHP');
+  </script>
+</head>
+<body>
+
+<!-- ── 헤더 ── -->
+<div class="tool-header">
+  <a href="chosung-quiz.html" class="back-link">← 게임 설명</a>
+  <span class="header-title">🔤 초성퀴즈 출제기</span>
+  <div class="score-wrap">
+    <div class="score-team">
+      <span class="score-label">A</span>
+      <button class="score-btn" onclick="score('a',-1)">−</button>
+      <span class="score-num" id="scoreA">0</span>
+      <button class="score-btn" onclick="score('a',1)">+</button>
+    </div>
+    <div class="score-team">
+      <span class="score-label">B</span>
+      <button class="score-btn" onclick="score('b',-1)">−</button>
+      <span class="score-num" id="scoreB">0</span>
+      <button class="score-btn" onclick="score('b',1)">+</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── 카테고리 탭 ── -->
+<div class="cat-tabs" id="catTabs">
+  <button class="cat-tab active" data-cat="all">전체</button>
+  <button class="cat-tab" data-cat="animal">🐾 동물</button>
+  <button class="cat-tab" data-cat="food">🍜 음식</button>
+  <button class="cat-tab" data-cat="object">📦 사물</button>
+  <button class="cat-tab" data-cat="job">💼 직업</button>
+  <button class="cat-tab" data-cat="sports">⚽ 스포츠</button>
+  <button class="cat-tab" data-cat="idiom">📖 사자성어</button>
+</div>
+
+<!-- ── 질문 영역 ── -->
+<div class="question-area" id="questionArea">
+
+  <div id="noQuestion">
+    <div class="no-question">
+      <div class="no-q-emoji">🔤</div>
+      <div class="no-q-title">문제를 뽑아 시작하세요!</div>
+      <div class="no-q-sub">아래 버튼을 누르면 초성이 나타납니다</div>
+    </div>
+  </div>
+
+  <div id="questionView" style="display:none; width:100%; display:none; align-items:center; flex-direction:column;">
+    <div class="q-counter" id="qCounter"></div>
+
+    <div class="q-meta-row" id="qMeta"></div>
+
+    <div class="chosung-display" id="chosungDisplay"></div>
+
+    <div class="hint-text" id="hintText" style="display:none;"></div>
+
+    <div class="answer-text" id="answerText" style="display:none;"></div>
+  </div>
+
+</div>
+
+<!-- ── 액션 버튼 ── -->
+<div class="action-area">
+  <button class="main-btn" id="mainBtn" onclick="handleMain()">문제 뽑기</button>
+
+  <div class="hint-action-row" id="hintRow" style="display:none;">
+    <button class="hint-btn" id="hintBtn" onclick="showHint()">💡 힌트 보기 (1/2)</button>
+    <button class="answer-btn" id="answerBtn" onclick="showAnswer()">✅ 정답 보기</button>
+  </div>
+
+  <button class="secondary-btn" id="reshuffleBtn" onclick="reshufflePool()" style="display:none;">🔄 다시 섞기</button>
+</div>
+
+<script>
+/* ── 초성 추출 ── */
+const CS = ['ㄱ','ㄲ','ㄴ','ㄷ','ㄸ','ㄹ','ㅁ','ㅂ','ㅃ','ㅅ','ㅆ','ㅇ','ㅈ','ㅉ','ㅊ','ㅋ','ㅌ','ㅍ','ㅎ'];
+
+function getChosung(word) {
+  return word.split('').map(ch => {
+    const code = ch.charCodeAt(0);
+    if (code < 0xAC00 || code > 0xD7A3) return null;
+    return CS[Math.floor((code - 0xAC00) / 588)];
+  }).filter(c => c !== null);
+}
+
+/* ── 단어 데이터 ── */
+const CAT_LABEL = {
+  animal:'🐾 동물', food:'🍜 음식', object:'📦 사물',
+  job:'💼 직업', sports:'⚽ 스포츠', idiom:'📖 사자성어'
+};
+
+const WORDS = {
+  animal: ['강아지','고양이','호랑이','코끼리','펭귄','다람쥐','고슴도치','기린','너구리','원숭이','돌고래','부엉이'],
+  food:   ['김치찌개','떡볶이','비빔밥','삼겹살','치킨','라면','김밥','불고기','떡국','잡채','순두부','갈비탕'],
+  object: ['냉장고','세탁기','텔레비전','가위','우산','칫솔','칠판','자전거','안경','연필','컴퓨터','청소기'],
+  job:    ['의사','선생님','경찰관','소방관','요리사','가수','운동선수','변호사','간호사','미용사'],
+  sports: ['축구','야구','농구','배구','수영','태권도','탁구','배드민턴','스키','양궁','골프','펜싱'],
+  idiom:  ['일석이조','유비무환','작심삼일','새옹지마','금상첨화','죽마고우','청출어람','권선징악','다다익선','대기만성']
+};
+
+/* ── 상태 ── */
+let S = {
+  cat: 'all',
+  pool: [],
+  allItems: [],
+  current: null,
+  hintLevel: 0,
+  answerShown: false,
+  scoreA: 0,
+  scoreB: 0,
+  shown: 0
+};
+
+function getItems(cat) {
+  if (cat === 'all') return Object.entries(WORDS).flatMap(([c, arr]) => arr.map(w => ({ word: w, cat: c })));
+  return (WORDS[cat] || []).map(w => ({ word: w, cat }));
+}
+
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function buildPool() {
+  S.allItems = getItems(S.cat);
+  S.pool = shuffle(S.allItems.map((_, i) => i));
+  S.shown = 0;
+}
+
+/* ── 카테고리 탭 ── */
+document.querySelectorAll('.cat-tab').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.cat-tab').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    S.cat = btn.dataset.cat;
+    buildPool();
+    resetView();
+  });
+});
+
+function resetView() {
+  S.current = null;
+  S.hintLevel = 0;
+  S.answerShown = false;
+  document.getElementById('noQuestion').style.display = 'block';
+  document.getElementById('questionView').style.display = 'none';
+  document.getElementById('hintRow').style.display = 'none';
+  document.getElementById('reshuffleBtn').style.display = 'none';
+  document.getElementById('mainBtn').textContent = '문제 뽑기';
+}
+
+/* ── 메인 버튼 핸들러 ── */
+function handleMain() {
+  if (S.pool.length === 0) buildPool();
+
+  const idx = S.pool.pop();
+  S.current = S.allItems[idx];
+  S.shown++;
+  S.hintLevel = 0;
+  S.answerShown = false;
+
+  renderQuestion(S.current);
+
+  document.getElementById('mainBtn').textContent = S.pool.length === 0 ? '🔄 처음부터' : '다음 문제';
+
+  if (S.shown > 1) document.getElementById('reshuffleBtn').style.display = 'block';
+
+  const remaining = S.pool.length;
+  document.getElementById('qCounter').textContent =
+    remaining === 0
+      ? `✅ ${S.allItems.length}개 모두 완료!`
+      : `${S.shown} / ${S.allItems.length}`;
+}
+
+/* ── 질문 렌더링 ── */
+function renderQuestion(item) {
+  document.getElementById('noQuestion').style.display = 'none';
+  const qv = document.getElementById('questionView');
+  qv.style.display = 'flex';
+
+  // 메타 배지
+  const meta = document.getElementById('qMeta');
+  const cs = getChosung(item.word);
+  meta.innerHTML =
+    `<span class="q-meta-badge highlight">${CAT_LABEL[item.cat]}</span>` +
+    `<span class="q-meta-badge">${item.word.length}글자</span>`;
+
+  // 초성 타일
+  renderTiles(cs, false);
+
+  // 힌트/정답 초기화
+  document.getElementById('hintText').style.display = 'none';
+  document.getElementById('answerText').style.display = 'none';
+
+  // 힌트 버튼
+  const hintBtn = document.getElementById('hintBtn');
+  hintBtn.textContent = '💡 힌트 (1/2)';
+  hintBtn.disabled = false;
+  document.getElementById('hintRow').style.display = 'grid';
+  document.getElementById('answerBtn').disabled = false;
+}
+
+function renderTiles(cs, isAnswer) {
+  const display = document.getElementById('chosungDisplay');
+  display.innerHTML = '';
+  cs.forEach((ch, i) => {
+    const tile = document.createElement('div');
+    tile.className = 'c-tile' + (isAnswer ? ' answer-tile' : '');
+    tile.style.animationDelay = (i * 0.05) + 's';
+    tile.textContent = ch;
+    display.appendChild(tile);
+  });
+}
+
+/* ── 힌트 ── */
+function showHint() {
+  if (!S.current || S.answerShown) return;
+  S.hintLevel++;
+
+  const hintText = document.getElementById('hintText');
+  const hintBtn = document.getElementById('hintBtn');
+
+  if (S.hintLevel === 1) {
+    // 글자 수 힌트
+    hintText.textContent = `총 ${S.current.word.length}글자입니다!`;
+    hintText.style.display = 'block';
+    // 애니메이션 재실행
+    hintText.style.animation = 'none';
+    void hintText.offsetWidth;
+    hintText.style.animation = '';
+
+    hintBtn.textContent = '💡 첫 글자 공개 (2/2)';
+
+  } else if (S.hintLevel === 2) {
+    // 첫 글자 공개
+    const firstChar = S.current.word[0];
+    hintText.textContent = `첫 글자: "${firstChar}"`;
+    hintText.style.animation = 'none';
+    void hintText.offsetWidth;
+    hintText.style.animation = '';
+
+    // 첫 번째 타일을 실제 글자로 교체
+    const tiles = document.querySelectorAll('.c-tile');
+    if (tiles[0]) {
+      tiles[0].textContent = firstChar;
+      tiles[0].classList.add('revealed');
+    }
+
+    hintBtn.disabled = true;
+    hintBtn.textContent = '💡 힌트 완료';
+  }
+}
+
+/* ── 정답 공개 ── */
+function showAnswer() {
+  if (!S.current) return;
+  S.answerShown = true;
+
+  // 초성 → 실제 글자로 교체
+  const chars = S.current.word.split('');
+  const display = document.getElementById('chosungDisplay');
+  display.innerHTML = '';
+  chars.forEach((ch, i) => {
+    const tile = document.createElement('div');
+    tile.className = 'c-tile answer-tile';
+    tile.style.animationDelay = (i * 0.06) + 's';
+    tile.textContent = ch;
+    display.appendChild(tile);
+  });
+
+  // 정답 텍스트
+  const answerText = document.getElementById('answerText');
+  answerText.textContent = S.current.word;
+  answerText.style.display = 'block';
+  answerText.style.animation = 'none';
+  void answerText.offsetWidth;
+  answerText.style.animation = '';
+
+  // 힌트 텍스트 숨기기
+  document.getElementById('hintText').style.display = 'none';
+
+  // 버튼 비활성화
+  document.getElementById('hintBtn').disabled = true;
+  document.getElementById('answerBtn').disabled = true;
+}
+
+/* ── 다시 섞기 ── */
+function reshufflePool() {
+  buildPool();
+  resetView();
+  document.getElementById('reshuffleBtn').style.display = 'none';
+}
+
+/* ── 팀 점수 ── */
+function score(team, delta) {
+  if (team === 'a') {
+    S.scoreA = Math.max(0, S.scoreA + delta);
+    document.getElementById('scoreA').textContent = S.scoreA;
+  } else {
+    S.scoreB = Math.max(0, S.scoreB + delta);
+    document.getElementById('scoreB').textContent = S.scoreB;
+  }
+}
+
+/* ── 초기화 ── */
+buildPool();
+</script>
+</body>
+</html>
