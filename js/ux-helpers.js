@@ -168,15 +168,138 @@
     }
   }
 
+  /* ── OG 태그 자동 주입 (게임 페이지 / JS-capable 크롤러용) ── */
+  function addOGTags() {
+    if (document.querySelector('meta[property="og:title"]')) return;
+    var titleEl = document.querySelector('title');
+    var descEl  = document.querySelector('meta[name="description"]');
+    var ogTitle = titleEl ? titleEl.textContent.trim() : document.title;
+    var ogDesc  = descEl  ? descEl.getAttribute('content') : '';
+    var ogUrl   = window.location.href.replace(/\?.*$/, '').replace(/#.*$/, '');
+    var ogImg   = 'https://rec-what.vercel.app/og-image.png';
+
+    var tags = [
+      { p: 'og:type',        c: 'website' },
+      { p: 'og:site_name',   c: '레크 뭐하지?' },
+      { p: 'og:title',       c: ogTitle },
+      { p: 'og:description', c: ogDesc },
+      { p: 'og:url',         c: ogUrl },
+      { p: 'og:image',       c: ogImg },
+      { p: 'og:locale',      c: 'ko_KR' },
+      { n: 'twitter:card',        c: 'summary_large_image' },
+      { n: 'twitter:title',       c: ogTitle },
+      { n: 'twitter:description', c: ogDesc.slice(0, 120) },
+      { n: 'twitter:image',       c: ogImg }
+    ];
+    tags.forEach(function(t) {
+      var m = document.createElement('meta');
+      if (t.p) m.setAttribute('property', t.p);
+      if (t.n) m.setAttribute('name', t.n);
+      m.setAttribute('content', t.c);
+      document.head.appendChild(m);
+    });
+  }
+
+  /* ── FAQ 섹션 + JSON-LD ── */
+  var LOC_LABEL = { indoor: '실내', outdoor: '야외', both: '실내·야외 모두' };
+
+  function locationText(g) {
+    var locs = [].concat(g.tags.location || []);
+    if (locs.indexOf('both') !== -1) return '실내·야외 어디서나 진행할 수 있습니다.';
+    if (locs.indexOf('indoor') !== -1) return '실내에서 진행하는 게임입니다.';
+    if (locs.indexOf('outdoor') !== -1) return '야외에서 진행하는 게임입니다.';
+    return '실내·야외 모두 가능합니다.';
+  }
+
+  function buildFaqItems(g) {
+    return [
+      {
+        q: g.title + ' 게임은 몇 명이 필요한가요?',
+        a: g.title + ' 게임은 ' + g.people + ' 인원으로 진행합니다.'
+      },
+      {
+        q: g.title + ' 게임은 얼마나 걸리나요?',
+        a: '소요 시간은 약 ' + g.time + ' 정도입니다. 인원과 진행 방식에 따라 달라질 수 있습니다.'
+      },
+      {
+        q: g.title + ' 게임에 준비물이 필요한가요?',
+        a: g.prep === '없음' || g.prep === '준비물 없음'
+           ? '별도 준비물 없이 바로 시작할 수 있습니다.'
+           : '필요한 준비물: ' + g.prep
+      },
+      {
+        q: g.title + ' 게임은 실내에서도 할 수 있나요?',
+        a: locationText(g)
+      }
+    ];
+  }
+
+  function addFAQSection() {
+    if (!isGamePage()) return;
+    if (!window.gamesData) return;
+
+    var match = window.location.pathname.match(/\/games\/([^\/]+)\.html$/);
+    if (!match) return;
+    var gameId = match[1];
+
+    var g = null;
+    for (var i = 0; i < window.gamesData.length; i++) {
+      if (window.gamesData[i].id === gameId) { g = window.gamesData[i]; break; }
+    }
+    if (!g) return;
+
+    var items = buildFaqItems(g);
+
+    var html = '<section class="faq-section">' +
+      '<h2>❓ 자주 묻는 질문</h2>' +
+      '<div class="faq-list">' +
+      items.map(function(item) {
+        return '<div class="faq-item">' +
+          '<div class="faq-q">Q. ' + item.q + '</div>' +
+          '<div class="faq-a">A. ' + item.a + '</div>' +
+          '</div>';
+      }).join('') +
+      '</div></section>';
+
+    var section = document.createElement('div');
+    section.innerHTML = html;
+    var faqEl = section.firstChild;
+
+    var anchor = document.querySelector('.bottom-back-nav') || document.querySelector('footer');
+    if (anchor) anchor.parentNode.insertBefore(faqEl, anchor);
+
+    /* JSON-LD */
+    var ld = {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: items.map(function(item) {
+        return {
+          '@type': 'Question',
+          name: item.q,
+          acceptedAnswer: { '@type': 'Answer', text: item.a }
+        };
+      })
+    };
+    var script = document.createElement('script');
+    script.type = 'application/ld+json';
+    script.textContent = JSON.stringify(ld);
+    document.head.appendChild(script);
+  }
+
+  function onGamesDataLoaded() {
+    addFAQSection();       // FAQ 먼저 삽입
+    addRecommendedGames(); // FAQ 아래에 추천 섹션
+  }
+
   function loadGamesDataThenRecommend() {
     if (!isGamePage()) return;
     if (window.gamesData) {
-      addRecommendedGames();
+      onGamesDataLoaded();
       return;
     }
     var script = document.createElement('script');
     script.src = '/js/games-data.js';
-    script.onload = addRecommendedGames;
+    script.onload = onGamesDataLoaded;
     document.head.appendChild(script);
   }
 
@@ -184,6 +307,7 @@
     applyBackUrl();      // 반드시 addBottomBackBtn 전에 실행
     addBottomBackBtn();
     addScrollTopBtn();
+    addOGTags();          // 게임 페이지 OG 태그 자동 주입
     loadGamesDataThenRecommend();
   }
 

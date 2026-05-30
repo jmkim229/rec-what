@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://rec-what.vercel.app/sitemap.xml
