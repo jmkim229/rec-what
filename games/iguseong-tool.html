@@ -140,26 +140,27 @@
       color: #f1f5f9;
       transition: all 0.2s;
     }
-    .char-tile.hidden {
-      background: #0f172a;
-      border-color: #1e293b;
-      color: #475569;
-      font-size: 28px;
-    }
-    .char-tile.revealed {
-      background: rgba(236,72,153,0.12);
+    .char-tile.highlighted {
+      background: rgba(236,72,153,0.18);
       border-color: #ec4899;
       color: #f9a8d4;
+      transform: scale(1.06);
+      box-shadow: 0 0 16px rgba(236,72,153,0.3);
     }
+    .char-tile.dimmed {
+      opacity: 0.25;
+    }
+    .char-num.dimmed { color: #475569; }
 
     .hint-notice {
-      font-size: 13px;
-      color: #94a3b8;
+      font-size: 14px;
+      font-weight: 700;
+      color: #f9a8d4;
       text-align: center;
-      padding: 10px 16px;
-      background: rgba(255,255,255,0.04);
+      padding: 12px 16px;
+      background: rgba(236,72,153,0.1);
       border-radius: 10px;
-      border-left: 3px solid #ec4899;
+      border: 1px solid rgba(236,72,153,0.25);
       line-height: 1.6;
     }
 
@@ -191,23 +192,43 @@
     }
     .draw-btn:active { transform: scale(0.97); }
 
-    .reveal-btn {
-      width: 100%;
-      padding: 16px;
+    .hint-btn-row {
+      display: flex;
+      gap: 8px;
+    }
+    .hint-action-btn {
+      flex: 1;
+      padding: 14px 8px;
       border-radius: 14px;
-      border: 2px solid rgba(236,72,153,0.35);
-      background: rgba(236,72,153,0.08);
-      color: #f9a8d4;
-      font-size: 15px;
+      border: 2px solid #334155;
+      background: #1e293b;
+      color: #94a3b8;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s;
+    }
+    .hint-action-btn:hover { border-color: #ec4899; color: #f9a8d4; background: rgba(236,72,153,0.08); }
+    .hint-action-btn:active { transform: scale(0.97); }
+
+    .clear-btn {
+      width: 100%;
+      padding: 14px;
+      border-radius: 14px;
+      border: 2px solid #334155;
+      background: transparent;
+      color: #64748b;
+      font-size: 14px;
       font-weight: 700;
       cursor: pointer;
       font-family: inherit;
       transition: all 0.15s;
       display: none;
     }
-    .reveal-btn.visible { display: block; }
-    .reveal-btn:hover { background: rgba(236,72,153,0.18); }
-    .reveal-btn:active { transform: scale(0.97); }
+    .clear-btn.visible { display: block; }
+    .clear-btn:hover { border-color: #475569; color: #94a3b8; }
+    .clear-btn:active { transform: scale(0.97); }
   </style>
 </head>
 <body>
@@ -236,14 +257,6 @@
       <button class="seg-btn" data-cat="일상어">일상어</button>
     </div>
   </div>
-  <div class="ctrl-row">
-    <span class="ctrl-label">힌트 모드</span>
-    <div class="btn-group" id="hintGroup">
-      <button class="seg-btn active" data-hint="0">없음</button>
-      <button class="seg-btn" data-hint="2">2명만</button>
-      <button class="seg-btn" data-hint="3">3명만</button>
-    </div>
-  </div>
 </div>
 
 <!-- 단어 디스플레이 -->
@@ -259,7 +272,11 @@
 <!-- 액션 버튼 -->
 <div class="action-area">
   <button class="draw-btn" id="drawBtn">🎤 단어 뽑기</button>
-  <button class="reveal-btn" id="revealBtn">🔍 정답 보기</button>
+  <div class="hint-btn-row">
+    <button class="hint-action-btn" id="hint2Btn">🙈 힌트: 2명만</button>
+    <button class="hint-action-btn" id="hint3Btn">🙈 힌트: 3명만</button>
+  </div>
+  <button class="clear-btn" id="clearBtn">↩ 전체 다시 보기</button>
 </div>
 
 <script>
@@ -318,10 +335,9 @@ const WORDS = [
 let S = {
   len: 4,
   cat: '전체',
-  hint: 0,
   currentWord: null,
-  visibleIdx: [],
-  revealed: false,
+  highlightedIdx: [],  // 힌트로 강조된 글자 인덱스
+  hintActive: false,
 };
 
 /* ── 컨트롤 이벤트 ── */
@@ -341,14 +357,6 @@ document.getElementById('catGroup').addEventListener('click', e => {
   resetDisplay();
 });
 
-document.getElementById('hintGroup').addEventListener('click', e => {
-  const btn = e.target.closest('.seg-btn');
-  if (!btn) return;
-  S.hint = parseInt(btn.dataset.hint);
-  setActive('hintGroup', btn);
-  if (S.currentWord) renderWord();
-});
-
 function setActive(groupId, activeBtn) {
   document.getElementById(groupId).querySelectorAll('.seg-btn').forEach(b => {
     b.classList.toggle('active', b === activeBtn);
@@ -364,34 +372,42 @@ function drawWord() {
     alert('해당 조건에 맞는 단어가 없어요. 글자 수나 카테고리를 바꿔보세요.');
     return;
   }
-  // 같은 단어 연속 방지 (pool이 2개 이상일 때)
   let picked = pool[Math.floor(Math.random() * pool.length)];
   if (pool.length > 1 && S.currentWord && picked.word === S.currentWord.word) {
     const others = pool.filter(w => w.word !== S.currentWord.word);
     picked = others[Math.floor(Math.random() * others.length)];
   }
   S.currentWord = picked;
-  S.revealed = false;
-  pickVisibleIdx();
+  S.hintActive = false;
+  S.highlightedIdx = [];
   renderWord();
 }
 
-function pickVisibleIdx() {
-  if (S.hint === 0) { S.visibleIdx = []; return; }
+/* ── 힌트 버튼 ── */
+document.getElementById('hint2Btn').addEventListener('click', () => applyHint(2));
+document.getElementById('hint3Btn').addEventListener('click', () => applyHint(3));
+
+function applyHint(count) {
+  if (!S.currentWord) {
+    alert('먼저 단어를 뽑아주세요!');
+    return;
+  }
   const total = S.currentWord.len;
-  const count = Math.min(S.hint, total);
+  const n = Math.min(count, total);
   const indices = [...Array(total).keys()];
-  // Fisher-Yates shuffle to pick random indices
   for (let i = indices.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [indices[i], indices[j]] = [indices[j], indices[i]];
   }
-  S.visibleIdx = indices.slice(0, count);
+  S.highlightedIdx = indices.slice(0, n).sort((a, b) => a - b);
+  S.hintActive = true;
+  renderWord();
 }
 
-/* ── 정답 보기 ── */
-document.getElementById('revealBtn').addEventListener('click', () => {
-  S.revealed = true;
+/* ── 전체 다시 보기 ── */
+document.getElementById('clearBtn').addEventListener('click', () => {
+  S.hintActive = false;
+  S.highlightedIdx = [];
   renderWord();
 });
 
@@ -404,41 +420,46 @@ function renderWord() {
   wordDisplay.style.display = 'flex';
 
   const chars = [...S.currentWord.word];
-  const isHintMode = S.hint > 0;
-  const revealAll = S.revealed || !isHintMode;
 
   wordDisplay.innerHTML = chars.map((ch, i) => {
-    const isVisible = revealAll || S.visibleIdx.includes(i);
-    const tileClass = isVisible
-      ? (isHintMode && !S.revealed ? 'char-tile revealed' : 'char-tile')
-      : 'char-tile hidden';
+    let tileClass = 'char-tile';
+    let numClass = 'char-num';
+    if (S.hintActive) {
+      if (S.highlightedIdx.includes(i)) {
+        tileClass += ' highlighted';
+      } else {
+        tileClass += ' dimmed';
+        numClass += ' dimmed';
+      }
+    }
     return `<div class="char-box">
-      <span class="char-num">${i + 1}번</span>
-      <div class="${tileClass}">${isVisible ? ch : '?'}</div>
+      <span class="${numClass}">${i + 1}번</span>
+      <div class="${tileClass}">${ch}</div>
     </div>`;
   }).join('');
 
   const hintNotice = document.getElementById('hintNotice');
-  const revealBtn = document.getElementById('revealBtn');
+  const clearBtn = document.getElementById('clearBtn');
 
-  if (isHintMode && !S.revealed) {
-    const nums = S.visibleIdx.map(i => `${i + 1}번`).sort((a, b) => parseInt(a) - parseInt(b)).join(', ');
-    hintNotice.textContent = `👆 ${nums} 사람만 외치게 하세요!`;
+  if (S.hintActive) {
+    const nums = S.highlightedIdx.map(i => `${i + 1}번`).join(', ');
+    hintNotice.textContent = `🔔 이 번호 사람들만 다시 외쳐주세요: ${nums}`;
     hintNotice.style.display = 'block';
-    revealBtn.classList.add('visible');
+    clearBtn.classList.add('visible');
   } else {
     hintNotice.style.display = 'none';
-    revealBtn.classList.remove('visible');
+    clearBtn.classList.remove('visible');
   }
 }
 
 function resetDisplay() {
   S.currentWord = null;
-  S.revealed = false;
+  S.hintActive = false;
+  S.highlightedIdx = [];
   document.getElementById('placeholder').style.display = 'block';
   document.getElementById('wordDisplay').style.display = 'none';
   document.getElementById('hintNotice').style.display = 'none';
-  document.getElementById('revealBtn').classList.remove('visible');
+  document.getElementById('clearBtn').classList.remove('visible');
 }
 </script>
 </body>
