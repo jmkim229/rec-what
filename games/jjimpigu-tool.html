@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="description" content="찜피구 진행자 도구. 팀 자동 나누기, 라운드 타이머, 공수 교대 기능 제공.">
+  <title>⏱️ 찜피구 도구 | 레크 뭐하지?</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif;
+      background: #0f172a;
+      color: #f1f5f9;
+      min-height: 100vh;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    }
+
+    /* ── 헤더 ── */
+    .tool-header {
+      display: flex;
+      align-items: center;
+      padding: 14px 16px;
+      background: rgba(255,255,255,0.05);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .back-link {
+      color: #ec4899;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .back-link:hover { color: #f9a8d4; }
+
+    /* ── 탭 ── */
+    .tab-nav {
+      display: flex;
+      background: #1e293b;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .tab-btn {
+      flex: 1;
+      padding: 14px 8px;
+      background: none;
+      border: none;
+      border-bottom: 3px solid transparent;
+      color: #64748b;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s;
+    }
+    .tab-btn.active {
+      color: #f9a8d4;
+      border-bottom-color: #ec4899;
+    }
+
+    .tab-pane { display: none; padding: 16px; }
+    .tab-pane.active { display: block; }
+
+    /* ── 공통 버튼 ── */
+    .seg-btn {
+      flex: 1;
+      padding: 10px 6px;
+      border-radius: 10px;
+      border: 2px solid #1e293b;
+      background: #1e293b;
+      color: #94a3b8;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      text-align: center;
+      transition: all 0.15s;
+    }
+    .seg-btn.active {
+      border-color: #ec4899;
+      background: rgba(236,72,153,0.15);
+      color: #f9a8d4;
+    }
+
+    .big-btn {
+      width: 100%;
+      padding: 18px;
+      border-radius: 16px;
+      border: none;
+      background: linear-gradient(135deg, #ec4899, #f43f5e);
+      color: white;
+      font-size: 18px;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 6px 24px rgba(236,72,153,0.4);
+      transition: transform 0.15s, box-shadow 0.15s;
+      font-family: inherit;
+      margin-bottom: 16px;
+    }
+    .big-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(236,72,153,0.55); }
+    .big-btn:active { transform: scale(0.97); }
+
+    .ghost-btn {
+      width: 100%;
+      padding: 14px;
+      border-radius: 14px;
+      border: 2px solid #334155;
+      background: transparent;
+      color: #94a3b8;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s;
+    }
+    .ghost-btn:hover { border-color: #ec4899; color: #f9a8d4; }
+    .ghost-btn:active { transform: scale(0.97); }
+
+    /* ── 팀 나누기 탭 ── */
+    .mode-row { display: flex; gap: 8px; margin-bottom: 12px; }
+
+    textarea {
+      width: 100%;
+      height: 130px;
+      background: #1e293b;
+      border: 2px solid #334155;
+      border-radius: 12px;
+      color: #f1f5f9;
+      font-family: inherit;
+      font-size: 14px;
+      padding: 12px;
+      resize: none;
+      outline: none;
+      margin-bottom: 12px;
+      transition: border-color 0.15s;
+    }
+    textarea:focus { border-color: #ec4899; }
+    textarea::placeholder { color: #475569; line-height: 1.8; }
+
+    .count-row {
+      display: none;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .count-row.visible { display: flex; }
+    .count-label { font-size: 14px; color: #94a3b8; font-weight: 600; }
+    .num-input {
+      width: 90px;
+      padding: 10px 12px;
+      background: #1e293b;
+      border: 2px solid #334155;
+      border-radius: 10px;
+      color: #f1f5f9;
+      font-family: inherit;
+      font-size: 20px;
+      font-weight: 800;
+      text-align: center;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .num-input:focus { border-color: #ec4899; }
+    .count-unit { font-size: 14px; color: #94a3b8; font-weight: 600; }
+
+    .team-cards {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .team-card {
+      background: #1e293b;
+      border: 2px solid #334155;
+      border-radius: 14px;
+      padding: 14px 10px;
+    }
+    .team-card.team-a { border-color: #3b82f6; }
+    .team-card.team-b { border-color: #f59e0b; }
+
+    .team-title {
+      font-size: 15px;
+      font-weight: 800;
+      margin-bottom: 10px;
+      text-align: center;
+      padding-bottom: 8px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .team-a .team-title { color: #60a5fa; }
+    .team-b .team-title { color: #fbbf24; }
+
+    .member-chip {
+      display: block;
+      background: rgba(255,255,255,0.06);
+      border-radius: 8px;
+      padding: 7px 8px;
+      font-size: 13px;
+      font-weight: 600;
+      margin-bottom: 6px;
+      text-align: center;
+      word-break: keep-all;
+    }
+    .team-a .member-chip { background: rgba(59,130,246,0.1); }
+    .team-b .member-chip { background: rgba(245,158,11,0.1); }
+
+    /* ── 라운드 타이머 탭 ── */
+    .round-bar {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .info-chip {
+      background: #1e293b;
+      border: 2px solid #334155;
+      border-radius: 12px;
+      padding: 12px 8px;
+      text-align: center;
+    }
+    .chip-label {
+      font-size: 10px;
+      font-weight: 700;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 4px;
+    }
+    .chip-val {
+      font-size: 20px;
+      font-weight: 800;
+      color: #f1f5f9;
+    }
+    .attack-chip { border-color: rgba(236,72,153,0.35); }
+    .attack-chip .chip-val { color: #f9a8d4; }
+
+    .action-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .action-btn {
+      flex: 1;
+      padding: 13px 8px;
+      border-radius: 12px;
+      border: 2px solid #334155;
+      background: #1e293b;
+      color: #94a3b8;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s;
+    }
+    .action-btn:hover { border-color: #ec4899; color: #f9a8d4; background: rgba(236,72,153,0.08); }
+    .action-btn:active { transform: scale(0.97); }
+
+    .timer-display {
+      text-align: center;
+      font-size: clamp(72px, 22vw, 116px);
+      font-weight: 800;
+      letter-spacing: -2px;
+      color: #f1f5f9;
+      padding: 12px 0 16px;
+      line-height: 1;
+      transition: color 0.25s;
+    }
+    .timer-display.danger { color: #ef4444; }
+    .timer-display.done { color: #ec4899; }
+
+    .quick-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .quick-btn {
+      flex: 1;
+      padding: 12px 6px;
+      border-radius: 10px;
+      border: 2px solid #1e293b;
+      background: #1e293b;
+      color: #94a3b8;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s;
+    }
+    .quick-btn.active {
+      border-color: #ec4899;
+      background: rgba(236,72,153,0.15);
+      color: #f9a8d4;
+    }
+
+    .custom-time-row {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 14px;
+    }
+    .time-input {
+      width: 58px;
+      padding: 10px 6px;
+      background: #1e293b;
+      border: 2px solid #334155;
+      border-radius: 10px;
+      color: #f1f5f9;
+      font-family: inherit;
+      font-size: 16px;
+      font-weight: 800;
+      text-align: center;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .time-input:focus { border-color: #ec4899; }
+    .time-sep { color: #64748b; font-size: 13px; font-weight: 700; }
+    .set-btn {
+      flex: 1;
+      padding: 10px 8px;
+      border-radius: 10px;
+      border: 2px solid #334155;
+      background: #1e293b;
+      color: #94a3b8;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s;
+      margin-left: 4px;
+    }
+    .set-btn:hover { border-color: #ec4899; color: #f9a8d4; }
+    .set-btn:active { transform: scale(0.97); }
+
+    .ctrl-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .start-btn {
+      flex: 2;
+      padding: 18px;
+      border-radius: 14px;
+      border: none;
+      background: linear-gradient(135deg, #ec4899, #f43f5e);
+      color: white;
+      font-size: 18px;
+      font-weight: 800;
+      cursor: pointer;
+      font-family: inherit;
+      box-shadow: 0 4px 16px rgba(236,72,153,0.4);
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .start-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 22px rgba(236,72,153,0.55); }
+    .start-btn:active { transform: scale(0.97); }
+
+    .reset-btn {
+      flex: 1;
+      padding: 18px;
+      border-radius: 14px;
+      border: 2px solid #334155;
+      background: #1e293b;
+      color: #94a3b8;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s;
+    }
+    .reset-btn:hover { border-color: #475569; color: #f1f5f9; }
+    .reset-btn:active { transform: scale(0.97); }
+
+    /* ── 라운드 기록 ── */
+    .log-section { display: none; margin-top: 4px; }
+    .log-section.visible { display: block; }
+    .log-title {
+      font-size: 11px;
+      font-weight: 700;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      margin-bottom: 8px;
+    }
+    .log-list { display: flex; flex-direction: column; gap: 6px; }
+    .log-item {
+      background: #1e293b;
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: 13px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .log-round { font-weight: 700; color: #f1f5f9; }
+    .log-time { color: #64748b; }
+
+    /* ── 화면 깜빡임 ── */
+    .flash-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(236,72,153,0.55);
+      pointer-events: none;
+      opacity: 0;
+      z-index: 9999;
+    }
+    .flash-overlay.flashing {
+      animation: flashAnim 1.4s ease forwards;
+    }
+    @keyframes flashAnim {
+      0%   { opacity: 0; }
+      12%  { opacity: 1; }
+      25%  { opacity: 0; }
+      40%  { opacity: 1; }
+      55%  { opacity: 0; }
+      70%  { opacity: 1; }
+      85%  { opacity: 0; }
+      100% { opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="flash-overlay" id="flashOverlay"></div>
+
+<!-- 헤더 -->
+<div class="tool-header">
+  <a href="jjimpigu.html" class="back-link">← 게임 설명으로 돌아가기</a>
+</div>
+
+<!-- 탭 네비게이션 -->
+<div class="tab-nav">
+  <button class="tab-btn active" data-tab="team">🏷️ 팀 나누기</button>
+  <button class="tab-btn" data-tab="timer">⏱️ 라운드 타이머</button>
+</div>
+
+
+<!-- ═══════════════ 팀 나누기 탭 ═══════════════ -->
+<div class="tab-pane active" id="tab-team">
+
+  <div class="mode-row">
+    <button class="seg-btn active" id="modeNames">이름으로</button>
+    <button class="seg-btn" id="modeCount">인원수만</button>
+  </div>
+
+  <textarea id="nameInput"
+    placeholder="이름을 입력하세요&#10;줄바꿈 또는 쉼표로 구분&#10;&#10;예) 홍길동&#10;김철수, 이영희&#10;박민준"></textarea>
+
+  <div class="count-row" id="countRow">
+    <span class="count-label">총 인원</span>
+    <input class="num-input" type="number" id="personCount" min="2" max="100" value="10">
+    <span class="count-unit">명</span>
+  </div>
+
+  <button class="big-btn" id="splitBtn">🎲 팀 나누기</button>
+
+  <div id="teamResult" style="display:none;">
+    <div class="team-cards">
+      <div class="team-card team-a">
+        <div class="team-title">🔵 A팀</div>
+        <div id="teamAList"></div>
+      </div>
+      <div class="team-card team-b">
+        <div class="team-title">🟡 B팀</div>
+        <div id="teamBList"></div>
+      </div>
+    </div>
+    <button class="ghost-btn" id="reshuffleBtn">🔀 다시 섞기</button>
+  </div>
+
+</div>
+
+
+<!-- ═══════════════ 라운드 타이머 탭 ═══════════════ -->
+<div class="tab-pane" id="tab-timer">
+
+  <!-- 라운드 · 공격팀 표시 -->
+  <div class="round-bar">
+    <div class="info-chip">
+      <div class="chip-label">라운드</div>
+      <div class="chip-val" id="roundNum">1</div>
+    </div>
+    <div class="info-chip attack-chip">
+      <div class="chip-label">공격팀</div>
+      <div class="chip-val" id="attackTeam">A팀</div>
+    </div>
+  </div>
+
+  <div class="action-row">
+    <button class="action-btn" id="switchBtn">⇄ 공수 교대</button>
+    <button class="action-btn" id="nextRoundBtn">▶▶ 다음 라운드</button>
+  </div>
+
+  <!-- 타이머 -->
+  <div class="timer-display" id="timerDisplay">03:00</div>
+
+  <div class="quick-row">
+    <button class="quick-btn" data-sec="60">1분</button>
+    <button class="quick-btn active" data-sec="180">3분</button>
+    <button class="quick-btn" data-sec="300">5분</button>
+  </div>
+
+  <div class="custom-time-row">
+    <input class="time-input" type="number" id="customMin" min="0" max="99" value="3">
+    <span class="time-sep">분</span>
+    <input class="time-input" type="number" id="customSec" min="0" max="59" value="0">
+    <span class="time-sep">초</span>
+    <button class="set-btn" id="setTimeBtn">설정</button>
+  </div>
+
+  <div class="ctrl-row">
+    <button class="start-btn" id="startBtn">▶ 시작</button>
+    <button class="reset-btn" id="resetBtn">↩ 리셋</button>
+  </div>
+
+  <!-- 라운드 기록 -->
+  <div class="log-section" id="logSection">
+    <div class="log-title">라운드 기록</div>
+    <div class="log-list" id="logList"></div>
+  </div>
+
+</div>
+
+
+<script>
+// ═══ 오디오 ═══
+function playBeep(freq, dur, delay) {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(freq, ctx.currentTime + delay);
+    gain.gain.setValueAtTime(0.55, ctx.currentTime + delay);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + delay + dur);
+    osc.start(ctx.currentTime + delay);
+    osc.stop(ctx.currentTime + delay + dur);
+  } catch (e) {}
+}
+
+function playEndAlarm() {
+  playBeep(880, 0.28, 0);
+  playBeep(880, 0.28, 0.38);
+  playBeep(1100, 0.45, 0.76);
+}
+
+// ═══ 탭 전환 ═══
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+  });
+});
+
+// ═══ 팀 나누기 ═══
+let inputMode = 'names';
+let lastMembers = [];
+
+document.getElementById('modeNames').addEventListener('click', () => {
+  inputMode = 'names';
+  document.getElementById('modeNames').classList.add('active');
+  document.getElementById('modeCount').classList.remove('active');
+  document.getElementById('nameInput').style.display = 'block';
+  document.getElementById('countRow').classList.remove('visible');
+});
+
+document.getElementById('modeCount').addEventListener('click', () => {
+  inputMode = 'count';
+  document.getElementById('modeCount').classList.add('active');
+  document.getElementById('modeNames').classList.remove('active');
+  document.getElementById('nameInput').style.display = 'none';
+  document.getElementById('countRow').classList.add('visible');
+});
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function renderTeams(members) {
+  const shuffled = shuffle(members);
+  const mid = Math.ceil(shuffled.length / 2);
+  const a = shuffled.slice(0, mid);
+  const b = shuffled.slice(mid);
+  document.getElementById('teamAList').innerHTML = a.map(n => `<span class="member-chip">${n}</span>`).join('');
+  document.getElementById('teamBList').innerHTML = b.map(n => `<span class="member-chip">${n}</span>`).join('');
+  document.getElementById('teamResult').style.display = 'block';
+}
+
+document.getElementById('splitBtn').addEventListener('click', () => {
+  let members;
+  if (inputMode === 'names') {
+    const raw = document.getElementById('nameInput').value;
+    members = raw.split(/[\n,]+/).map(s => s.trim()).filter(s => s.length > 0);
+    if (members.length < 2) { alert('이름을 2명 이상 입력해주세요.'); return; }
+  } else {
+    const n = parseInt(document.getElementById('personCount').value);
+    if (isNaN(n) || n < 2) { alert('2명 이상 입력해주세요.'); return; }
+    members = Array.from({ length: n }, (_, i) => `${i + 1}번`);
+  }
+  lastMembers = members;
+  renderTeams(members);
+});
+
+document.getElementById('reshuffleBtn').addEventListener('click', () => {
+  if (lastMembers.length >= 2) renderTeams(lastMembers);
+});
+
+// ═══ 타이머 ═══
+const timer = { total: 180, remain: 180, running: false, id: null };
+
+function fmt(sec) {
+  const m = Math.floor(sec / 60);
+  const s = sec % 60;
+  return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+}
+
+function updateDisplay() {
+  const el = document.getElementById('timerDisplay');
+  el.textContent = fmt(timer.remain);
+  el.classList.remove('danger', 'done');
+  if (timer.remain === 0) {
+    el.classList.add('done');
+  } else if (timer.remain <= 10) {
+    el.classList.add('danger');
+  }
+}
+
+function stopTimer() {
+  if (timer.id) { clearInterval(timer.id); timer.id = null; }
+  timer.running = false;
+}
+
+function setTime(sec) {
+  stopTimer();
+  timer.total = sec;
+  timer.remain = sec;
+  document.getElementById('startBtn').textContent = '▶ 시작';
+  document.getElementById('customMin').value = Math.floor(sec / 60);
+  document.getElementById('customSec').value = sec % 60;
+  updateDisplay();
+}
+
+function onTimerEnd() {
+  updateDisplay();
+  playEndAlarm();
+  const overlay = document.getElementById('flashOverlay');
+  overlay.classList.remove('flashing');
+  void overlay.offsetWidth;
+  overlay.classList.add('flashing');
+  setTimeout(() => overlay.classList.remove('flashing'), 1800);
+  document.getElementById('startBtn').textContent = '▶ 시작';
+}
+
+document.getElementById('startBtn').addEventListener('click', () => {
+  if (timer.running) {
+    stopTimer();
+    document.getElementById('startBtn').textContent = '▶ 계속';
+    updateDisplay();
+    return;
+  }
+  if (timer.remain === 0) return;
+  timer.running = true;
+  document.getElementById('startBtn').textContent = '⏸ 일시정지';
+  timer.id = setInterval(() => {
+    timer.remain--;
+    updateDisplay();
+    if (timer.remain === 0) {
+      stopTimer();
+      onTimerEnd();
+    }
+  }, 1000);
+});
+
+document.getElementById('resetBtn').addEventListener('click', () => {
+  stopTimer();
+  timer.remain = timer.total;
+  document.getElementById('startBtn').textContent = '▶ 시작';
+  updateDisplay();
+});
+
+document.querySelectorAll('.quick-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.quick-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    setTime(parseInt(btn.dataset.sec));
+  });
+});
+
+document.getElementById('setTimeBtn').addEventListener('click', () => {
+  const m = Math.max(0, parseInt(document.getElementById('customMin').value) || 0);
+  const s = Math.min(59, Math.max(0, parseInt(document.getElementById('customSec').value) || 0));
+  const total = m * 60 + s;
+  if (total <= 0) { alert('시간을 입력해주세요.'); return; }
+  document.querySelectorAll('.quick-btn').forEach(b => b.classList.remove('active'));
+  setTime(total);
+});
+
+// ═══ 라운드 · 공수 ═══
+let round = 1;
+let attackTeam = 'A';
+const logs = [];
+
+function updateRoundDisplay() {
+  document.getElementById('roundNum').textContent = round;
+  document.getElementById('attackTeam').textContent = attackTeam + '팀';
+}
+
+function addLog(label) {
+  const elapsed = timer.total - timer.remain;
+  if (elapsed > 0 || timer.remain === 0) {
+    logs.unshift({ round, team: attackTeam, elapsed, label });
+    renderLogs();
+  }
+}
+
+function renderLogs() {
+  const section = document.getElementById('logSection');
+  const list = document.getElementById('logList');
+  if (logs.length === 0) { section.classList.remove('visible'); return; }
+  section.classList.add('visible');
+  list.innerHTML = logs.map(l => `
+    <div class="log-item">
+      <span class="log-round">라운드 ${l.round} · ${l.team}팀 공격</span>
+      <span class="log-time">${fmt(l.elapsed)} 경과</span>
+    </div>`).join('');
+}
+
+document.getElementById('switchBtn').addEventListener('click', () => {
+  addLog('switch');
+  attackTeam = attackTeam === 'A' ? 'B' : 'A';
+  updateRoundDisplay();
+  stopTimer();
+  timer.remain = timer.total;
+  document.getElementById('startBtn').textContent = '▶ 시작';
+  updateDisplay();
+});
+
+document.getElementById('nextRoundBtn').addEventListener('click', () => {
+  addLog('next');
+  round++;
+  updateRoundDisplay();
+  stopTimer();
+  timer.remain = timer.total;
+  document.getElementById('startBtn').textContent = '▶ 시작';
+  updateDisplay();
+});
+
+// init
+updateDisplay();
+updateRoundDisplay();
+</script>
+</body>
+</html>
