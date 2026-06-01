@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="레크리에이션 진행자 도구 모음. 마피아·폭탄돌리기·초성퀴즈·밸런스게임 타이머·룰렛 등 준비물 없이 폰·노트북으로 바로 진행하는 레크 도구.">
+  <meta name="keywords" content="레크리에이션 진행자 도구, 레크 타이머, 레크 룰렛, 레크리에이션 도구 모음, 마피아 도구, 폭탄돌리기 타이머, 초성퀴즈 출제기, 밸런스게임 뽑기">
+  <title>레크 진행 도구 모음 - 레크리에이션 진행자 도구 | 레크 뭐하지?</title>
+  <!-- Open Graph / SNS 공유 -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="레크 뭐하지?">
+  <meta property="og:title" content="레크 진행 도구 모음 - 레크리에이션 진행자 도구 | 레크 뭐하지?">
+  <meta property="og:description" content="레크리에이션 진행자 도구 모음. 마피아·폭탄돌리기·초성퀴즈·밸런스게임 타이머·룰렛 등 준비물 없이 폰·노트북으로 바로 진행하는 레크 도구.">
+  <meta property="og:url" content="https://rec-what.vercel.app/tools.html">
+  <meta property="og:image" content="https://rec-what.vercel.app/og-image.png">
+  <meta property="og:locale" content="ko_KR">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="레크 진행 도구 모음 - 레크리에이션 진행자 도구 | 레크 뭐하지?">
+  <meta name="twitter:description" content="레크리에이션 진행자 도구 모음. 마피아·폭탄돌리기·초성퀴즈·밸런스게임 타이머·룰렛 등 준비물 없이 폰·노트북으로 바로 진행하는 레크 도구.">
+  <meta name="twitter:image" content="https://rec-what.vercel.app/og-image.png">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="css/style.css">
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8683975585186347"
+       crossorigin="anonymous"></script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-75JKFQWSHP"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-75JKFQWSHP');
+  </script>
+  <style>
+    .tools-header {
+      background: linear-gradient(135deg, #6366f1 0%, #a78bfa 100%);
+      color: white;
+      padding: 48px 20px 36px;
+      text-align: center;
+      animation: headerFadeIn 0.5s ease both;
+    }
+    .tools-header h1 {
+      font-size: 30px;
+      font-weight: 800;
+      margin-bottom: 10px;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.12);
+    }
+    .tools-header p {
+      font-size: 14px;
+      opacity: 0.92;
+      max-width: 560px;
+      margin: 0 auto;
+      line-height: 1.8;
+    }
+    .tools-header .tags {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 16px;
+    }
+    .tools-header .tag {
+      background: rgba(255,255,255,0.25);
+      border-radius: 20px;
+      padding: 4px 14px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .content {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 36px 16px 56px;
+    }
+
+    .tools-intro {
+      background: white;
+      border-radius: 16px;
+      padding: 22px 24px;
+      margin-bottom: 32px;
+      box-shadow: 0 3px 14px rgba(0,0,0,0.06);
+      border-left: 4px solid #6366f1;
+    }
+    .tools-intro p {
+      font-size: 14px;
+      color: #555;
+      line-height: 1.9;
+    }
+    .tools-intro strong {
+      color: #1a1a2e;
+    }
+
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    .tool-card {
+      background: white;
+      border-radius: 18px;
+      padding: 26px 22px;
+      box-shadow: 0 3px 14px rgba(0,0,0,0.07);
+      text-decoration: none;
+      color: inherit;
+      display: block;
+      border: 2px solid transparent;
+      transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+      animation: cardFadeUp 0.55s ease both;
+    }
+    .tool-card:hover {
+      transform: translateY(-5px) scale(1.01);
+      box-shadow: 0 12px 30px rgba(99,102,241,0.15);
+      border-color: #6366f1;
+    }
+    .tool-card .tool-emoji {
+      font-size: 36px;
+      margin-bottom: 12px;
+      display: block;
+    }
+    .tool-card h3 {
+      font-size: 16px;
+      font-weight: 800;
+      color: #1a1a2e;
+      margin-bottom: 7px;
+      letter-spacing: -0.3px;
+    }
+    .tool-card .tool-desc {
+      font-size: 13px;
+      color: #777;
+      line-height: 1.7;
+      margin-bottom: 14px;
+    }
+    .tool-card .tool-badge {
+      display: inline-block;
+      background: #f0f0ff;
+      color: #6366f1;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 12px;
+    }
+    .tool-card:hover .tool-badge {
+      background: #6366f1;
+      color: white;
+    }
+
+    .section-label {
+      font-size: 18px;
+      font-weight: 800;
+      color: #1a1a2e;
+      margin: 36px 0 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 2px;
+      background: #f0f0f0;
+      border-radius: 2px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="tools-header">
+    <h1>🛠️ 레크 진행자 도구 모음</h1>
+    <p>준비물 없이 폰·노트북만으로 바로 진행할 수 있는 레크리에이션 진행자 도구 모음<br>타이머·룰렛·출제기·역할 배정까지, 진행자가 손쉽게 쓸 수 있어요</p>
+    <div class="tags">
+      <span class="tag">무료</span>
+      <span class="tag">설치 없음</span>
+      <span class="tag">모바일 최적화</span>
+      <span class="tag">즉시 사용</span>
+    </div>
+  </div>
+
+  <nav>
+    <a href="index.html">🏠 홈</a>
+    <a href="indoor.html">실내</a>
+    <a href="outdoor.html">야외</a>
+    <a href="all-games.html">📚 전체보기</a>
+    <a href="tools.html" style="background:rgba(255,255,255,0.45);">🛠️ 진행 도구</a>
+  </nav>
+
+  <div class="content">
+    <a href="index.html" class="back-btn">← 홈으로 돌아가기</a>
+
+    <div class="tools-intro">
+      <p>
+        <strong>레크리에이션 진행자 도구</strong>는 게임 진행에 필요한 타이머·룰렛·역할 배정·출제기를 화면에서 바로 사용할 수 있는 도구입니다.
+        스마트폰이나 노트북 하나면 충분합니다. 앱 설치 없이, 준비물 없이 바로 진행해보세요.
+      </p>
+    </div>
+
+    <p class="section-label">⏱️ 타이머 &amp; 랜덤 도구</p>
+
+    <div class="tools-grid">
+
+      <a href="games/bomb-pass-tool.html" class="tool-card">
+        <span class="tool-emoji">💣</span>
+        <h3>폭탄 돌리기 타이머</h3>
+        <p class="tool-desc">랜덤 타이머와 스톱워치로 게임 타이밍을 자유롭게 제어. 언제 폭탄이 터질지 아무도 모른다!</p>
+        <span class="tool-badge">타이머</span>
+      </a>
+
+      <a href="games/escape-timer.html" class="tool-card">
+        <span class="tool-emoji">⏱️</span>
+        <h3>방탈출 타이머</h3>
+        <p class="tool-desc">제한시간 설정, 힌트 카운터, 긴장감 넘치는 경고 효과 포함. 방탈출 게임을 더 몰입감 있게 진행.</p>
+        <span class="tool-badge">타이머</span>
+      </a>
+
+      <a href="games/jjimpigu-tool.html" class="tool-card">
+        <span class="tool-emoji">⏱️</span>
+        <h3>찜피구 도구</h3>
+        <p class="tool-desc">팀 자동 나누기, 라운드 타이머, 공수 교대 기능. 찜피구 진행을 훨씬 편하게.</p>
+        <span class="tool-badge">타이머</span>
+      </a>
+
+      <a href="games/team-relay-tool.html" class="tool-card">
+        <span class="tool-emoji">🏃</span>
+        <h3>릴레이 미션 타이머</h3>
+        <p class="tool-desc">팀 릴레이 미션의 진행 시간을 측정하고 라운드를 관리하는 진행자 전용 타이머.</p>
+        <span class="tool-badge">타이머</span>
+      </a>
+
+    </div>
+
+    <p class="section-label">🎲 역할 배정 &amp; 진행 도구</p>
+
+    <div class="tools-grid">
+
+      <a href="games/mafia-tool.html" class="tool-card">
+        <span class="tool-emoji">🕵️</span>
+        <h3>마피아 진행 도구</h3>
+        <p class="tool-desc">밤/낮 페이즈 자동 진행, 역할 호출, 효과음, 토론 타이머. 진행자가 폰 하나로 모두 진행 가능.</p>
+        <span class="tool-badge">역할 배정</span>
+      </a>
+
+      <a href="games/liar-game-tool.html" class="tool-card">
+        <span class="tool-emoji">🕵️</span>
+        <h3>라이어 게임 진행 도구</h3>
+        <p class="tool-desc">참가자 수와 카테고리를 설정하면 라이어를 자동으로 배정. 카테고리별 키워드도 제공.</p>
+        <span class="tool-badge">역할 배정</span>
+      </a>
+
+      <a href="games/updown-tool.html" class="tool-card">
+        <span class="tool-emoji">🔢</span>
+        <h3>업다운 진행 도구</h3>
+        <p class="tool-desc">비밀 숫자 설정과 업·다운 힌트로 업다운 게임을 손쉽게 진행. 범위와 난이도 조절 가능.</p>
+        <span class="tool-badge">진행 도구</span>
+      </a>
+
+      <a href="games/speedquiz-tool.html" class="tool-card">
+        <span class="tool-emoji">⚡</span>
+        <h3>스피드 퀴즈 진행 도구</h3>
+        <p class="tool-desc">타이머와 점수판으로 팀 대항 스피드 퀴즈를 손쉽게 진행. 문제 목록 관리도 간편.</p>
+        <span class="tool-badge">진행 도구</span>
+      </a>
+
+    </div>
+
+    <p class="section-label">🃏 출제기 &amp; 뽑기 도구</p>
+
+    <div class="tools-grid">
+
+      <a href="games/chosung-quiz-tool.html" class="tool-card">
+        <span class="tool-emoji">🔤</span>
+        <h3>초성퀴즈 자동 출제기</h3>
+        <p class="tool-desc">단어를 입력하면 초성을 자동 추출해 큰 화면에 표시. 카테고리 선택, 단계별 힌트, 타이머 포함.</p>
+        <span class="tool-badge">출제기</span>
+      </a>
+
+      <a href="games/balance-game-tool.html" class="tool-card">
+        <span class="tool-emoji">⚖️</span>
+        <h3>밸런스게임 질문 뽑기</h3>
+        <p class="tool-desc">카테고리별 랜덤 질문 자동 출제, 즉석 득표 집계, 직접 질문 추가 기능. 발표 없이 화면만 보여주면 끝.</p>
+        <span class="tool-badge">뽑기</span>
+      </a>
+
+      <a href="games/body-talk-picker.html" class="tool-card">
+        <span class="tool-emoji">🙌</span>
+        <h3>몸으로 말해요 제시어 뽑기</h3>
+        <p class="tool-desc">쉬움·보통·어려움 난이도별, 주제별 제시어를 즉시 뽑아줍니다. 이제 제시어 찾느라 시간 낭비 없이!</p>
+        <span class="tool-badge">뽑기</span>
+      </a>
+
+      <a href="games/me-too-tool.html" class="tool-card">
+        <span class="tool-emoji">🙋</span>
+        <h3>너도나도 주제 추천 도구</h3>
+        <p class="tool-desc">카테고리를 선택하면 너도나도 게임 주제를 랜덤으로 뽑아줍니다. 매번 새로운 주제로 진행.</p>
+        <span class="tool-badge">뽑기</span>
+      </a>
+
+      <a href="games/iguseong-tool.html" class="tool-card">
+        <span class="tool-emoji">🎤</span>
+        <h3>이구동성 단어 출제기</h3>
+        <p class="tool-desc">팀원 수(글자 수)를 정하면 그 인원에 맞는 단어만 랜덤 출제. 글자 수가 딱 맞아야 성공!</p>
+        <span class="tool-badge">출제기</span>
+      </a>
+
+      <a href="games/animal-imitate-tool.html" class="tool-card">
+        <span class="tool-emoji">🐘</span>
+        <h3>동물 카드 뽑기 도구</h3>
+        <p class="tool-desc">동물 흉내 게임 진행자 도구. 동물 카드를 한 장씩 뽑아 화면에 크게 표시합니다.</p>
+        <span class="tool-badge">뽑기</span>
+      </a>
+
+      <a href="games/color-hunt-tool.html" class="tool-card">
+        <span class="tool-emoji">🎨</span>
+        <h3>색깔 찾기 도구</h3>
+        <p class="tool-desc">난이도·자동/수동 모드를 설정하면 화면 전체를 해당 색으로 채워 줍니다. 색깔 찾기 게임을 더 쉽게.</p>
+        <span class="tool-badge">진행 도구</span>
+      </a>
+
+      <a href="games/card-flip-tool.html" class="tool-card">
+        <span class="tool-emoji">🃏</span>
+        <h3>카드 뒤집기 도구</h3>
+        <p class="tool-desc">학습용 카드 세트, 팀별 점수, 미리보기 기능 포함. 기억력 짝맞추기 게임을 화면으로 진행.</p>
+        <span class="tool-badge">진행 도구</span>
+      </a>
+
+    </div>
+
+    <div style="margin-top:40px;background:white;border-radius:16px;padding:24px;box-shadow:0 3px 14px rgba(0,0,0,0.06);">
+      <h2 style="font-size:16px;font-weight:800;color:#1a1a2e;margin-bottom:10px;">레크 진행 도구를 이렇게 활용하세요</h2>
+      <ul style="font-size:13px;color:#555;line-height:2;padding-left:18px;">
+        <li>진행자가 스마트폰을 빔프로젝터·TV에 연결하면 전체 화면 공유 가능</li>
+        <li>도구 페이지는 인터넷 없이도 동작하는 경우가 많아 현장에서 바로 사용 가능</li>
+        <li>각 도구 페이지에서 게임 설명 페이지로 바로 이동할 수 있습니다</li>
+      </ul>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2025 레크 뭐하지? | 모든 레크 진행자를 위한 아이디어 모음</p>
+    <p style="margin-top:8px;font-size:13px;">
+      <a href="/about.html" style="color:#bbb;">소개</a> |
+      <a href="/contact.html" style="color:#bbb;">문의</a> |
+      <a href="/privacy.html" style="color:#bbb;">개인정보처리방침</a> |
+      <a href="/terms.html" style="color:#bbb;">이용약관</a>
+    </p>
+  </footer>
+
+</body>
+</html>
