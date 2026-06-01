@@ -802,6 +802,23 @@ const gamesData = [
     }
   },
   {
+    id: 'mbti-game',
+    emoji: '🧠',
+    title: 'MBTI 게임',
+    description: 'MBTI 성향으로 서로를 알아가는 아이스브레이킹! 참가자 각자 폰으로 MBTI 빙고 + 진행자 코너이동 상황질문 두 가지 모드. 준비물 없음.',
+    url: 'games/mbti-game.html',
+    people: '6명~제한없음',
+    time: '10~20분',
+    prep: '없음(폰)',
+    tags: {
+      location: ['both'],
+      groupSize: ['medium', 'large', 'xlarge'],
+      ageGroup: ['teen', 'adult'],
+      duration: 'medium',
+      situation: ['ice-break', 'no-prep']
+    }
+  },
+  {
     id: 'balance-game',
     emoji: '⚖️',
     title: '밸런스게임',

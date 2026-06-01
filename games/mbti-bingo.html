@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="description" content="MBTI 빙고 참가자용. MBTI 4축(E/I·S/N·T/F·P/J) 성향 칸을 채우는 아이스브레이킹 빙고게임.">
+  <!-- Open Graph / SNS 공유 -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="레크 뭐하지?">
+  <meta property="og:title" content="🧠 MBTI 빙고 (참가자용) | 레크 뭐하지?">
+  <meta property="og:description" content="MBTI 아이스브레이킹 빙고판. 각 칸에 해당하는 사람을 찾아 이름을 받으세요!">
+  <meta property="og:url" content="https://rec-what.vercel.app/games/mbti-bingo.html">
+  <meta property="og:image" content="https://rec-what.vercel.app/og-image.png">
+  <meta property="og:locale" content="ko_KR">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="🧠 MBTI 빙고 (참가자용) | 레크 뭐하지?">
+  <meta name="twitter:description" content="MBTI 아이스브레이킹 빙고판. 각 칸에 해당하는 사람을 찾아 이름을 받으세요!">
+  <meta name="twitter:image" content="https://rec-what.vercel.app/og-image.png">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif;
+      background: #0f172a;
+      color: #f1f5f9;
+      min-height: 100vh;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    }
+
+    /* ── 헤더 ── */
+    .bingo-header {
+      background: linear-gradient(135deg, #831843, #ec4899);
+      padding: 16px 16px 14px;
+      text-align: center;
+    }
+    .bingo-header-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+    .back-link {
+      color: rgba(255,255,255,0.85);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .header-title {
+      font-size: 17px;
+      font-weight: 800;
+      color: white;
+    }
+    .header-info {
+      font-size: 12px;
+      color: rgba(255,255,255,0.75);
+    }
+
+    /* ── 빙고 상태 바 ── */
+    .status-bar {
+      background: #1e293b;
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .status-bingo {
+      font-size: 13px;
+      font-weight: 700;
+      color: #94a3b8;
+    }
+    .status-bingo span {
+      color: #ec4899;
+      font-size: 16px;
+    }
+    .status-checked {
+      font-size: 12px;
+      color: #64748b;
+    }
+
+    /* ── 그리드 래퍼 ── */
+    .grid-wrap {
+      padding: 12px;
+    }
+    .bingo-grid {
+      display: grid;
+      gap: 5px;
+      width: 100%;
+      aspect-ratio: 1;
+    }
+
+    /* ── 빙고 셀 ── */
+    .bingo-cell {
+      background: #1e293b;
+      border: 2px solid #334155;
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.15s;
+      overflow: hidden;
+      position: relative;
+      padding: 4px 3px;
+      user-select: none;
+    }
+    .bingo-cell:active { transform: scale(0.95); }
+    .bingo-cell.checked {
+      background: linear-gradient(135deg, #831843, #be185d);
+      border-color: #ec4899;
+      box-shadow: 0 0 0 2px rgba(236,72,153,0.3);
+    }
+    .bingo-cell.free-cell {
+      background: linear-gradient(135deg, #1e3a5f, #1d4ed8);
+      border-color: #3b82f6;
+      cursor: default;
+    }
+    .bingo-cell.bingo-line {
+      box-shadow: 0 0 0 3px #fbbf24, 0 0 12px rgba(251,191,36,0.4);
+      border-color: #fbbf24;
+    }
+    .cell-label {
+      font-weight: 700;
+      color: #e2e8f0;
+      text-align: center;
+      line-height: 1.25;
+      word-break: keep-all;
+    }
+    .bingo-cell.checked .cell-label,
+    .bingo-cell.free-cell .cell-label {
+      color: white;
+    }
+    .cell-name {
+      font-size: 10px;
+      color: rgba(255,255,255,0.75);
+      margin-top: 3px;
+      text-align: center;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 90%;
+    }
+    .rare-badge {
+      position: absolute;
+      top: 3px;
+      right: 3px;
+      font-size: 9px;
+      line-height: 1;
+    }
+    .axis-badge {
+      position: absolute;
+      bottom: 3px;
+      left: 3px;
+      font-size: 8px;
+      color: rgba(255,255,255,0.4);
+      font-weight: 700;
+    }
+
+    /* ── 빙고 선언 배너 ── */
+    .bingo-banner {
+      display: none;
+      background: linear-gradient(135deg, #92400e, #f59e0b);
+      color: white;
+      text-align: center;
+      padding: 12px 16px;
+      font-size: 18px;
+      font-weight: 800;
+      animation: bingoPop 0.4s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    @keyframes bingoPop {
+      from { opacity: 0; transform: scale(0.9); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+
+    /* ── 규칙 안내 ── */
+    .rule-notice {
+      margin: 0 12px 12px;
+      background: rgba(255,255,255,0.04);
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: 12px;
+      color: #94a3b8;
+      line-height: 1.7;
+    }
+
+    /* ── 모달 ── */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.65);
+      z-index: 100;
+      align-items: flex-end;
+      justify-content: center;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal-box {
+      background: #1e293b;
+      border-radius: 24px 24px 0 0;
+      padding: 24px 20px 36px;
+      width: 100%;
+      max-width: 480px;
+      animation: slideUp 0.25s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    @keyframes slideUp {
+      from { transform: translateY(100%); }
+      to   { transform: translateY(0); }
+    }
+    .modal-drag {
+      width: 40px; height: 4px;
+      background: #475569;
+      border-radius: 2px;
+      margin: 0 auto 18px;
+    }
+    .modal-axis-badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 3px 10px;
+      border-radius: 20px;
+      background: #ec4899;
+      color: white;
+      margin-bottom: 10px;
+    }
+    .modal-sentence {
+      font-size: 17px;
+      font-weight: 700;
+      color: #f1f5f9;
+      line-height: 1.55;
+      margin-bottom: 20px;
+    }
+    .modal-rule {
+      font-size: 12px;
+      color: #64748b;
+      margin-bottom: 12px;
+    }
+    .modal-input-wrap {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .modal-input {
+      flex: 1;
+      background: #0f172a;
+      border: 2px solid #334155;
+      border-radius: 12px;
+      padding: 14px 16px;
+      font-size: 16px;
+      font-family: inherit;
+      color: #f1f5f9;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    .modal-input:focus { border-color: #ec4899; }
+    .modal-check-btn {
+      background: linear-gradient(135deg, #9d174d, #ec4899);
+      border: none;
+      border-radius: 12px;
+      color: white;
+      font-size: 15px;
+      font-weight: 800;
+      padding: 14px 20px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: transform 0.1s;
+      white-space: nowrap;
+    }
+    .modal-check-btn:active { transform: scale(0.97); }
+    .modal-warn {
+      font-size: 12px;
+      color: #f87171;
+      font-weight: 700;
+      margin-bottom: 8px;
+      min-height: 18px;
+    }
+    .modal-clear-btn {
+      width: 100%;
+      background: none;
+      border: 1.5px solid #334155;
+      border-radius: 10px;
+      color: #94a3b8;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 10px;
+      cursor: pointer;
+      font-family: inherit;
+      margin-top: 4px;
+    }
+    .modal-close-btn {
+      width: 100%;
+      background: none;
+      border: none;
+      color: #64748b;
+      font-size: 13px;
+      padding: 10px;
+      cursor: pointer;
+      font-family: inherit;
+    }
+  </style>
+</head>
+<body>
+
+<div class="bingo-header">
+  <div class="bingo-header-top">
+    <a href="mbti-game.html" class="back-link">← 게임 설명</a>
+    <span class="header-title">🧠 MBTI 빙고</span>
+    <span style="font-size:13px;color:rgba(255,255,255,0.6);" id="header-size"></span>
+  </div>
+  <div class="header-info">칸에 해당하는 <strong style="color:white;">다른 사람</strong>을 찾아 이름을 받으세요 &nbsp;·&nbsp; 1인 1칸</div>
+</div>
+
+<div class="status-bar">
+  <div class="status-bingo">빙고 <span id="bingo-count">0</span>줄</div>
+  <div class="status-checked" id="checked-count">0 / 0 칸 체크됨</div>
+</div>
+
+<div id="bingo-banner" class="bingo-banner">🎉 빙고! 줄을 완성했어요!</div>
+
+<div class="grid-wrap">
+  <div class="bingo-grid" id="bingo-grid"></div>
+</div>
+
+<div class="rule-notice">
+  💡 <strong style="color:#e2e8f0;">규칙:</strong> 한 사람에게 한 칸만 받을 수 있어요. 이미 사인한 사람에게 다시 부탁하면 안 됩니다.
+  <span id="rare-notice"></span>
+</div>
+
+<!-- 모달 -->
+<div class="modal-overlay" id="modal-overlay" onclick="handleOverlayClick(event)">
+  <div class="modal-box" id="modal-box">
+    <div class="modal-drag"></div>
+    <div class="modal-axis-badge" id="modal-axis"></div>
+    <div class="modal-sentence" id="modal-sentence"></div>
+    <div class="modal-rule">🔒 1인 1칸 – 이미 사인받은 사람의 이름은 쓸 수 없어요</div>
+    <div class="modal-input-wrap">
+      <input type="text" class="modal-input" id="modal-input" placeholder="이름 입력" maxlength="10">
+      <button class="modal-check-btn" onclick="confirmCell()">✓ 체크</button>
+    </div>
+    <div class="modal-warn" id="modal-warn"></div>
+    <button class="modal-clear-btn" id="modal-clear-btn" onclick="clearCell()" style="display:none;">✕ 이 칸 체크 취소</button>
+    <button class="modal-close-btn" onclick="closeModal()">닫기</button>
+  </div>
+</div>
+
+<script>
+/* ── 칸 풀 ── */
+const POOL = [
+  { label: '먼저 말 거는 사람', sentence: '처음 본 사람한테 먼저 말 거는 편', axis: 'E', rare: false },
+  { label: '혼자 충전형', sentence: '약속 끝나면 집에서 혼자 충전하는 편', axis: 'I', rare: false },
+  { label: '단톡방 수다쟁이', sentence: '단톡방에서 말 많이 하는 편', axis: 'E', rare: false },
+  { label: '문자가 편함', sentence: '전화보다 문자가 편한 편', axis: 'I', rare: false },
+  { label: '장기자랑 가능', sentence: '처음 보는 자리에서도 노래·장기자랑 가능한 사람', axis: 'E', rare: true },
+  { label: '주말은 집', sentence: '주말에 약속 없으면 더 좋은 편', axis: 'I', rare: false },
+  { label: '분위기 메이커', sentence: '모임에서 분위기 띄우는 역할 자주 하는 사람', axis: 'E', rare: false },
+  { label: '소수 깊은 관계', sentence: '친구는 적지만 깊게 사귀는 편', axis: 'I', rare: false },
+  { label: '예시부터 드는 사람', sentence: '설명할 때 구체적인 예시부터 드는 편', axis: 'S', rare: false },
+  { label: '상상 잘 빠짐', sentence: '가끔 멍때리며 상상에 빠지는 편', axis: 'N', rare: false },
+  { label: '결론부터 듣고파', sentence: '"그래서 결론이 뭔데?" 자주 말하는 편', axis: 'S', rare: false },
+  { label: '의미 해석파', sentence: '영화 볼 때 디테일보다 의미·해석을 좋아함', axis: 'N', rare: false },
+  { label: '상상하다 못 잠', sentence: '자기 전 상상하다 잠 못 든 적 있는 사람', axis: 'N', rare: true },
+  { label: '설명서 먼저', sentence: '새 물건 사면 설명서 먼저 읽는 사람', axis: 'S', rare: true },
+  { label: '실용적 선물', sentence: '선물은 실용적인 걸 주는 편', axis: 'S', rare: false },
+  { label: '아이디어 뱅크', sentence: '엉뚱한 아이디어가 자주 떠오르는 편', axis: 'N', rare: false },
+  { label: '해결책부터', sentence: '고민 들으면 해결책부터 말하는 편', axis: 'T', rare: false },
+  { label: '같이 울컥', sentence: '친구가 울면 같이 울컥하는 편', axis: 'F', rare: false },
+  { label: '팩트파', sentence: '"팩트로는 맞지" 소리 자주 함', axis: 'T', rare: false },
+  { label: '칭찬에 행복', sentence: '칭찬 들으면 하루 종일 기분 좋은 편', axis: 'F', rare: false },
+  { label: '최근에 운 사람', sentence: '최근에 영화·영상 보다 운 적 있는 사람', axis: 'F', rare: true },
+  { label: '토론 즐김', sentence: '의견 부딪히는 토론을 즐기는 편', axis: 'T', rare: true },
+  { label: '공감 먼저', sentence: '조언보다 공감을 먼저 해주는 편', axis: 'F', rare: false },
+  { label: '원칙 중시', sentence: '규칙·원칙을 중요하게 여기는 편', axis: 'T', rare: false },
+  { label: '계획표파', sentence: '여행 가기 전 계획표 짜는 편', axis: 'J', rare: false },
+  { label: '마감 직전 폭주', sentence: '과제·일을 마감 직전에 몰아서 하는 편', axis: 'P', rare: false },
+  { label: '정리 잘함', sentence: '책상·폰이 늘 정리돼 있는 편', axis: 'J', rare: false },
+  { label: '즉흥 OK', sentence: '약속 즉흥 변경도 환영인 편', axis: 'P', rare: false },
+  { label: '비상용품 챙김', sentence: '가방에 비상용품(반창고 등) 늘 들고 다니는 사람', axis: 'J', rare: true },
+  { label: '무계획 여행', sentence: '계획 없이 훌쩍 떠나본 적 있는 사람', axis: 'P', rare: true },
+  { label: 'To-do 리스트', sentence: '할 일을 리스트로 적어두는 편', axis: 'J', rare: false },
+  { label: '벼락치기 능력자', sentence: '벼락치기에 강한 편', axis: 'P', rare: false },
+  { label: 'MBTI 외움', sentence: '자기 MBTI를 외우고 다니는 사람', axis: '재미', rare: false },
+  { label: '검사 3번+', sentence: 'MBTI 검사를 3번 이상 해본 사람', axis: '재미', rare: false },
+  { label: '오늘 처음 본 사람', sentence: '오늘 처음 인사한 사람', axis: '재미', rare: false },
+  { label: 'MBTI 바뀜', sentence: '최근에 MBTI가 바뀐 사람', axis: '재미', rare: true },
+  { label: '가족 MBTI 다 앎', sentence: '가족 전원의 MBTI를 아는 사람', axis: '재미', rare: true },
+  { label: '검사 안 해봄', sentence: 'MBTI 검사를 한 번도 안 해본 사람', axis: '재미', rare: true },
+  { label: '나랑 같은 MBTI', sentence: '나와 MBTI가 같은 사람', axis: '재미', rare: false },
+  { label: '정반대 MBTI', sentence: '나와 정반대 MBTI인 사람', axis: '재미', rare: true },
+];
+
+const AXIS_LABELS = { E:'E(외향)', I:'I(내향)', S:'S(감각)', N:'N(직관)', T:'T(사고)', F:'F(감정)', J:'J(판단)', P:'P(인식)', '재미':'재미 칸' };
+const MAIN_AXES = ['E','I','S','N','T','F','P','J'];
+
+/* ── URL 파라미터 읽기 ── */
+const params = new URLSearchParams(location.search);
+const SIZE = Math.min(5, Math.max(3, parseInt(params.get('size') || '4')));
+const HAS_FREE = params.get('free') === '1';
+const HAS_RARE = params.get('rare') === '1';
+
+/* ── 상태 ── */
+let cells = [];       // 배치된 셀 배열 { pool항목, checked, name, isFree }
+let bingoLines = [];  // 완성된 줄 인덱스 배열
+let activeCellIdx = -1;
+
+/* ── 셔플 ── */
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+/* ── 빙고 풀 생성 (MBTI 4축 균형) ── */
+function buildBingoPool() {
+  const totalCells = SIZE * SIZE;
+  const needed = totalCells - (HAS_FREE ? 1 : 0);
+
+  // 메인 8축에서 균등하게 뽑기
+  const perAxis = Math.max(1, Math.floor(needed / MAIN_AXES.length));
+  const shuffledAxes = shuffle([...MAIN_AXES]);
+  let selected = [];
+
+  shuffledAxes.forEach(ax => {
+    const axPool = shuffle(POOL.filter(c => c.axis === ax));
+    selected.push(...axPool.slice(0, perAxis));
+  });
+
+  // 부족한 슬롯을 재미 칸으로 채우기
+  const remaining = needed - selected.length;
+  if (remaining > 0) {
+    const funPool = shuffle(POOL.filter(c => c.axis === '재미'));
+    selected.push(...funPool.slice(0, remaining));
+  }
+
+  // 여전히 부족하면 메인 축에서 추가 뽑기
+  if (selected.length < needed) {
+    const usedLabels = new Set(selected.map(c => c.label));
+    const extras = shuffle(POOL.filter(c => MAIN_AXES.includes(c.axis) && !usedLabels.has(c.label)));
+    selected.push(...extras.slice(0, needed - selected.length));
+  }
+
+  return shuffle(selected.slice(0, needed));
+}
+
+/* ── 셀 초기화 ── */
+function initCells() {
+  const pool = buildBingoPool();
+  const totalCells = SIZE * SIZE;
+  const freeIdx = HAS_FREE ? Math.floor(SIZE / 2) * SIZE + Math.floor(SIZE / 2) : -1;
+
+  cells = [];
+  let poolIdx = 0;
+
+  for (let i = 0; i < totalCells; i++) {
+    if (i === freeIdx) {
+      cells.push({ label: 'FREE', sentence: '', axis: '', rare: false, checked: true, name: 'FREE', isFree: true });
+    } else {
+      const item = pool[poolIdx++];
+      cells.push({ ...item, checked: false, name: '', isFree: false });
+    }
+  }
+}
+
+/* ── CSS 셀 폰트 크기 계산 ── */
+function getCellFontSize() {
+  const vw = window.innerWidth;
+  const gridWidth = vw - 24; // 12px padding * 2
+  const cellWidth = (gridWidth - (SIZE - 1) * 5) / SIZE; // gap=5px
+  return Math.min(14, Math.max(8, cellWidth / 5.5)) + 'px';
+}
+
+/* ── 그리드 렌더 ── */
+function renderGrid() {
+  const grid = document.getElementById('bingo-grid');
+  grid.style.gridTemplateColumns = `repeat(${SIZE}, 1fr)`;
+  const fs = getCellFontSize();
+
+  grid.innerHTML = cells.map((cell, idx) => {
+    let cls = 'bingo-cell';
+    if (cell.isFree) cls += ' free-cell';
+    else if (cell.checked) cls += ' checked';
+    if (bingoLines.some(line => line.includes(idx))) cls += ' bingo-line';
+
+    const rareBadge = (HAS_RARE && cell.rare && !cell.isFree) ? '<span class="rare-badge">★</span>' : '';
+    const axisBadge = (!cell.isFree && cell.axis) ? `<span class="axis-badge">${cell.axis}</span>` : '';
+    const nameEl = (cell.checked && !cell.isFree && cell.name)
+      ? `<div class="cell-name">${escHtml(cell.name)}</div>` : '';
+
+    return `<div class="${cls}" onclick="openModal(${idx})" style="--fs:${fs}">
+      ${rareBadge}
+      <div class="cell-label" style="font-size:${fs}">${escHtml(cell.label)}</div>
+      ${nameEl}
+      ${axisBadge}
+    </div>`;
+  }).join('');
+
+  updateStatus();
+}
+
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+/* ── 빙고 판정 ── */
+function detectBingo() {
+  const prev = bingoLines.length;
+  bingoLines = [];
+
+  // 가로
+  for (let r = 0; r < SIZE; r++) {
+    const line = [];
+    for (let c = 0; c < SIZE; c++) line.push(r * SIZE + c);
+    if (line.every(i => cells[i].checked)) bingoLines.push(line);
+  }
+  // 세로
+  for (let c = 0; c < SIZE; c++) {
+    const line = [];
+    for (let r = 0; r < SIZE; r++) line.push(r * SIZE + c);
+    if (line.every(i => cells[i].checked)) bingoLines.push(line);
+  }
+  // 대각선
+  const diag1 = [], diag2 = [];
+  for (let i = 0; i < SIZE; i++) {
+    diag1.push(i * SIZE + i);
+    diag2.push(i * SIZE + (SIZE - 1 - i));
+  }
+  if (diag1.every(i => cells[i].checked)) bingoLines.push(diag1);
+  if (diag2.every(i => cells[i].checked)) bingoLines.push(diag2);
+
+  if (bingoLines.length > prev) {
+    showBingoBanner();
+  }
+}
+
+function showBingoBanner() {
+  const banner = document.getElementById('bingo-banner');
+  banner.textContent = `🎉 빙고! ${bingoLines.length}줄 완성!`;
+  banner.style.display = 'block';
+  banner.style.animation = 'none';
+  void banner.offsetWidth;
+  banner.style.animation = 'bingoPop 0.4s cubic-bezier(0.34,1.56,0.64,1)';
+}
+
+/* ── 상태 업데이트 ── */
+function updateStatus() {
+  const checkedCnt = cells.filter(c => c.checked).length;
+  const totalCnt = cells.length;
+  document.getElementById('bingo-count').textContent = bingoLines.length;
+  document.getElementById('checked-count').textContent = `${checkedCnt} / ${totalCnt} 칸 체크됨`;
+}
+
+/* ── 모달 ── */
+function openModal(idx) {
+  const cell = cells[idx];
+  if (cell.isFree) return;
+
+  activeCellIdx = idx;
+  document.getElementById('modal-warn').textContent = '';
+  document.getElementById('modal-axis').textContent = AXIS_LABELS[cell.axis] || cell.axis;
+  document.getElementById('modal-sentence').textContent = cell.sentence;
+  document.getElementById('modal-input').value = cell.name || '';
+
+  const clearBtn = document.getElementById('modal-clear-btn');
+  clearBtn.style.display = cell.checked ? 'block' : 'none';
+
+  document.getElementById('modal-overlay').classList.add('open');
+  setTimeout(() => document.getElementById('modal-input').focus(), 300);
+}
+
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+  activeCellIdx = -1;
+}
+
+function handleOverlayClick(e) {
+  if (e.target === document.getElementById('modal-overlay')) closeModal();
+}
+
+function confirmCell() {
+  const name = document.getElementById('modal-input').value.trim();
+  const warnEl = document.getElementById('modal-warn');
+
+  if (!name) {
+    warnEl.textContent = '이름을 입력해 주세요';
+    return;
+  }
+
+  // 1인 1칸 검사
+  const duplicate = cells.findIndex((c, i) => i !== activeCellIdx && c.checked && !c.isFree && c.name === name);
+  if (duplicate !== -1) {
+    warnEl.textContent = `"${name}"은(는) 이미 다른 칸에 사인받은 사람이에요`;
+    return;
+  }
+
+  cells[activeCellIdx].checked = true;
+  cells[activeCellIdx].name = name;
+  warnEl.textContent = '';
+  closeModal();
+  detectBingo();
+  renderGrid();
+}
+
+function clearCell() {
+  if (activeCellIdx < 0) return;
+  cells[activeCellIdx].checked = false;
+  cells[activeCellIdx].name = '';
+  closeModal();
+  detectBingo();
+  renderGrid();
+}
+
+/* ── 엔터키 ── */
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && document.getElementById('modal-overlay').classList.contains('open')) {
+    confirmCell();
+  }
+  if (e.key === 'Escape') closeModal();
+});
+
+/* ── 초기화 ── */
+function init() {
+  document.getElementById('header-size').textContent = `${SIZE}×${SIZE}`;
+  if (HAS_RARE) {
+    document.getElementById('rare-notice').textContent = ' ★ 표시 칸은 보너스 레어 칸이에요!';
+  }
+
+  initCells();
+  detectBingo();
+  renderGrid();
+}
+
+window.addEventListener('resize', () => renderGrid());
+init();
+</script>
+</body>
+</html>

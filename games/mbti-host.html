@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="description" content="MBTI 게임 진행자 도구. 빙고판 크기·FREE칸·레어칸·제한시간을 설정하고 참가자 QR코드를 생성하세요. 코너이동 상황질문 출제기 포함.">
+  <!-- Open Graph / SNS 공유 -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="레크 뭐하지?">
+  <meta property="og:title" content="🎤 MBTI 게임 진행자 도구 - QR 생성 + 상황질문 | 레크 뭐하지?">
+  <meta property="og:description" content="MBTI 빙고 QR코드 생성 및 코너이동 상황질문 출제기. MBTI 게임 진행자용 도구.">
+  <meta property="og:url" content="https://rec-what.vercel.app/games/mbti-host.html">
+  <meta property="og:image" content="https://rec-what.vercel.app/og-image.png">
+  <meta property="og:locale" content="ko_KR">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="🎤 MBTI 게임 진행자 도구 - QR 생성 + 상황질문 | 레크 뭐하지?">
+  <meta name="twitter:description" content="MBTI 빙고 QR코드 생성 및 코너이동 상황질문 출제기. MBTI 게임 진행자용 도구.">
+  <meta name="twitter:image" content="https://rec-what.vercel.app/og-image.png">
+  <title>🎤 MBTI 게임 진행자 도구 | 레크 뭐하지?</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif;
+      background: #0f172a;
+      color: #f1f5f9;
+      min-height: 100vh;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* ── 헤더 ── */
+    .tool-header {
+      display: flex;
+      align-items: center;
+      padding: 14px 16px;
+      background: rgba(255,255,255,0.05);
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .back-link {
+      color: #f472b6;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 600;
+      margin-right: auto;
+    }
+    .header-title {
+      font-size: 15px;
+      font-weight: 800;
+      color: #f1f5f9;
+      margin-right: auto;
+    }
+
+    /* ── 섹션 탭 ── */
+    .tab-bar {
+      display: flex;
+      background: #1e293b;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .tab-btn {
+      flex: 1;
+      padding: 13px 8px;
+      border: none;
+      background: none;
+      color: #64748b;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      border-bottom: 2px solid transparent;
+      transition: all 0.15s;
+    }
+    .tab-btn.active {
+      color: #ec4899;
+      border-bottom-color: #ec4899;
+    }
+
+    /* ── 공통 패널 ── */
+    .panel { display: none; padding: 20px 16px 40px; }
+    .panel.active { display: block; }
+
+    /* ── 설정 그룹 ── */
+    .setting-group { margin-bottom: 24px; }
+    .setting-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: #94a3b8;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 10px;
+    }
+    .setting-hint {
+      font-size: 12px;
+      color: #475569;
+      margin-top: 6px;
+    }
+
+    /* ── 토글 그룹 ── */
+    .toggle-group {
+      display: flex;
+      gap: 8px;
+    }
+    .toggle-btn {
+      flex: 1;
+      padding: 12px 8px;
+      border-radius: 10px;
+      border: 2px solid #1e293b;
+      background: #1e293b;
+      color: #94a3b8;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+      font-family: inherit;
+      text-align: center;
+    }
+    .toggle-btn.selected {
+      border-color: #ec4899;
+      background: rgba(236,72,153,0.15);
+      color: #f9a8d4;
+    }
+
+    /* ── 타이머 ── */
+    .timer-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .timer-input {
+      background: #1e293b;
+      border: 2px solid #334155;
+      border-radius: 10px;
+      color: #f1f5f9;
+      font-size: 16px;
+      font-family: inherit;
+      font-weight: 700;
+      padding: 10px 14px;
+      width: 80px;
+      text-align: center;
+      outline: none;
+    }
+    .timer-input:focus { border-color: #ec4899; }
+    .timer-start-btn {
+      flex: 1;
+      padding: 11px 14px;
+      border-radius: 10px;
+      border: none;
+      background: #1e293b;
+      color: #94a3b8;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s;
+      border: 1.5px solid #334155;
+    }
+    .timer-start-btn.running {
+      background: rgba(236,72,153,0.15);
+      border-color: #ec4899;
+      color: #f9a8d4;
+    }
+    .timer-display {
+      font-size: 40px;
+      font-weight: 800;
+      text-align: center;
+      color: #ec4899;
+      letter-spacing: 2px;
+      padding: 8px 0;
+      display: none;
+    }
+    .timer-display.warn { color: #f87171; }
+
+    /* ── QR 영역 ── */
+    .qr-section {
+      background: #1e293b;
+      border-radius: 16px;
+      padding: 20px;
+    }
+    .qr-section-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: #94a3b8;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .qr-canvas-wrap {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 16px;
+    }
+    #qr-canvas {
+      background: white;
+      border-radius: 12px;
+      padding: 12px;
+    }
+    .qr-link-box {
+      background: #0f172a;
+      border-radius: 10px;
+      padding: 12px 14px;
+      font-size: 12px;
+      color: #94a3b8;
+      word-break: break-all;
+      line-height: 1.6;
+      margin-bottom: 12px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .qr-link-box:hover { background: #0a0f1e; }
+    .copy-btn {
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      border: none;
+      background: linear-gradient(135deg, #9d174d, #ec4899);
+      color: white;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      transition: transform 0.1s;
+    }
+    .copy-btn:active { transform: scale(0.98); }
+    .copy-toast {
+      text-align: center;
+      font-size: 12px;
+      color: #4ade80;
+      margin-top: 8px;
+      height: 16px;
+    }
+
+    /* ── 상황질문 섹션 ── */
+    .axis-filter {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+    .axis-filter-btn {
+      padding: 8px 14px;
+      border-radius: 8px;
+      border: 2px solid #1e293b;
+      background: #1e293b;
+      color: #94a3b8;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s;
+    }
+    .axis-filter-btn.selected {
+      border-color: #a855f7;
+      background: rgba(168,85,247,0.15);
+      color: #d8b4fe;
+    }
+
+    .pick-btn {
+      width: 100%;
+      padding: 16px;
+      border-radius: 14px;
+      border: none;
+      background: linear-gradient(135deg, #6b21a8, #a855f7);
+      color: white;
+      font-size: 17px;
+      font-weight: 800;
+      cursor: pointer;
+      font-family: inherit;
+      box-shadow: 0 4px 20px rgba(168,85,247,0.35);
+      transition: transform 0.1s, box-shadow 0.1s;
+      margin-bottom: 24px;
+    }
+    .pick-btn:active {
+      transform: scale(0.98);
+      box-shadow: 0 2px 10px rgba(168,85,247,0.2);
+    }
+
+    /* ── A vs B 카드 ── */
+    .question-card {
+      display: none;
+      background: #1e293b;
+      border-radius: 20px;
+      padding: 28px 20px 24px;
+      text-align: center;
+      animation: qCardIn 0.35s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    @keyframes qCardIn {
+      from { opacity: 0; transform: scale(0.92); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+    .question-card.visible { display: block; }
+    .q-axis-label {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 4px 12px;
+      border-radius: 20px;
+      background: rgba(168,85,247,0.2);
+      color: #d8b4fe;
+      margin-bottom: 20px;
+    }
+    .q-ab-wrap {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 12px;
+      align-items: center;
+    }
+    .q-side {
+      background: #0f172a;
+      border-radius: 14px;
+      padding: 18px 12px;
+      font-size: 15px;
+      font-weight: 700;
+      color: #f1f5f9;
+      line-height: 1.4;
+      min-height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .q-side.a-side { border: 2px solid #3b82f6; color: #93c5fd; }
+    .q-side.b-side { border: 2px solid #ec4899; color: #f9a8d4; }
+    .q-vs {
+      font-size: 20px;
+      font-weight: 900;
+      color: #475569;
+    }
+    .q-remaining {
+      margin-top: 16px;
+      font-size: 12px;
+      color: #475569;
+    }
+
+    /* ── 섹션 구분선 ── */
+    .divider {
+      height: 1px;
+      background: rgba(255,255,255,0.06);
+      margin: 8px 0 20px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="tool-header">
+  <a href="mbti-game.html" class="back-link">← 게임 설명으로</a>
+  <span class="header-title">🎤 MBTI 진행자 도구</span>
+</div>
+
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="switchTab('bingo')">📱 빙고 QR 생성</button>
+  <button class="tab-btn" onclick="switchTab('questions')">🎯 코너이동 질문</button>
+</div>
+
+<!-- ══ 패널 A: 빙고 설정 + QR ══ -->
+<div id="panel-bingo" class="panel active">
+
+  <div class="setting-group">
+    <div class="setting-label">빙고판 크기</div>
+    <div class="toggle-group">
+      <button class="toggle-btn" data-size="3" onclick="selectSize(this)">3×3</button>
+      <button class="toggle-btn selected" data-size="4" onclick="selectSize(this)">4×4</button>
+      <button class="toggle-btn" data-size="5" onclick="selectSize(this)">5×5</button>
+    </div>
+    <div class="setting-hint">칸이 많을수록 게임 시간이 길어져요</div>
+  </div>
+
+  <div class="setting-group">
+    <div class="setting-label">FREE 칸</div>
+    <div class="toggle-group">
+      <button class="toggle-btn selected" data-free="0" onclick="selectFree(this)">없음</button>
+      <button class="toggle-btn" data-free="1" onclick="selectFree(this)">정중앙 FREE</button>
+    </div>
+    <div class="setting-hint">FREE 칸은 시작부터 체크된 상태로 주어져요</div>
+  </div>
+
+  <div class="setting-group">
+    <div class="setting-label">레어 칸 표시</div>
+    <div class="toggle-group">
+      <button class="toggle-btn selected" data-rare="0" onclick="selectRare(this)">사용 안 함</button>
+      <button class="toggle-btn" data-rare="1" onclick="selectRare(this)">★ 레어 칸 표시</button>
+    </div>
+    <div class="setting-hint">★ 칸은 해당하는 사람이 드문 보너스 칸이에요</div>
+  </div>
+
+  <div class="setting-group">
+    <div class="setting-label">제한시간</div>
+    <div class="timer-row">
+      <input type="number" class="timer-input" id="timer-minutes" value="10" min="1" max="60" placeholder="분">
+      <span style="color:#64748b;font-size:13px;">분</span>
+      <button class="timer-start-btn" id="timer-btn" onclick="toggleTimer()">▶ 타이머 시작</button>
+    </div>
+    <div class="timer-display" id="timer-display">10:00</div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="qr-section">
+    <div class="qr-section-title">📲 참가자 QR 코드</div>
+    <div class="qr-canvas-wrap">
+      <div id="qr-canvas"></div>
+    </div>
+    <div class="qr-link-box" id="qr-link" onclick="copyLink()">링크 생성 중...</div>
+    <button class="copy-btn" onclick="copyLink()">🔗 링크 복사</button>
+    <div class="copy-toast" id="copy-toast"></div>
+  </div>
+
+</div>
+
+<!-- ══ 패널 B: 코너이동 상황 질문 ══ -->
+<div id="panel-questions" class="panel">
+
+  <div class="setting-group">
+    <div class="setting-label">출제 축 선택</div>
+    <div class="axis-filter">
+      <button class="axis-filter-btn selected" data-axis="all" onclick="selectAxis(this)">전체</button>
+      <button class="axis-filter-btn" data-axis="E/I" onclick="selectAxis(this)">E·I</button>
+      <button class="axis-filter-btn" data-axis="S/N" onclick="selectAxis(this)">S·N</button>
+      <button class="axis-filter-btn" data-axis="T/F" onclick="selectAxis(this)">T·F</button>
+      <button class="axis-filter-btn" data-axis="P/J" onclick="selectAxis(this)">P·J</button>
+    </div>
+  </div>
+
+  <button class="pick-btn" onclick="pickQuestion()">🎯 질문 뽑기</button>
+
+  <div class="question-card" id="question-card">
+    <div class="q-axis-label" id="q-axis-label">E/I</div>
+    <div class="q-ab-wrap">
+      <div class="q-side a-side" id="q-side-a">—</div>
+      <div class="q-vs">VS</div>
+      <div class="q-side b-side" id="q-side-b">—</div>
+    </div>
+    <div class="q-remaining" id="q-remaining"></div>
+  </div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+/* ── 상태 ── */
+const STATE = { size: 4, free: 0, rare: 0 };
+let timerInterval = null;
+let timerSecs = 0;
+let timerRunning = false;
+
+/* ── 탭 전환 ── */
+function switchTab(tab) {
+  document.querySelectorAll('.tab-btn').forEach((b, i) => {
+    b.classList.toggle('active', (i === 0 && tab === 'bingo') || (i === 1 && tab === 'questions'));
+  });
+  document.getElementById('panel-bingo').classList.toggle('active', tab === 'bingo');
+  document.getElementById('panel-questions').classList.toggle('active', tab === 'questions');
+}
+
+/* ── 설정 토글 ── */
+function selectSize(btn) {
+  document.querySelectorAll('[data-size]').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  STATE.size = parseInt(btn.dataset.size);
+  updateQR();
+}
+function selectFree(btn) {
+  document.querySelectorAll('[data-free]').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  STATE.free = parseInt(btn.dataset.free);
+  updateQR();
+}
+function selectRare(btn) {
+  document.querySelectorAll('[data-rare]').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  STATE.rare = parseInt(btn.dataset.rare);
+  updateQR();
+}
+
+/* ── QR 생성 ── */
+let qrObj = null;
+
+function buildLink() {
+  return `https://rec-what.vercel.app/games/mbti-bingo.html?size=${STATE.size}&free=${STATE.free}&rare=${STATE.rare}`;
+}
+
+function updateQR() {
+  const link = buildLink();
+  document.getElementById('qr-link').textContent = link;
+
+  const container = document.getElementById('qr-canvas');
+  container.innerHTML = '';
+  qrObj = new QRCode(container, {
+    text: link,
+    width: 220,
+    height: 220,
+    colorDark: '#0f172a',
+    colorLight: '#ffffff',
+    correctLevel: QRCode.CorrectLevel.M
+  });
+}
+
+function copyLink() {
+  const link = buildLink();
+  navigator.clipboard.writeText(link).then(() => {
+    const toast = document.getElementById('copy-toast');
+    toast.textContent = '✓ 링크 복사됨!';
+    setTimeout(() => { toast.textContent = ''; }, 2000);
+  }).catch(() => {
+    // 클립보드 미지원 폴백
+    const el = document.createElement('textarea');
+    el.value = link;
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand('copy');
+    document.body.removeChild(el);
+    const toast = document.getElementById('copy-toast');
+    toast.textContent = '✓ 링크 복사됨!';
+    setTimeout(() => { toast.textContent = ''; }, 2000);
+  });
+}
+
+/* ── 타이머 ── */
+function toggleTimer() {
+  if (timerRunning) {
+    clearInterval(timerInterval);
+    timerRunning = false;
+    document.getElementById('timer-btn').textContent = '▶ 타이머 재시작';
+    document.getElementById('timer-btn').classList.remove('running');
+    return;
+  }
+
+  const mins = parseInt(document.getElementById('timer-minutes').value) || 10;
+  if (!timerSecs || timerSecs <= 0) timerSecs = mins * 60;
+
+  const display = document.getElementById('timer-display');
+  display.style.display = 'block';
+  display.classList.remove('warn');
+  updateTimerDisplay();
+
+  timerRunning = true;
+  document.getElementById('timer-btn').textContent = '⏸ 일시정지';
+  document.getElementById('timer-btn').classList.add('running');
+
+  timerInterval = setInterval(() => {
+    timerSecs--;
+    updateTimerDisplay();
+    if (timerSecs <= 30) display.classList.add('warn');
+    if (timerSecs <= 0) {
+      clearInterval(timerInterval);
+      timerRunning = false;
+      timerSecs = 0;
+      display.textContent = '⏰ 종료!';
+      document.getElementById('timer-btn').textContent = '▶ 다시 시작';
+      document.getElementById('timer-btn').classList.remove('running');
+    }
+  }, 1000);
+}
+
+function updateTimerDisplay() {
+  const m = Math.floor(timerSecs / 60);
+  const s = timerSecs % 60;
+  document.getElementById('timer-display').textContent = `${m}:${String(s).padStart(2,'0')}`;
+}
+
+document.getElementById('timer-minutes').addEventListener('change', () => {
+  timerSecs = 0; // 분 바꾸면 초기화
+});
+
+/* ── 상황 질문 데이터 ── */
+const QUESTIONS = [
+  { a: '쉬는 날 사람 만나기', b: '집에서 혼자', axis: 'E/I' },
+  { a: '새 모임에서 먼저 말 걸기', b: '누가 말 걸어주길', axis: 'E/I' },
+  { a: '에너지 충전은 사람들과 함께', b: '혼자만의 시간', axis: 'E/I' },
+  { a: '여행지 도착 맛집 리스트대로', b: '발길 닿는 대로', axis: 'S/N' },
+  { a: '대화 주제 현실적인 얘기', b: '상상·가능성 얘기', axis: 'S/N' },
+  { a: '설명할 때 순서대로 차근차근', b: '큰 그림부터 먼저', axis: 'S/N' },
+  { a: '친구 고민에 해결책 제시', b: '공감·위로 먼저', axis: 'T/F' },
+  { a: '결정 기준 논리·효율', b: '사람·감정 우선', axis: 'T/F' },
+  { a: '거절할 때 단호하게', b: '미안해하며 돌려서', axis: 'T/F' },
+  { a: '여행은 분 단위 계획', b: '즉흥 여행', axis: 'P/J' },
+  { a: '과제는 미리미리', b: '마감 직전 몰아서', axis: 'P/J' },
+  { a: '주말 계획 미리 정함', b: '그날 기분따라', axis: 'P/J' },
+];
+
+let shownQuestions = new Set();
+let selectedAxis = 'all';
+
+function selectAxis(btn) {
+  document.querySelectorAll('.axis-filter-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  selectedAxis = btn.dataset.axis;
+  shownQuestions.clear();
+  document.getElementById('question-card').classList.remove('visible');
+}
+
+function pickQuestion() {
+  const pool = QUESTIONS.filter(q => selectedAxis === 'all' || q.axis === selectedAxis);
+  if (pool.length === 0) return;
+
+  // 안 나온 질문 우선, 모두 나오면 초기화
+  let unshown = pool.filter(q => !shownQuestions.has(q.a));
+  if (unshown.length === 0) {
+    shownQuestions.clear();
+    unshown = pool;
+  }
+
+  const q = unshown[Math.floor(Math.random() * unshown.length)];
+  shownQuestions.add(q.a);
+
+  const card = document.getElementById('question-card');
+  card.classList.remove('visible');
+  void card.offsetWidth; // 애니메이션 재실행
+  card.classList.add('visible');
+
+  document.getElementById('q-axis-label').textContent = q.axis + ' 성향';
+  document.getElementById('q-side-a').textContent = q.a;
+  document.getElementById('q-side-b').textContent = q.b;
+
+  const remaining = pool.length - shownQuestions.size;
+  document.getElementById('q-remaining').textContent =
+    remaining > 0 ? `남은 질문 ${remaining}개` : '모든 질문을 다 뽑았어요! 다음 뽑기 시 처음부터 반복됩니다';
+}
+
+/* ── 초기화 ── */
+window.addEventListener('load', () => {
+  updateQR();
+});
+</script>
+</body>
+</html>
