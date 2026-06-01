@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="수련회 게임 추천 모음. 교회·청소년·학교 수련회, 캠프에서 쓰는 실내·야외 단체 레크리에이션. 실내 강당 게임부터 야외 활동, 팀 대항전, 야간 마무리 게임까지.">
+  <meta name="keywords" content="수련회 게임, 수련회 레크, 캠프 게임, 수련회 게임 추천, 청소년 수련회 게임, 교회 수련회 레크리에이션, 캠프 레크, 야외 단체 게임">
+  <title>수련회 게임 추천 모음 - 캠프·수련회 레크리에이션 | 레크 뭐하지?</title>
+  <!-- Open Graph / SNS 공유 -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="레크 뭐하지?">
+  <meta property="og:title" content="수련회 게임 추천 모음 - 캠프·수련회 레크리에이션 | 레크 뭐하지?">
+  <meta property="og:description" content="수련회 게임 추천 모음. 교회·청소년·학교 수련회, 캠프에서 쓰는 실내·야외 단체 레크리에이션. 실내 강당 게임부터 야외 활동, 팀 대항전, 야간 마무리 게임까지.">
+  <meta property="og:url" content="https://rec-what.vercel.app/camp-games.html">
+  <meta property="og:image" content="https://rec-what.vercel.app/og-image.png">
+  <meta property="og:locale" content="ko_KR">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="수련회 게임 추천 모음 - 캠프·수련회 레크리에이션 | 레크 뭐하지?">
+  <meta name="twitter:description" content="수련회 게임 추천 모음. 교회·청소년·학교 수련회, 캠프에서 쓰는 실내·야외 단체 레크리에이션.">
+  <meta name="twitter:image" content="https://rec-what.vercel.app/og-image.png">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/games-data.js"></script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8683975585186347"
+       crossorigin="anonymous"></script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-75JKFQWSHP"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-75JKFQWSHP');
+  </script>
+  <style>
+    .guide-header {
+      background: linear-gradient(135deg, #16a34a 0%, #0ea5e9 100%);
+      color: white;
+      padding: 48px 20px 36px;
+      text-align: center;
+    }
+    .guide-header h1 { font-size: 28px; margin-bottom: 10px; text-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    .guide-header p  { font-size: 15px; opacity: 0.9; }
+    .guide-header .tags { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-top: 14px; }
+    .guide-header .tag { background: rgba(255,255,255,0.25); padding: 4px 14px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+
+    .guide-content {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 40px 16px 64px;
+    }
+
+    .intro-box {
+      background: #f0fdf4;
+      border-radius: 14px;
+      padding: 24px;
+      margin-bottom: 28px;
+      border-left: 4px solid #16a34a;
+    }
+    .intro-box p { font-size: 15px; color: #444; line-height: 1.95; margin-bottom: 0; }
+
+    .sit-section {
+      background: white;
+      border-radius: 18px;
+      padding: 28px 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 3px 14px rgba(0,0,0,0.07);
+    }
+    .sit-badge {
+      display: inline-block;
+      padding: 5px 16px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 800;
+      margin-bottom: 12px;
+      color: white;
+    }
+    .sit-section h2 {
+      font-size: 20px;
+      font-weight: 800;
+      color: #1a1a2e;
+      margin-bottom: 10px;
+    }
+    .sit-section > p {
+      font-size: 14px;
+      color: #555;
+      line-height: 1.9;
+      margin-bottom: 16px;
+    }
+
+    .ic-wrapper { display: flex; flex-direction: column; }
+    .ic-wrapper .game-card {
+      border-radius: 18px 18px 0 0;
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+      flex: 1;
+    }
+    .ic-reason {
+      background: #fffbeb;
+      border: 2px solid #fde68a;
+      border-top: none;
+      border-radius: 0 0 18px 18px;
+      padding: 8px 18px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #92400e;
+      line-height: 1.5;
+    }
+    .ic-wrapper:hover .game-card {
+      box-shadow: 0 12px 30px rgba(255,107,53,0.15);
+      border-color: #FF6B35;
+    }
+    .ic-wrapper:hover .ic-reason {
+      border-color: #FF6B35;
+      background: #fff7ed;
+      color: #c2410c;
+    }
+
+    .tool-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 12px;
+      margin-top: 16px;
+    }
+    .tool-card {
+      display: block;
+      background: linear-gradient(160deg, #1e293b 0%, #0f172a 100%);
+      border-radius: 16px;
+      padding: 18px 16px;
+      text-decoration: none;
+      color: white;
+      border: 2px solid #334155;
+      transition: all 0.2s;
+    }
+    .tool-card:hover {
+      border-color: #16a34a;
+      transform: translateY(-3px);
+      box-shadow: 0 8px 24px rgba(22,163,74,0.28);
+      text-decoration: none;
+      color: white;
+    }
+    .tool-card-emoji { font-size: 26px; margin-bottom: 8px; display: block; }
+    .tool-card-name  { font-size: 14px; font-weight: 800; margin-bottom: 2px; }
+    .tool-card-game  { font-size: 11px; color: #94a3b8; margin-bottom: 8px; }
+    .tool-card-desc  { font-size: 12px; color: #cbd5e1; line-height: 1.6; margin-bottom: 12px; }
+    .tool-card-btn {
+      display: inline-block;
+      background: linear-gradient(135deg, #16a34a, #0ea5e9);
+      color: white;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 5px 12px;
+      border-radius: 20px;
+    }
+
+    .all-games-banner {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: white;
+      border-radius: 18px;
+      padding: 22px 24px;
+      margin-top: 32px;
+      box-shadow: 0 3px 14px rgba(0,0,0,0.07);
+      text-decoration: none;
+      color: inherit;
+      border: 2px solid transparent;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .all-games-banner:hover { border-color: #FF6B35; box-shadow: 0 6px 20px rgba(255,107,53,0.15); text-decoration: none; }
+    .all-games-icon { font-size: 32px; }
+    .all-games-text { flex: 1; }
+    .all-games-text strong { display: block; font-size: 15px; color: #1a1a2e; margin-bottom: 3px; }
+    .all-games-text span { font-size: 13px; color: #888; }
+    .all-games-arrow { font-size: 14px; font-weight: 700; color: #FF6B35; white-space: nowrap; }
+
+    .ic-grid { min-height: 60px; }
+  </style>
+</head>
+<body>
+
+  <div class="guide-header">
+    <h1>⛺ 수련회·캠프 게임 추천</h1>
+    <p>교회·학교·청소년 수련회에서 바로 쓰는 실내·야외 단체 레크리에이션</p>
+    <div class="tags">
+      <span class="tag">교회 수련회</span>
+      <span class="tag">청소년 캠프</span>
+      <span class="tag">학교 수련회</span>
+      <span class="tag">실내·야외 모두</span>
+    </div>
+  </div>
+
+  <div class="guide-content">
+    <a href="index.html" class="back-btn">← 홈으로 돌아가기</a>
+
+    <div class="intro-box">
+      <p>수련회·캠프 게임은 <strong>하루 종일 함께하는 프로그램</strong>이기 때문에 시간대와 공간에 따라 적절히 섞는 것이 중요합니다. 낮에는 에너지를 발산하는 야외 게임, 강당에서는 전체 단체 게임, 야간에는 소그룹 심리 게임으로 진행하면 수련회 전체 흐름이 자연스럽게 이어집니다. 교회 수련회, 청소년 캠프, 학교 수련회 모두에서 바로 쓸 수 있는 수련회 레크리에이션을 상황별로 정리했습니다.</p>
+    </div>
+
+    <!-- ── 섹션 1: 실내(강당) 단체 게임 ── -->
+    <div class="sit-section">
+      <div class="sit-badge" style="background:#0ea5e9;">실내·강당</div>
+      <h2>🏠 실내 강당 수련회 단체 게임</h2>
+      <p>강당처럼 넓은 실내 공간에서는 <strong>전체가 동시에 참여</strong>할 수 있는 게임이 최고예요. 준비물이 없거나 간단한 게임일수록 진행 흐름이 끊기지 않고 참가자들의 집중을 유지할 수 있습니다.</p>
+      <div class="game-grid ic-grid" id="grid-indoor"></div>
+    </div>
+
+    <!-- ── 섹션 2: 야외 활동 게임 ── -->
+    <div class="sit-section">
+      <div class="sit-badge" style="background:#16a34a;">야외 활동</div>
+      <h2>🌳 야외에서 하는 캠프·수련회 게임</h2>
+      <p>야외 운동장이나 캠프장에서는 <strong>몸을 크게 쓰고 달리는 게임</strong>이 분위기를 최고조로 올려요. 수련회 레크 중에서도 야외 활동은 참가자들이 가장 좋아하는 파트입니다. 장소가 넓을수록 더 신나게 즐길 수 있어요.</p>
+      <div class="game-grid ic-grid" id="grid-outdoor"></div>
+    </div>
+
+    <!-- ── 섹션 3: 팀 대항전 ── -->
+    <div class="sit-section">
+      <div class="sit-badge" style="background:#f97316;">팀 대항전</div>
+      <h2>🏆 수련회 팀 대항 레크리에이션</h2>
+      <p>수련회에서 팀을 나눠 경쟁하는 <strong>팀 대항 게임</strong>은 단체의 결속력을 가장 빠르게 높여줍니다. 응원과 전략이 함께 어우러지는 팀 게임으로 수련회 하이라이트를 만들어보세요.</p>
+      <div class="game-grid ic-grid" id="grid-team"></div>
+    </div>
+
+    <!-- ── 섹션 4: 조용히 마무리하는 게임 ── -->
+    <div class="sit-section">
+      <div class="sit-badge" style="background:#6366f1;">야간·마무리</div>
+      <h2>🌙 수련회 야간·마무리 게임</h2>
+      <p>수련회 저녁이나 마지막 프로그램에는 <strong>조용히 몰입하며</strong> 팀원들과 깊이 소통할 수 있는 게임이 좋아요. 온종일 에너지를 쏟은 후에도 자연스럽게 참여할 수 있는 소그룹 중심 게임들입니다.</p>
+      <div class="game-grid ic-grid" id="grid-night"></div>
+    </div>
+
+    <!-- ── 섹션 5: 바로 쓰는 진행자 도구 ── -->
+    <div class="sit-section">
+      <div class="sit-badge" style="background:#ec4899;">진행자 도구</div>
+      <h2>🎮 수련회 진행자를 위한 도구 모음</h2>
+      <p>스마트폰 하나로 타이머·역할 배정·출제기까지. 수련회 진행자가 준비 부담 없이 <strong>화면 한 장으로</strong> 게임을 이끌 수 있는 도구들입니다.</p>
+      <div class="tool-grid">
+        <a href="games/mafia-tool.html" class="tool-card">
+          <span class="tool-card-emoji">🕵️</span>
+          <div class="tool-card-name">마피아 진행 도구</div>
+          <div class="tool-card-game">마피아 게임 전용 도구</div>
+          <div class="tool-card-desc">역할 자동 배정, 밤/낮 페이즈 전환 타이머. 수련회 야간 게임에 최적.</div>
+          <span class="tool-card-btn">도구 열기 →</span>
+        </a>
+        <a href="games/bomb-pass-tool.html" class="tool-card">
+          <span class="tool-card-emoji">💣</span>
+          <div class="tool-card-name">폭탄 돌리기 타이머</div>
+          <div class="tool-card-game">폭탄 돌리기 전용 도구</div>
+          <div class="tool-card-desc">랜덤 타이머로 긴장감 극대화. 수련회 강당 게임에 딱.</div>
+          <span class="tool-card-btn">도구 열기 →</span>
+        </a>
+        <a href="games/chosung-quiz-tool.html" class="tool-card">
+          <span class="tool-card-emoji">🔤</span>
+          <div class="tool-card-name">초성퀴즈 출제기</div>
+          <div class="tool-card-game">초성퀴즈 전용 도구</div>
+          <div class="tool-card-desc">단어 입력 시 초성 자동 추출. 수련회 말씀·성경 주제 적용 가능.</div>
+          <span class="tool-card-btn">도구 열기 →</span>
+        </a>
+        <a href="games/team-relay-tool.html" class="tool-card">
+          <span class="tool-card-emoji">🏃</span>
+          <div class="tool-card-name">릴레이 미션 타이머</div>
+          <div class="tool-card-game">릴레이 미션 전용 도구</div>
+          <div class="tool-card-desc">팀 릴레이 미션 시간 측정·라운드 관리. 수련회 팀 대항전에 활용.</div>
+          <span class="tool-card-btn">도구 열기 →</span>
+        </a>
+        <a href="games/escape-timer.html" class="tool-card">
+          <span class="tool-card-emoji">⏱️</span>
+          <div class="tool-card-name">방탈출 타이머</div>
+          <div class="tool-card-game">방탈출 전용 도구</div>
+          <div class="tool-card-desc">제한 시간·힌트 카운터·경고 효과 내장. 수련회 방탈출 미션에 바로 사용.</div>
+          <span class="tool-card-btn">도구 열기 →</span>
+        </a>
+        <a href="games/balance-game-tool.html" class="tool-card">
+          <span class="tool-card-emoji">⚖️</span>
+          <div class="tool-card-name">밸런스게임 질문 뽑기</div>
+          <div class="tool-card-game">밸런스게임 전용 도구</div>
+          <div class="tool-card-desc">카테고리별 랜덤 질문 출제. 수련회 소그룹 나눔·대화 시작에 활용.</div>
+          <span class="tool-card-btn">도구 열기 →</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- ── 전체 게임 보기 ── -->
+    <a href="all-games.html" class="all-games-banner">
+      <span class="all-games-icon">📚</span>
+      <div class="all-games-text">
+        <strong>더 많은 수련회 게임을 찾고 싶다면?</strong>
+        <span>전체 게임 목록 · 장소·인원·연령 필터 지원</span>
+      </div>
+      <span class="all-games-arrow">전체 게임 보기 →</span>
+    </a>
+
+  </div>
+
+  <footer>
+    <p>© 2025 레크 뭐하지? | 모든 레크 진행자를 위한 아이디어 모음</p>
+    <p style="margin-top:8px;font-size:13px;">
+      <a href="/about.html" style="color:#bbb;">소개</a> |
+      <a href="/contact.html" style="color:#bbb;">문의</a> |
+      <a href="/privacy.html" style="color:#bbb;">개인정보처리방침</a> |
+      <a href="/terms.html" style="color:#bbb;">이용약관</a>
+    </p>
+  </footer>
+
+  <script>
+  const SECTIONS = [
+    {
+      gridId: 'grid-indoor',
+      games: [
+        { id: 'bomb-pass',    reason: '준비물 없이 30초 안에 시작. 수련회 강당 첫 게임으로 최고' },
+        { id: 'body-talk',    reason: '몸짓으로 전달하는 팀 대항 게임. 웃음 폭발 보장' },
+        { id: 'nunchigame',   reason: '준비물 제로, 전 인원 동시 참여. 수련회 단골 게임' },
+        { id: 'bingo',        reason: '주제를 말씀·성경으로 바꾸면 수련회 맞춤 게임 완성' },
+        { id: 'updown',       reason: '앉고 서는 단체 반응 게임. 숫자만 바꾸면 변형 무궁무진' }
+      ]
+    },
+    {
+      gridId: 'grid-outdoor',
+      games: [
+        { id: 'relay-race',    reason: '미션 추가 이어달리기. 수련회 운동회 하이라이트' },
+        { id: 'balloon-pop',   reason: '발목 풍선 터뜨리기. 에너지 폭발 야외 대결' },
+        { id: 'group-jumprope', reason: '단체 줄넘기로 팀 호흡 맞추기. 캠프 협동 게임' },
+        { id: 'team-relay',    reason: '릴레이 미션 팀 대항. 응원과 열기가 가득한 야외 게임' },
+        { id: 'towel-pass',    reason: '수건 들고 추격하는 박진감 넘치는 야외 캠프 게임' }
+      ]
+    },
+    {
+      gridId: 'grid-team',
+      games: [
+        { id: 'ox-quiz',           reason: '전체 단체 OX 퀴즈. 수련회 주제 맞춤으로 활용 가능' },
+        { id: 'relay-quiz',        reason: '팀 릴레이 퀴즈 배틀. 수련회 팀 대항 메인 이벤트' },
+        { id: 'team-mission-race', reason: '두뇌·체력·협동 종합 미션 레이스. 수련회 대미를 장식' },
+        { id: 'iguseong',          reason: '이구동성 팀 대항 게임. 목소리 하나로 웃음 폭발' },
+        { id: 'talent-show',       reason: '팀별 장기자랑. 수련회 마지막을 화려하게 마무리' }
+      ]
+    },
+    {
+      gridId: 'grid-night',
+      games: [
+        { id: 'mafia',          reason: '수련회 야간 게임의 정석. 심리전으로 깊은 소통 유도' },
+        { id: 'escape-mission', reason: '협동 방탈출 미션. 수련회 팀워크 미션으로 딱 맞아요' },
+        { id: 'telestrations',  reason: '그림+글 전달 게임. 소그룹에서 웃음이 끊이지 않아요' },
+        { id: 'story-creation', reason: '한 문장씩 이어가는 창작 게임. 조용히 몰입하는 시간' },
+        { id: 'truth-or-lie',   reason: '팀원의 숨겨진 이야기로 친밀감을 깊게 쌓는 마무리 게임' }
+      ]
+    }
+  ];
+
+  function renderIcCard(id, reason) {
+    const g = gamesData.find(g => g.id === id);
+    if (!g) return '';
+    return `<div class="ic-wrapper">
+      ${renderGameCard(g)}
+      <div class="ic-reason">💡 ${reason}</div>
+    </div>`;
+  }
+
+  try {
+    SECTIONS.forEach(({ gridId, games }) => {
+      const el = document.getElementById(gridId);
+      if (!el) return;
+      el.innerHTML = games.map(({ id, reason }) => renderIcCard(id, reason)).join('');
+    });
+  } catch(e) {
+    console.error('수련회 게임 페이지 오류:', e);
+  }
+  </script>
+  <script src="js/ux-helpers.js"></script>
+</body>
+</html>

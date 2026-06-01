@@ -321,6 +321,21 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://rec-what.vercel.app/mt-games.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://rec-what.vercel.app/camp-games.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://rec-what.vercel.app/family-holiday-games.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://rec-what.vercel.app/games/human-bingo.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>

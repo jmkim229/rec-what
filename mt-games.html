@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="MT 게임 추천 모음. 대학 MT, 직장 단합, 동아리 엠티에서 술 없이도 즐기는 게임 25가지. 어색함 풀기부터 팀 대항전까지 상황별로 골라 쓰세요.">
+  <meta name="keywords" content="MT 게임, MT 게임 추천, 엠티 게임, MT 레크리에이션, 대학 MT 게임, 직장 MT 게임, 단합 게임, MT 아이스브레이킹">
+  <title>MT 게임 추천 모음 - 대학·직장 엠티 레크리에이션 | 레크 뭐하지?</title>
+  <!-- Open Graph / SNS 공유 -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="레크 뭐하지?">
+  <meta property="og:title" content="MT 게임 추천 모음 - 대학·직장 엠티 레크리에이션 | 레크 뭐하지?">
+  <meta property="og:description" content="MT 게임 추천 모음. 대학 MT, 직장 단합, 동아리 엠티에서 술 없이도 즐기는 게임 25가지. 어색함 풀기부터 팀 대항전까지 상황별로 골라 쓰세요.">
+  <meta property="og:url" content="https://rec-what.vercel.app/mt-games.html">
+  <meta property="og:image" content="https://rec-what.vercel.app/og-image.png">
+  <meta property="og:locale" content="ko_KR">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="MT 게임 추천 모음 - 대학·직장 엠티 레크리에이션 | 레크 뭐하지?">
+  <meta name="twitter:description" content="MT 게임 추천 모음. 대학 MT, 직장 단합, 동아리 엠티에서 술 없이도 즐기는 게임 25가지.">
+  <meta name="twitter:image" content="https://rec-what.vercel.app/og-image.png">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="css/style.css">
+  <script src="js/games-data.js"></script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8683975585186347"
+       crossorigin="anonymous"></script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-75JKFQWSHP"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-75JKFQWSHP');
+  </script>
+  <style>
+    .guide-header {
+      background: linear-gradient(135deg, #f97316 0%, #fbbf24 100%);
+      color: white;
+      padding: 48px 20px 36px;
+      text-align: center;
+    }
+    .guide-header h1 { font-size: 28px; margin-bottom: 10px; text-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    .guide-header p  { font-size: 15px; opacity: 0.9; }
+    .guide-header .tags { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-top: 14px; }
+    .guide-header .tag { background: rgba(255,255,255,0.25); padding: 4px 14px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+
+    .guide-content {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 40px 16px 64px;
+    }
+
+    .intro-box {
+      background: #fff7ed;
+      border-radius: 14px;
+      padding: 24px;
+      margin-bottom: 28px;
+      border-left: 4px solid #f97316;
+    }
+    .intro-box p { font-size: 15px; color: #444; line-height: 1.95; margin-bottom: 0; }
+
+    .sit-section {
+      background: white;
+      border-radius: 18px;
+      padding: 28px 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 3px 14px rgba(0,0,0,0.07);
+    }
+    .sit-badge {
+      display: inline-block;
+      padding: 5px 16px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 800;
+      margin-bottom: 12px;
+      color: white;
+    }
+    .sit-section h2 {
+      font-size: 20px;
+      font-weight: 800;
+      color: #1a1a2e;
+      margin-bottom: 10px;
+    }
+    .sit-section > p {
+      font-size: 14px;
+      color: #555;
+      line-height: 1.9;
+      margin-bottom: 16px;
+    }
+
+    .ic-wrapper { display: flex; flex-direction: column; }
+    .ic-wrapper .game-card {
+      border-radius: 18px 18px 0 0;
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+      flex: 1;
+    }
+    .ic-reason {
+      background: #fffbeb;
+      border: 2px solid #fde68a;
+      border-top: none;
+      border-radius: 0 0 18px 18px;
+      padding: 8px 18px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #92400e;
+      line-height: 1.5;
+    }
+    .ic-wrapper:hover .game-card {
+      box-shadow: 0 12px 30px rgba(255,107,53,0.15);
+      border-color: #FF6B35;
+    }
+    .ic-wrapper:hover .ic-reason {
+      border-color: #FF6B35;
+      background: #fff7ed;
+      color: #c2410c;
+    }
+
+    .tool-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 12px;
+      margin-top: 16px;
+    }
+    .tool-card {
+      display: block;
+      background: linear-gradient(160deg, #1e293b 0%, #0f172a 100%);
+      border-radius: 16px;
+      padding: 18px 16px;
+      text-decoration: none;
+      color: white;
+      border: 2px solid #334155;
+      transition: all 0.2s;
+    }
+    .tool-card:hover {
+      border-color: #f97316;
+      transform: translateY(-3px);
+      box-shadow: 0 8px 24px rgba(249,115,22,0.28);
+      text-decoration: none;
+      color: white;
+    }
+    .tool-card-emoji { font-size: 26px; margin-bottom: 8px; display: block; }
+    .tool-card-name  { font-size: 14px; font-weight: 800; margin-bottom: 2px; }
+    .tool-card-game  { font-size: 11px; color: #94a3b8; margin-bottom: 8px; }
+    .tool-card-desc  { font-size: 12px; color: #cbd5e1; line-height: 1.6; margin-bottom: 12px; }
+    .tool-card-btn {
+      display: inline-block;
+      background: linear-gradient(135deg, #f97316, #ef4444);
+      color: white;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 5px 12px;
+      border-radius: 20px;
+    }
+
+    .all-games-banner {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: white;
+      border-radius: 18px;
+      padding: 22px 24px;
+      margin-top: 32px;
+      box-shadow: 0 3px 14px rgba(0,0,0,0.07);
+      text-decoration: none;
+      color: inherit;
+      border: 2px solid transparent;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .all-games-banner:hover { border-color: #FF6B35; box-shadow: 0 6px 20px rgba(255,107,53,0.15); text-decoration: none; }
+    .all-games-icon { font-size: 32px; }
+    .all-games-text { flex: 1; }
+    .all-games-text strong { display: block; font-size: 15px; color: #1a1a2e; margin-bottom: 3px; }
+    .all-games-text span { font-size: 13px; color: #888; }
+    .all-games-arrow { font-size: 14px; font-weight: 700; color: #FF6B35; white-space: nowrap; }
+
+    .ic-grid { min-height: 60px; }
+  </style>
+</head>
+<body>
+
+  <div class="guide-header">
+    <h1>🎉 MT 게임 추천 모음</h1>
+    <p>대학·직장·동아리 MT에서 바로 쓰는 검증된 레크리에이션</p>
+    <div class="tags">
+      <span class="tag">대학 MT</span>
+      <span class="tag">직장 단합</span>
+      <span class="tag">동아리 엠티</span>
+      <span class="tag">술 없이도 OK</span>
+    </div>
+  </div>
+
+  <div class="guide-content">
+    <a href="index.html" class="back-btn">← 홈으로 돌아가기</a>
+
+    <div class="intro-box">
+      <p>MT 게임은 서로 어색한 사이를 빠르게 녹이고, 자연스럽게 팀워크를 쌓는 게 핵심입니다. 대학교 MT, 직장 워크숍·단합 대회, 동아리 엠티 등 어떤 자리든 <strong>준비물이 적고 누구나 쉽게 참여할 수 있는 게임</strong>이 최고예요. 술 없이도 충분히 분위기가 달아오르는 무알코올 친화 게임들로만 골랐습니다. 아래에서 MT 상황에 맞는 게임을 골라보세요.</p>
+    </div>
+
+    <!-- ── 섹션 1: 어색함 푸는 첫 게임 ── -->
+    <div class="sit-section">
+      <div class="sit-badge" style="background:#f97316;">어색함 풀기</div>
+      <h2>👋 어색함 푸는 MT 첫 게임</h2>
+      <p>MT 첫 자리는 서로 이름도 모르는 상태일 때가 많아요. <strong>정답이 없고 모두가 동시에 참여</strong>할 수 있는 게임부터 시작하면 어색함이 빠르게 녹아듭니다. 자기소개 대신 게임이 분위기를 만들어주는 MT 게임 추천입니다.</p>
+      <div class="game-grid ic-grid" id="grid-ice"></div>
+    </div>
+
+    <!-- ── 섹션 2: 분위기 띄우는 액티브 게임 ── -->
+    <div class="sit-section">
+      <div class="sit-badge" style="background:#ef4444;">에너지 폭발</div>
+      <h2>🔥 분위기 띄우는 액티브 MT 게임</h2>
+      <p>어색함이 어느 정도 풀렸다면, 이제 에너지를 폭발시킬 차례예요. <strong>몸을 써서 웃음이 터지는</strong> 게임들은 MT의 하이라이트가 됩니다. 준비물이 적거나 없어서 언제 어디서든 바로 시작할 수 있어요.</p>
+      <div class="game-grid ic-grid" id="grid-energy"></div>
+    </div>
+
+    <!-- ── 섹션 3: 머리 쓰는 두뇌·심리 게임 ── -->
+    <div class="sit-section">
+      <div class="sit-badge" style="background:#6366f1;">두뇌·심리전</div>
+      <h2>🧠 머리 쓰는 두뇌·심리 MT 게임</h2>
+      <p>에너지가 넘치는 게임 이후에는 <strong>심리전과 추리가 담긴 게임</strong>으로 전환하면 좋아요. 조용히 앉아서 하지만 긴장감과 흥미는 전혀 떨어지지 않습니다. 소그룹 MT나 야간 프로그램에 특히 추천하는 MT 게임들입니다.</p>
+      <div class="game-grid ic-grid" id="grid-brain"></div>
+    </div>
+
+    <!-- ── 섹션 4: 대규모로 다 같이 ── -->
+    <div class="sit-section">
+      <div class="sit-badge" style="background:#22c55e;">대규모 전체</div>
+      <h2>🏟️ 대규모로 다 같이 하는 MT 게임</h2>
+      <p>20명 이상이 모인 MT에서는 <strong>전체가 한 번에 참여</strong>할 수 있는 게임이 필요해요. 팀을 나눠 경쟁 구도를 만들면 응원과 열기가 자연스럽게 달아오릅니다. MT 최종 게임이나 클라이맥스 이벤트로 딱 맞는 게임들입니다.</p>
+      <div class="game-grid ic-grid" id="grid-large"></div>
+    </div>
+
+    <!-- ── 섹션 5: 바로 쓰는 진행자 도구 ── -->
+    <div class="sit-section">
+      <div class="sit-badge" style="background:#ec4899;">진행자 도구</div>
+      <h2>🎮 MT 진행자를 위한 도구 모음</h2>
+      <p>스마트폰 하나로 타이머·역할 배정·질문 뽑기까지 해결하는 도구예요. 진행자가 준비 부담 없이 <strong>화면 한 장으로</strong> MT 게임을 이끌 수 있습니다.</p>
+      <div class="tool-grid">
+        <a href="games/bomb-pass-tool.html" class="tool-card">
+          <span class="tool-card-emoji">💣</span>
+          <div class="tool-card-name">폭탄 돌리기 타이머</div>
+          <div class="tool-card-game">폭탄 돌리기 전용 도구</div>
+          <div class="tool-card-desc">랜덤 타이머로 폭발 시점을 예측 불가하게. 긴장감 극대화.</div>
+          <span class="tool-card-btn">도구 열기 →</span>
+        </a>
+        <a href="games/mafia-tool.html" class="tool-card">
+          <span class="tool-card-emoji">🕵️</span>
+          <div class="tool-card-name">마피아 진행 도구</div>
+          <div class="tool-card-game">마피아 게임 전용 도구</div>
+          <div class="tool-card-desc">역할 자동 배정, 밤/낮 페이즈 전환 타이머. 처음 진행해도 OK.</div>
+          <span class="tool-card-btn">도구 열기 →</span>
+        </a>
+        <a href="games/liar-game-tool.html" class="tool-card">
+          <span class="tool-card-emoji">🕵️</span>
+          <div class="tool-card-name">라이어 게임 도구</div>
+          <div class="tool-card-game">라이어 게임 전용 도구</div>
+          <div class="tool-card-desc">카테고리별 단어 자동 배정. 라이어에게만 다른 단어 표시.</div>
+          <span class="tool-card-btn">도구 열기 →</span>
+        </a>
+        <a href="games/balance-game-tool.html" class="tool-card">
+          <span class="tool-card-emoji">⚖️</span>
+          <div class="tool-card-name">밸런스게임 질문 뽑기</div>
+          <div class="tool-card-game">밸런스게임 전용 도구</div>
+          <div class="tool-card-desc">카테고리별 랜덤 질문 출제, 즉석 득표 집계. MT 대화 시작에 최고.</div>
+          <span class="tool-card-btn">도구 열기 →</span>
+        </a>
+        <a href="games/speedquiz-tool.html" class="tool-card">
+          <span class="tool-card-emoji">⚡</span>
+          <div class="tool-card-name">스피드 퀴즈 도구</div>
+          <div class="tool-card-game">스피드 퀴즈 전용 도구</div>
+          <div class="tool-card-desc">타이머·점수판으로 팀 대항 스피드 퀴즈를 손쉽게 진행.</div>
+          <span class="tool-card-btn">도구 열기 →</span>
+        </a>
+        <a href="games/iguseong-tool.html" class="tool-card">
+          <span class="tool-card-emoji">🎤</span>
+          <div class="tool-card-name">이구동성 출제기</div>
+          <div class="tool-card-game">이구동성 전용 도구</div>
+          <div class="tool-card-desc">팀원 수에 맞는 단어만 랜덤 출제. 글자 수가 팀 인원과 딱!</div>
+          <span class="tool-card-btn">도구 열기 →</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- ── 전체 게임 보기 ── -->
+    <a href="all-games.html" class="all-games-banner">
+      <span class="all-games-icon">📚</span>
+      <div class="all-games-text">
+        <strong>더 많은 MT 게임을 찾고 싶다면?</strong>
+        <span>전체 게임 목록 · 장소·인원·연령 필터 지원</span>
+      </div>
+      <span class="all-games-arrow">전체 게임 보기 →</span>
+    </a>
+
+  </div>
+
+  <footer>
+    <p>© 2025 레크 뭐하지? | 모든 레크 진행자를 위한 아이디어 모음</p>
+    <p style="margin-top:8px;font-size:13px;">
+      <a href="/about.html" style="color:#bbb;">소개</a> |
+      <a href="/contact.html" style="color:#bbb;">문의</a> |
+      <a href="/privacy.html" style="color:#bbb;">개인정보처리방침</a> |
+      <a href="/terms.html" style="color:#bbb;">이용약관</a>
+    </p>
+  </footer>
+
+  <script>
+  const SECTIONS = [
+    {
+      gridId: 'grid-ice',
+      games: [
+        { id: 'truth-or-lie', reason: '세 가지 중 거짓말 하나! 부담 없이 서로를 알아가는 MT 단골 게임' },
+        { id: 'balance-game', reason: '취향 공유 한 번으로 대화가 술술. 무알코올 MT 첫 게임의 정석' },
+        { id: 'guess-who',    reason: '익명 정보를 맞히며 팀원의 의외의 모습에 자연스럽게 친해짐' },
+        { id: 'mind-match',   reason: '얼마나 생각이 통하는지 바로 확인하는 공감 게임' },
+        { id: 'bingo',        reason: '이름 빙고로 모든 참가자를 자연스럽게 연결. 인원 제한 없음' }
+      ]
+    },
+    {
+      gridId: 'grid-energy',
+      games: [
+        { id: 'bomb-pass',    reason: '준비물 없이 30초 안에 시작. 긴장감과 웃음이 동시에 폭발' },
+        { id: 'nunchigame',   reason: '눈치 싸움으로 웃음 폭발, 준비물 제로의 MT 액티브 게임' },
+        { id: 'throne-battle', reason: '진화 가위바위보 10명+ 단체 게임. 에너지 폭발 보장' },
+        { id: 'iguseong',     reason: '동시에 한 글자씩 외치는 웃음 폭발 MT 팀 대항 게임' },
+        { id: 'balloon-volleyball', reason: '풍선 배구로 팀 대항! 실내 어디서든 신나게 즐길 수 있어요' }
+      ]
+    },
+    {
+      gridId: 'grid-brain',
+      games: [
+        { id: 'mafia',         reason: '심리전과 추리의 MT 야간 게임. 진행자 도구로 쉽게 진행' },
+        { id: 'liar-game',     reason: '라이어를 찾아라! 4~15명 소그룹 MT 심리 추리 게임' },
+        { id: 'speedquiz',     reason: '팀 대항 스피드 퀴즈 배틀. MT 퀴즈 이벤트로 딱' },
+        { id: 'wordchain',     reason: '끝말잇기에 제한 시간·벌칙 추가. 순발력과 어휘력 대결' },
+        { id: 'escape-mission', reason: '협동 방탈출 미션으로 팀워크를 자연스럽게 쌓는 게임' }
+      ]
+    },
+    {
+      gridId: 'grid-large',
+      games: [
+        { id: 'ox-quiz',          reason: 'OX 퀴즈는 100명도 OK! MT 주제 맞춤으로 만들어 쓰면 최고' },
+        { id: 'relay-quiz',       reason: '팀 릴레이 퀴즈 대결. 상식·팀 관련 문제로 커스텀 가능' },
+        { id: 'photo-mission',    reason: '팀 포토 미션으로 자연스러운 협동과 창의력 발휘' },
+        { id: 'team-mission-race', reason: '두뇌·체력·협동 종합 미션 레이스. MT 클라이맥스 이벤트' },
+        { id: 'wave',             reason: '30명+ 전체가 파도타기로 하나 됨을 느끼는 마무리 게임' }
+      ]
+    }
+  ];
+
+  function renderIcCard(id, reason) {
+    const g = gamesData.find(g => g.id === id);
+    if (!g) return '';
+    return `<div class="ic-wrapper">
+      ${renderGameCard(g)}
+      <div class="ic-reason">💡 ${reason}</div>
+    </div>`;
+  }
+
+  try {
+    SECTIONS.forEach(({ gridId, games }) => {
+      const el = document.getElementById(gridId);
+      if (!el) return;
+      el.innerHTML = games.map(({ id, reason }) => renderIcCard(id, reason)).join('');
+    });
+  } catch(e) {
+    console.error('MT 게임 페이지 오류:', e);
+  }
+  </script>
+  <script src="js/ux-helpers.js"></script>
+</body>
+</html>
