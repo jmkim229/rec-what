@@ -834,6 +834,91 @@ const gamesData = [
       duration: 'short',
       situation: ['ice-break', 'no-prep']
     }
+  },
+  {
+    id: 'twenty-questions',
+    emoji: '🤔',
+    title: '스무고개',
+    description: '스무 번의 질문으로 정답을 추리하라! 출제자가 곧 진행자라 알아서 굴러가는 추리 게임. 질문 카운터 도구 포함',
+    url: 'games/twenty-questions.html',
+    people: '3명+',
+    time: '10~20분',
+    prep: '없음',
+    tags: {
+      location: ['indoor'],
+      groupSize: ['small', 'medium'],
+      ageGroup: ['kid-young', 'kid-old', 'teen', 'adult'],
+      duration: 'medium',
+      situation: ['brain', 'no-prep']
+    }
+  },
+  {
+    id: '007-bang',
+    emoji: '🔫',
+    title: '007빵',
+    description: '공! 공! 칠! 빵! 으악! 총 맞은 사람 옆자리가 비명 지르는 리듬 순발력 게임. 룰만 알려주면 알아서 굴러감',
+    url: 'games/007-bang.html',
+    people: '4명+',
+    time: '5~15분',
+    prep: '없음',
+    tags: {
+      location: ['indoor'],
+      groupSize: ['small', 'medium'],
+      ageGroup: ['kid-old', 'teen', 'adult'],
+      duration: 'short',
+      situation: ['energy', 'no-prep']
+    }
+  },
+  {
+    id: 'chamchamcham',
+    emoji: '👉',
+    title: '참참참',
+    description: '손 방향을 피해 고개를 돌려라! 설명 10초면 시작하는 국민 순발력 게임. 토너먼트로 확장 가능',
+    url: 'games/chamchamcham.html',
+    people: '2명+',
+    time: '5~15분',
+    prep: '없음',
+    tags: {
+      location: ['both'],
+      groupSize: ['small', 'medium'],
+      ageGroup: ['young', 'kid-young', 'kid-old', 'teen', 'adult'],
+      duration: 'short',
+      situation: ['ice-break', 'energy', 'no-prep']
+    }
+  },
+  {
+    id: '369-game',
+    emoji: '👏',
+    title: '369 게임',
+    description: '3, 6, 9가 들어간 숫자엔 말 대신 박수! 숫자 세다 무너지는 두뇌 순발력 게임. 30번대가 최대 고비',
+    url: 'games/369-game.html',
+    people: '4명+',
+    time: '5~15분',
+    prep: '없음',
+    tags: {
+      location: ['indoor'],
+      groupSize: ['small', 'medium'],
+      ageGroup: ['kid-young', 'kid-old', 'teen', 'adult'],
+      duration: 'short',
+      situation: ['brain', 'no-prep']
+    }
+  },
+  {
+    id: 'dangyeonhaji',
+    emoji: '😎',
+    title: '당연하지 게임',
+    description: '어떤 질문에도 정색하고 "당연하지!" 웃음 터지면 탈락. 참가자끼리 서로 무너뜨리는 폭소 게임',
+    url: 'games/dangyeonhaji.html',
+    people: '4명+',
+    time: '10~20분',
+    prep: '없음',
+    tags: {
+      location: ['indoor'],
+      groupSize: ['small', 'medium'],
+      ageGroup: ['teen', 'adult'],
+      duration: 'medium',
+      situation: ['ice-break', 'no-prep']
+    }
   }
 ];
 
