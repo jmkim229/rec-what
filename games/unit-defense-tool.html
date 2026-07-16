@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="description" content="유닛 디펜스 사령관 도구. 코인 자동 적립, 유닛 소환 상점, 유닛 랜덤 뽑기, 경기 타이머, 서든데스 더블 코인까지. 각 팀 사령관의 폰에서 사용.">
+  <!-- Open Graph / SNS 공유 -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="레크 뭐하지?">
+  <meta property="og:title" content="🏰 유닛 디펜스 사령관 도구 | 레크 뭐하지?">
+  <meta property="og:description" content="유닛 디펜스 사령관 도구. 코인 자동 적립, 유닛 소환 상점, 유닛 랜덤 뽑기, 경기 타이머, 서든데스 더블 코인까지.">
+  <meta property="og:url" content="https://rec-what.vercel.app/games/unit-defense-tool.html">
+  <meta property="og:image" content="https://rec-what.vercel.app/og-image.png">
+  <meta property="og:locale" content="ko_KR">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="🏰 유닛 디펜스 사령관 도구 | 레크 뭐하지?">
+  <meta name="twitter:description" content="유닛 디펜스 사령관 도구. 코인 자동 적립, 유닛 소환 상점, 유닛 랜덤 뽑기, 경기 타이머, 서든데스 더블 코인까지.">
+  <meta name="twitter:image" content="https://rec-what.vercel.app/og-image.png">
+  <title>🏰 유닛 디펜스 사령관 도구 | 레크 뭐하지?</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif;
+      background: #0f172a;
+      color: #f1f5f9;
+      min-height: 100vh;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+      overflow-x: hidden;
+    }
+
+    /* ── 헤더 ── */
+    .tool-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 11px 14px;
+      background: rgba(255,255,255,0.04);
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+    }
+    .back-link {
+      color: #a78bfa;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+    .back-link:hover { color: #c4b5fd; }
+    .header-title {
+      font-size: 15px;
+      font-weight: 800;
+      color: #f1f5f9;
+      flex: 1;
+    }
+    .team-badge {
+      background: #1e293b;
+      border-radius: 10px;
+      padding: 5px 10px;
+      font-size: 12px;
+      font-weight: 800;
+      color: #fbbf24;
+    }
+
+    .screen { display: none; }
+    .screen.active { display: block; }
+
+    /* ══════════ 설정 화면 ══════════ */
+    .setup-wrap {
+      max-width: 520px;
+      margin: 0 auto;
+      padding: 18px 16px 30px;
+    }
+    .setup-title {
+      font-size: 13px;
+      font-weight: 800;
+      color: #94a3b8;
+      margin: 18px 0 8px;
+    }
+    .opt-row {
+      display: flex;
+      gap: 7px;
+      flex-wrap: wrap;
+    }
+    .opt-btn {
+      flex: 1;
+      min-width: 70px;
+      padding: 12px 8px;
+      border-radius: 12px;
+      border: 1.5px solid #1e293b;
+      background: #1e293b;
+      color: #94a3b8;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s;
+      text-align: center;
+    }
+    .opt-btn.active {
+      border-color: #fbbf24;
+      background: rgba(251,191,36,0.12);
+      color: #fbbf24;
+    }
+    .setup-desc { font-size: 11px; color: #475569; margin-top: 5px; }
+
+    .start-btn {
+      width: 100%;
+      margin-top: 26px;
+      padding: 18px;
+      border-radius: 16px;
+      border: none;
+      background: linear-gradient(135deg, #b45309, #fbbf24);
+      color: #0f172a;
+      font-size: 18px;
+      font-weight: 900;
+      cursor: pointer;
+      font-family: inherit;
+      box-shadow: 0 6px 24px rgba(251,191,36,0.35);
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .start-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(251,191,36,0.5); }
+    .start-btn:active { transform: scale(0.97); }
+    .draw-link-btn {
+      width: 100%;
+      margin-top: 10px;
+      padding: 13px;
+      border-radius: 13px;
+      border: 1.5px solid #334155;
+      background: transparent;
+      color: #94a3b8;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s;
+    }
+    .draw-link-btn:hover { border-color: #a78bfa; color: #c4b5fd; }
+
+    /* ══════════ 유닛 뽑기 화면 ══════════ */
+    .draw-wrap {
+      max-width: 520px;
+      margin: 0 auto;
+      padding: 18px 16px 30px;
+      text-align: center;
+    }
+    .draw-info { font-size: 13px; color: #94a3b8; margin-bottom: 16px; line-height: 1.5; }
+    .draw-card {
+      background: #1e293b;
+      border: 2px solid #334155;
+      border-radius: 22px;
+      padding: 34px 20px;
+      margin-bottom: 14px;
+      min-height: 210px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    .draw-card.revealed {
+      border-color: #fbbf24;
+      background: rgba(251,191,36,0.07);
+      animation: cardPop 0.35s cubic-bezier(0.34,1.5,0.64,1) both;
+    }
+    @keyframes cardPop {
+      from { transform: scale(0.75) rotateY(90deg); opacity: 0; }
+      to   { transform: scale(1) rotateY(0); opacity: 1; }
+    }
+    .draw-emoji { font-size: 64px; margin-bottom: 10px; }
+    .draw-name { font-size: 26px; font-weight: 900; color: #fbbf24; margin-bottom: 6px; }
+    .draw-trait { font-size: 13px; color: #94a3b8; line-height: 1.5; }
+    .draw-count { font-size: 12px; color: #475569; margin-bottom: 12px; font-weight: 700; }
+    .draw-btn {
+      width: 100%;
+      padding: 16px;
+      border-radius: 15px;
+      border: none;
+      background: linear-gradient(135deg, #6d28d9, #a78bfa);
+      color: white;
+      font-size: 17px;
+      font-weight: 800;
+      cursor: pointer;
+      font-family: inherit;
+      box-shadow: 0 5px 18px rgba(139,92,246,0.35);
+      transition: transform 0.15s;
+    }
+    .draw-btn:active { transform: scale(0.97); }
+    .drawn-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      justify-content: center;
+      margin-top: 14px;
+      min-height: 24px;
+    }
+    .drawn-chip {
+      font-size: 12px;
+      font-weight: 700;
+      padding: 5px 10px;
+      border-radius: 14px;
+      background: #1e293b;
+      border: 1px solid #334155;
+      color: #94a3b8;
+    }
+    .draw-back {
+      margin-top: 16px;
+      padding: 11px 20px;
+      border-radius: 11px;
+      border: 1.5px solid #334155;
+      background: transparent;
+      color: #64748b;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    /* ══════════ 플레이 화면 ══════════ */
+    /* 타이머 바 */
+    .timer-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 14px;
+      background: rgba(255,255,255,0.03);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .match-time {
+      font-size: 20px;
+      font-weight: 900;
+      color: #f1f5f9;
+      font-variant-numeric: tabular-nums;
+    }
+    .match-time.sudden { color: #f87171; animation: blink 1s infinite; }
+    @keyframes blink { 50% { opacity: 0.45; } }
+    .double-badge {
+      font-size: 11px;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 12px;
+      background: rgba(248,113,113,0.15);
+      border: 1px solid rgba(248,113,113,0.4);
+      color: #f87171;
+      display: none;
+    }
+    .double-badge.on { display: inline-block; animation: blink 1s infinite; }
+    .pause-btn {
+      padding: 6px 12px;
+      border-radius: 10px;
+      border: 1.5px solid #334155;
+      background: transparent;
+      color: #94a3b8;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    /* 코인 영역 */
+    .coin-area {
+      text-align: center;
+      padding: 16px 16px 6px;
+    }
+    .coin-label { font-size: 12px; font-weight: 700; color: #64748b; }
+    .coin-num {
+      font-size: clamp(64px, 17vmin, 104px);
+      font-weight: 900;
+      color: #fbbf24;
+      line-height: 1.05;
+      letter-spacing: -2px;
+      user-select: none;
+    }
+    .coin-num.pop { animation: coinPop 0.3s cubic-bezier(0.34,1.56,0.64,1); }
+    @keyframes coinPop {
+      0% { transform: scale(1); }
+      40% { transform: scale(1.15); }
+      100% { transform: scale(1); }
+    }
+    /* 다음 코인 진행 바 */
+    .coin-progress {
+      max-width: 260px;
+      height: 8px;
+      background: #1e293b;
+      border-radius: 6px;
+      margin: 6px auto 0;
+      overflow: hidden;
+    }
+    .coin-progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #b45309, #fbbf24);
+      border-radius: 6px;
+      transition: width 0.2s linear;
+    }
+    .coin-adjust {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      margin-top: 8px;
+    }
+    .adj-btn {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      border: 1.5px solid #334155;
+      background: #1e293b;
+      color: #fbbf24;
+      font-size: 17px;
+      font-weight: 800;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    /* 유닛 상점 */
+    .shop-wrap {
+      padding: 12px 14px 16px;
+      max-width: 560px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    .shop-title { font-size: 12px; font-weight: 800; color: #475569; margin-bottom: 8px; text-align: center; }
+    .shop-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(96px, 1fr));
+      gap: 8px;
+    }
+    .unit-btn {
+      padding: 13px 6px 11px;
+      border-radius: 15px;
+      border: 1.5px solid #334155;
+      background: #1e293b;
+      cursor: pointer;
+      font-family: inherit;
+      text-align: center;
+      transition: all 0.15s;
+      user-select: none;
+    }
+    .unit-btn:not(:disabled):hover { border-color: #fbbf24; transform: translateY(-2px); }
+    .unit-btn:not(:disabled):active { transform: scale(0.95); }
+    .unit-btn:disabled { opacity: 0.35; cursor: default; }
+    .u-emoji { font-size: 30px; display: block; }
+    .u-name { font-size: 13px; font-weight: 800; color: #f1f5f9; display: block; margin-top: 3px; }
+    .u-cost { font-size: 12px; font-weight: 800; color: #fbbf24; display: block; margin-top: 2px; }
+    .u-trait { font-size: 9.5px; color: #64748b; display: block; margin-top: 3px; line-height: 1.3; }
+
+    /* 소환 로그 */
+    .log-area {
+      padding: 0 14px 20px;
+      max-width: 560px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    .log-title { font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 6px; text-align: center; }
+    .summon-log {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      justify-content: center;
+      min-height: 22px;
+    }
+    .s-chip {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 9px;
+      border-radius: 13px;
+      background: rgba(251,191,36,0.1);
+      border: 1px solid rgba(251,191,36,0.3);
+      color: #fbbf24;
+      animation: chipIn 0.2s ease both;
+    }
+    @keyframes chipIn { from { opacity: 0; transform: scale(0.6); } to { opacity: 1; transform: scale(1); } }
+    .reset-row {
+      display: flex;
+      gap: 8px;
+      margin-top: 14px;
+    }
+    .sub-btn {
+      flex: 1;
+      padding: 10px;
+      border-radius: 11px;
+      border: 1.5px solid #1e293b;
+      background: transparent;
+      color: #64748b;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .sub-btn:hover { border-color: #334155; color: #94a3b8; }
+
+    /* 소환 오버레이 */
+    .summon-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15,23,42,0.93);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 60;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .summon-overlay.show { display: flex; }
+    .so-emoji { font-size: 110px; animation: soIn 0.4s cubic-bezier(0.34,1.5,0.64,1) both; }
+    .so-text {
+      font-size: 38px;
+      font-weight: 900;
+      color: #fbbf24;
+      letter-spacing: -1px;
+      animation: soIn 0.4s 0.05s cubic-bezier(0.34,1.5,0.64,1) both;
+    }
+    .so-sub { font-size: 14px; color: #94a3b8; font-weight: 700; animation: soIn 0.4s 0.1s both; }
+    @keyframes soIn {
+      from { transform: scale(0.5) translateY(30px); opacity: 0; }
+      to   { transform: scale(1) translateY(0); opacity: 1; }
+    }
+  </style>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-75JKFQWSHP"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-75JKFQWSHP');
+  </script>
+</head>
+<body>
+
+<!-- ── 헤더 ── -->
+<div class="tool-header">
+  <a href="unit-defense.html" class="back-link">← 게임 설명</a>
+  <span class="header-title">🏰 유닛 디펜스 사령관 도구</span>
+  <span class="team-badge" id="coinRateBadge">8초/1코인</span>
+</div>
+
+<!-- ══════════ 설정 화면 ══════════ -->
+<div class="screen active" id="setupScreen">
+  <div class="setup-wrap">
+
+    <div class="setup-title">⏱️ 코인 적립 속도</div>
+    <div class="opt-row" id="rateRow">
+      <button class="opt-btn" data-v="6">6초</button>
+      <button class="opt-btn active" data-v="8">8초</button>
+      <button class="opt-btn" data-v="10">10초</button>
+    </div>
+    <div class="setup-desc">1코인이 쌓이는 데 걸리는 시간. 빠를수록 정신없는 난타전!</div>
+
+    <div class="setup-title">💰 시작 코인</div>
+    <div class="opt-row" id="startCoinRow">
+      <button class="opt-btn" data-v="0">0</button>
+      <button class="opt-btn active" data-v="3">3</button>
+      <button class="opt-btn" data-v="5">5</button>
+    </div>
+    <div class="setup-desc">경기 시작과 동시에 보유하는 코인</div>
+
+    <div class="setup-title">⏰ 경기 시간</div>
+    <div class="opt-row" id="timeRow">
+      <button class="opt-btn active" data-v="5">5분</button>
+      <button class="opt-btn" data-v="7">7분</button>
+      <button class="opt-btn" data-v="10">10분</button>
+      <button class="opt-btn" data-v="0">무제한</button>
+    </div>
+    <div class="setup-desc">시간 종료 후엔 서든데스(코인 2배)로 전환됩니다</div>
+
+    <div class="setup-title">⚡ 더블 코인 타임</div>
+    <div class="opt-row" id="doubleRow">
+      <button class="opt-btn active" data-v="1">마지막 1분</button>
+      <button class="opt-btn" data-v="2">마지막 2분</button>
+      <button class="opt-btn" data-v="-1">없음</button>
+    </div>
+    <div class="setup-desc">경기 후반 코인이 2배 속도로 쌓여 총력전 유도</div>
+
+    <button class="start-btn" onclick="startMatch()">⚔️ 경기 시작!</button>
+    <button class="draw-link-btn" onclick="showScreen('drawScreen')">🎴 유닛 뽑기 먼저 하기</button>
+  </div>
+</div>
+
+<!-- ══════════ 유닛 뽑기 화면 ══════════ -->
+<div class="screen" id="drawScreen">
+  <div class="draw-wrap">
+    <div class="draw-info">사령관을 제외한 팀원이 한 명씩 버튼을 눌러<br>자기 유닛을 뽑으세요! (병종이 골고루 섞여 나옵니다)</div>
+
+    <div class="draw-card" id="drawCard">
+      <div class="draw-count" id="drawCount"></div>
+      <div class="draw-emoji" id="drawEmoji">🎴</div>
+      <div class="draw-name" id="drawName">유닛 카드</div>
+      <div class="draw-trait" id="drawTrait">버튼을 눌러 병종을 뽑으세요</div>
+    </div>
+
+    <button class="draw-btn" onclick="drawUnit()">🎴 유닛 뽑기</button>
+
+    <div class="drawn-list" id="drawnList"></div>
+
+    <button class="draw-back" onclick="resetDraw()">🔄 뽑기 초기화</button>
+    <button class="draw-back" onclick="showScreen('setupScreen')">← 설정으로</button>
+  </div>
+</div>
+
+<!-- ══════════ 플레이 화면 ══════════ -->
+<div class="screen" id="playScreen">
+
+  <div class="timer-bar">
+    <span class="match-time" id="matchTime">5:00</span>
+    <span class="double-badge" id="doubleBadge">⚡ 더블 코인!</span>
+    <button class="pause-btn" id="pauseBtn" onclick="togglePause()">⏸ 일시정지</button>
+  </div>
+
+  <div class="coin-area">
+    <div class="coin-label">보유 코인</div>
+    <div class="coin-num" id="coinNum">0</div>
+    <div class="coin-progress"><div class="coin-progress-fill" id="coinFill"></div></div>
+    <div class="coin-adjust">
+      <button class="adj-btn" onclick="adjustCoin(-1)">−</button>
+      <button class="adj-btn" onclick="adjustCoin(1)">+</button>
+    </div>
+  </div>
+
+  <div class="shop-wrap">
+    <div class="shop-title">⚔️ 유닛 소환 (버튼을 누르면 코인 차감)</div>
+    <div class="shop-grid" id="shopGrid"></div>
+  </div>
+
+  <div class="log-area">
+    <div class="log-title">소환 기록</div>
+    <div class="summon-log" id="summonLog"></div>
+    <div class="reset-row">
+      <button class="sub-btn" onclick="undoSummon()">↩️ 소환 무르기</button>
+      <button class="sub-btn" onclick="endMatch()">🏁 경기 종료 (설정으로)</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- ── 소환 오버레이 ── -->
+<div class="summon-overlay" id="summonOverlay">
+  <div class="so-emoji" id="soEmoji">⚔️</div>
+  <div class="so-text" id="soText">병사 소환!</div>
+  <div class="so-sub" id="soSub">-2코인</div>
+</div>
+
+<script>
+/* ── 유닛 정의 ── */
+const UNITS = [
+  { key: 'soldier', emoji: '⚔️', name: '병사',   cost: 2, trait: '기본 유닛 · 목숨 1' },
+  { key: 'shield',  emoji: '🛡️', name: '방패병', cost: 3, trait: '목숨 2 · 한 번 져도 버팀' },
+  { key: 'runner',  emoji: '🏃', name: '돌격병', cost: 4, trait: '목숨 1 · 빠른 걸음 허용' },
+  { key: 'mage',    emoji: '🧙', name: '마법사', cost: 5, trait: '목숨 1 · 비기면 승리' },
+  { key: 'giant',   emoji: '👹', name: '거인',   cost: 6, trait: '목숨 3 · 초슬로우 걸음' }
+];
+
+const $ = id => document.getElementById(id);
+function vibrate(p) { if (navigator.vibrate) navigator.vibrate(p); }
+
+/* ── 효과음 (Web Audio 비프) ── */
+let audioCtx = null;
+function beep(freq, dur, type) {
+  try {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const o = audioCtx.createOscillator();
+    const g = audioCtx.createGain();
+    o.type = type || 'triangle';
+    o.frequency.value = freq;
+    g.gain.setValueAtTime(0.18, audioCtx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + dur);
+    o.connect(g); g.connect(audioCtx.destination);
+    o.start(); o.stop(audioCtx.currentTime + dur);
+  } catch (e) {}
+}
+
+/* ── 설정 상태 ── */
+let CFG = { rate: 8, startCoin: 3, matchMin: 5, doubleMin: 1 };
+
+function bindOptRow(rowId, key) {
+  document.querySelectorAll('#' + rowId + ' .opt-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('#' + rowId + ' .opt-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      CFG[key] = parseInt(btn.dataset.v, 10);
+      if (key === 'rate') $('coinRateBadge').textContent = CFG.rate + '초/1코인';
+    });
+  });
+}
+bindOptRow('rateRow', 'rate');
+bindOptRow('startCoinRow', 'startCoin');
+bindOptRow('timeRow', 'matchMin');
+bindOptRow('doubleRow', 'doubleMin');
+
+/* ── 화면 전환 ── */
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  $(id).classList.add('active');
+}
+
+/* ══════════ 유닛 뽑기 ══════════ */
+let drawDeck = [];
+let drawnUnits = [];
+
+function refillDeck() {
+  // 5종 1세트씩 섞어서 병종이 골고루 나오게
+  const deck = UNITS.slice();
+  for (let i = deck.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [deck[i], deck[j]] = [deck[j], deck[i]];
+  }
+  drawDeck = drawDeck.concat(deck);
+}
+
+function drawUnit() {
+  if (drawDeck.length === 0) refillDeck();
+  const u = drawDeck.shift();
+  drawnUnits.push(u);
+
+  const card = $('drawCard');
+  card.classList.remove('revealed');
+  void card.offsetWidth;
+  card.classList.add('revealed');
+
+  $('drawCount').textContent = drawnUnits.length + '번째 유닛';
+  $('drawEmoji').textContent = u.emoji;
+  $('drawName').textContent = u.name;
+  $('drawTrait').textContent = u.trait + ' · 소환 비용 ' + u.cost + '코인';
+
+  const chip = document.createElement('span');
+  chip.className = 'drawn-chip';
+  chip.textContent = drawnUnits.length + '. ' + u.emoji + ' ' + u.name;
+  $('drawnList').appendChild(chip);
+
+  vibrate(30);
+  beep(660, 0.15);
+}
+
+function resetDraw() {
+  drawDeck = [];
+  drawnUnits = [];
+  $('drawnList').innerHTML = '';
+  $('drawCount').textContent = '';
+  $('drawEmoji').textContent = '🎴';
+  $('drawName').textContent = '유닛 카드';
+  $('drawTrait').textContent = '버튼을 눌러 병종을 뽑으세요';
+  $('drawCard').classList.remove('revealed');
+}
+
+/* ══════════ 경기 진행 ══════════ */
+let S = {
+  coin: 0,
+  coinMs: 0,          // 다음 코인까지 누적 ms
+  remainMs: 0,        // 남은 경기 시간 ms
+  sudden: false,
+  paused: false,
+  log: [],            // {unit, cost}
+  timerId: null,
+  lastTick: 0
+};
+
+function buildShop() {
+  const grid = $('shopGrid');
+  grid.innerHTML = '';
+  UNITS.forEach(u => {
+    const btn = document.createElement('button');
+    btn.className = 'unit-btn';
+    btn.id = 'shop-' + u.key;
+    btn.innerHTML =
+      '<span class="u-emoji">' + u.emoji + '</span>' +
+      '<span class="u-name">' + u.name + '</span>' +
+      '<span class="u-cost">🪙 ' + u.cost + '</span>' +
+      '<span class="u-trait">' + u.trait + '</span>';
+    btn.addEventListener('click', () => summon(u));
+    grid.appendChild(btn);
+  });
+}
+
+function startMatch() {
+  S.coin = CFG.startCoin;
+  S.coinMs = 0;
+  S.remainMs = CFG.matchMin > 0 ? CFG.matchMin * 60 * 1000 : -1;
+  S.sudden = false;
+  S.paused = false;
+  S.log = [];
+  $('summonLog').innerHTML = '';
+  $('doubleBadge').classList.remove('on');
+  $('matchTime').classList.remove('sudden');
+  buildShop();
+  renderCoin();
+  renderTime();
+  showScreen('playScreen');
+
+  if (S.timerId) clearInterval(S.timerId);
+  S.lastTick = performance.now();
+  S.timerId = setInterval(tick, 100);
+  beep(520, 0.12); setTimeout(() => beep(660, 0.12), 130); setTimeout(() => beep(880, 0.2), 260);
+}
+
+function isDouble() {
+  if (S.sudden) return true;
+  if (CFG.doubleMin < 0 || CFG.matchMin === 0) return false;
+  return S.remainMs >= 0 && S.remainMs <= CFG.doubleMin * 60 * 1000;
+}
+
+function tick() {
+  const now = performance.now();
+  const dt = now - S.lastTick;
+  S.lastTick = now;
+  if (S.paused) return;
+
+  // 경기 시간
+  if (S.remainMs > 0) {
+    S.remainMs -= dt;
+    if (S.remainMs <= 0) {
+      S.remainMs = 0;
+      S.sudden = true;
+      $('matchTime').classList.add('sudden');
+      vibrate([80, 60, 80, 60, 120]);
+      beep(880, 0.3, 'square'); setTimeout(() => beep(660, 0.4, 'square'), 320);
+    }
+  }
+  renderTime();
+
+  // 코인 적립
+  const effRate = CFG.rate * 1000 / (isDouble() ? 2 : 1);
+  S.coinMs += dt;
+  while (S.coinMs >= effRate) {
+    S.coinMs -= effRate;
+    S.coin++;
+    coinPop();
+  }
+  $('coinFill').style.width = Math.min(100, (S.coinMs / effRate) * 100) + '%';
+  $('doubleBadge').classList.toggle('on', isDouble());
+  renderShopState();
+}
+
+function coinPop() {
+  const el = $('coinNum');
+  el.textContent = S.coin;
+  el.classList.remove('pop');
+  void el.offsetWidth;
+  el.classList.add('pop');
+  beep(1040, 0.08);
+}
+
+function renderCoin() { $('coinNum').textContent = S.coin; renderShopState(); }
+
+function renderShopState() {
+  UNITS.forEach(u => {
+    const btn = $('shop-' + u.key);
+    if (btn) btn.disabled = S.coin < u.cost;
+  });
+}
+
+function renderTime() {
+  const el = $('matchTime');
+  if (CFG.matchMin === 0) { el.textContent = '무제한'; return; }
+  if (S.sudden) { el.textContent = '서든데스!'; return; }
+  const total = Math.ceil(S.remainMs / 1000);
+  const m = Math.floor(total / 60);
+  const s = total % 60;
+  el.textContent = m + ':' + String(s).padStart(2, '0');
+}
+
+/* ── 소환 ── */
+function summon(u) {
+  if (S.paused || S.coin < u.cost) return;
+  S.coin -= u.cost;
+  S.log.push(u);
+  renderCoin();
+
+  // 로그 칩
+  const chip = document.createElement('span');
+  chip.className = 's-chip';
+  chip.textContent = u.emoji + ' ' + u.name;
+  $('summonLog').appendChild(chip);
+
+  // 오버레이
+  $('soEmoji').textContent = u.emoji;
+  $('soText').textContent = u.name + ' 소환!';
+  $('soSub').textContent = '-' + u.cost + '코인';
+  const ov = $('summonOverlay');
+  ov.classList.add('show');
+  vibrate([40, 40, 80]);
+  beep(440, 0.1); setTimeout(() => beep(880, 0.25), 110);
+  setTimeout(() => ov.classList.remove('show'), 1400);
+}
+
+function undoSummon() {
+  const u = S.log.pop();
+  if (!u) return;
+  S.coin += u.cost;
+  renderCoin();
+  const chips = $('summonLog');
+  if (chips.lastChild) chips.removeChild(chips.lastChild);
+  vibrate(20);
+}
+
+function adjustCoin(d) {
+  S.coin = Math.max(0, S.coin + d);
+  renderCoin();
+}
+
+function togglePause() {
+  S.paused = !S.paused;
+  $('pauseBtn').textContent = S.paused ? '▶ 재개' : '⏸ 일시정지';
+}
+
+function endMatch() {
+  if (S.timerId) { clearInterval(S.timerId); S.timerId = null; }
+  showScreen('setupScreen');
+}
+</script>
+</body>
+</html>

@@ -970,6 +970,23 @@ const gamesData = [
       duration: 'short',
       situation: ['ice-break', 'no-prep']
     }
+  },
+  {
+    id: 'unit-defense',
+    emoji: '🏰',
+    title: '유닛 디펜스',
+    description: '코인으로 유닛(팀원!)을 소환해 적 기지에 먼저 도달하라! 디펜스 게임 실사판 팀 전략 대전. 사령관 도구 포함',
+    url: 'games/unit-defense.html',
+    people: '8명+ (팀당 4~8명)',
+    time: '한 판 5~10분',
+    prep: '폰 2대·테이프·의자',
+    tags: {
+      location: ['indoor'],
+      groupSize: ['medium', 'large'],
+      ageGroup: ['kid-old', 'teen', 'adult'],
+      duration: 'medium',
+      situation: ['energy', 'brain']
+    }
   }
 ];
 

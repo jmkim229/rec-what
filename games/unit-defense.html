@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="유닛 디펜스 게임 방법, 유닛 종류, 진행 팁까지. 코인으로 유닛을 소환해 적 기지에 먼저 도달하라! 사람이 유닛이 되는 팀 대항 전략 레크리에이션. 사령관 도구 포함.">
+  <!-- Open Graph / SNS 공유 -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="레크 뭐하지?">
+  <meta property="og:title" content="유닛 디펜스 방법과 진행 팁 - 팀 전략 레크리에이션 | 레크 뭐하지?">
+  <meta property="og:description" content="유닛 디펜스 게임 방법, 유닛 종류, 진행 팁까지. 코인으로 유닛을 소환해 적 기지에 먼저 도달하라! 사람이 유닛이 되는 팀 대항 전략 레크리에이션. 사령관 도구 포함.">
+  <meta property="og:url" content="https://rec-what.vercel.app/games/unit-defense.html">
+  <meta property="og:image" content="https://rec-what.vercel.app/og-image.png">
+  <meta property="og:locale" content="ko_KR">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="유닛 디펜스 방법과 진행 팁 - 팀 전략 레크리에이션 | 레크 뭐하지?">
+  <meta name="twitter:description" content="유닛 디펜스 게임 방법, 유닛 종류, 진행 팁까지. 코인으로 유닛을 소환해 적 기지에 먼저 도달하라! 사람이 유닛이 되는 팀 대항 전략 레크리에이션.">
+  <meta name="twitter:image" content="https://rec-what.vercel.app/og-image.png">
+  <meta name="keywords" content="유닛 디펜스, 디펜스 게임 레크리에이션, 전략 게임, 팀 대항 게임, 강당 게임, 수련회 게임, 청소년 레크리에이션, 소환 게임, 클래시로얄 실사판">
+  <title>유닛 디펜스 방법과 진행 팁 - 팀 전략 레크리에이션 | 레크 뭐하지?</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="../css/style.css">
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8683975585186347"
+       crossorigin="anonymous"></script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-75JKFQWSHP"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-75JKFQWSHP');
+  </script>
+  <style>
+    .unit-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+      font-size: 14px;
+    }
+    .unit-table th {
+      background: #FF6B35;
+      color: white;
+      padding: 10px 8px;
+      text-align: left;
+      font-size: 13px;
+    }
+    .unit-table td {
+      padding: 10px 8px;
+      border-bottom: 1px solid #eee;
+      vertical-align: top;
+    }
+    .unit-table tr:last-child td { border-bottom: none; }
+    .unit-name { font-weight: 800; white-space: nowrap; }
+    .unit-cost { font-weight: 800; color: #FF6B35; white-space: nowrap; }
+  </style>
+</head>
+<body>
+
+  <div class="game-header">
+    <h1>🏰 유닛 디펜스</h1>
+    <p class="subtitle">코인으로 유닛을 소환하라! 적 기지에 먼저 도달하는 팀이 승리</p>
+    <div class="tags">
+      <span class="tag">실내(강당)</span>
+      <span class="tag">8명 이상</span>
+      <span class="tag">초등 고학년~성인</span>
+      <span class="tag">사령관 도구(폰 2대)</span>
+    </div>
+  </div>
+
+  <div class="content">
+    <a href="../indoor.html" class="back-btn">← 실내 레크 목록으로</a>
+
+    <div class="info-box">
+      <div class="info-item">
+        <div class="label">인원</div>
+        <div class="value">팀당 4~8명 × 2팀</div>
+      </div>
+      <div class="info-item">
+        <div class="label">장소</div>
+        <div class="value">강당·넓은 교실</div>
+      </div>
+      <div class="info-item">
+        <div class="label">소요시간</div>
+        <div class="value">한 판 5~10분</div>
+      </div>
+      <div class="info-item">
+        <div class="label">준비물</div>
+        <div class="value">폰 2대(사령관 도구)·테이프·의자 2개</div>
+      </div>
+      <div class="info-item">
+        <div class="label">추천연령</div>
+        <div class="value">초등 고학년~성인</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>🗺️ 게임 컨셉</h2>
+      <div class="tip-box">
+        <strong>디펜스 게임(클래시 로얄류)의 실사판!</strong><br>
+        시간이 지나면 코인이 쌓이고, 사령관은 코인으로 유닛(팀원!)을 소환한다. 소환된 유닛은 전장을 걸어 적 기지로 진격하고, 적 유닛과 만나면 전투! 싸게 물량으로 밀지, 코인을 모아 거인으로 밀지 — 사령관의 전략과 유닛의 가위바위보 실력이 승부를 가른다.
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>⚔️ 유닛 종류</h2>
+      <p style="font-size:14px; color:#666;">경기 시작 전 <strong>유닛 뽑기</strong>(사령관 도구)로 각자 병종이 정해진다. 내가 어떤 유닛이냐에 따라 팀 전략이 달라진다!</p>
+      <table class="unit-table">
+        <tr><th>유닛</th><th>코인</th><th>특성</th></tr>
+        <tr>
+          <td class="unit-name">⚔️ 병사</td>
+          <td class="unit-cost">2</td>
+          <td>기본 유닛. 목숨 1. 싸고 빠르게 물량전 가능</td>
+        </tr>
+        <tr>
+          <td class="unit-name">🛡️ 방패병</td>
+          <td class="unit-cost">3</td>
+          <td>목숨 2. 전투에서 한 번 져도 버틴다</td>
+        </tr>
+        <tr>
+          <td class="unit-name">🏃 돌격병</td>
+          <td class="unit-cost">4</td>
+          <td>목숨 1. 유일하게 <strong>빠른 걸음</strong> 허용 (다른 유닛은 뒤꿈치-발끝 걷기)</td>
+        </tr>
+        <tr>
+          <td class="unit-name">🧙 마법사</td>
+          <td class="unit-cost">5</td>
+          <td>목숨 1. 가위바위보에서 <strong>비기면 승리</strong></td>
+        </tr>
+        <tr>
+          <td class="unit-name">👹 거인</td>
+          <td class="unit-cost">6</td>
+          <td>목숨 3. 대신 한 걸음마다 "쿵!" 외치고 한 박자 쉬는 초슬로우 걸음</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="section">
+      <h2>🎮 게임 방법</h2>
+      <div class="step-list">
+        <div class="step">
+          <div class="step-num">1</div>
+          <p><strong>전장 만들기:</strong> 강당 바닥에 테이프로 폭 1m 정도의 긴 통로(전장 경로)를 만들고, 양 끝에 각 팀 기지(의자)를 놓는다. 경로 옆에 팀별 대기석을 정한다.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <p><strong>팀 구성:</strong> 각 팀에서 <strong>사령관 1명</strong>을 정한다(폰으로 사령관 도구 조작). 나머지 팀원은 사령관 도구의 <strong>유닛 뽑기</strong>로 각자 병종을 배정받는다.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <p><strong>코인과 소환:</strong> 경기가 시작되면 도구에 코인이 자동으로 쌓인다(기본 8초에 1코인). 사령관이 도구에서 유닛 버튼을 누르면 코인이 차감되고, 해당 병종 팀원이 기지에서 출발한다!</p>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <p><strong>이동:</strong> 유닛은 경로 안에서 <strong>뒤꿈치-발끝을 붙여 걷기</strong>로만 전진한다(돌격병은 빠른 걸음 가능, 거인은 쿵-쉬고-쿵). 후진은 금지!</p>
+        </div>
+        <div class="step">
+          <div class="step-num">5</div>
+          <p><strong>전투:</strong> 적 유닛과 만나면 그 자리에 멈추고 <strong>가위바위보</strong>! 지면 목숨 -1 (마법사는 비겨도 승리). 목숨이 0이 되면 경로 밖으로 나와 자기 팀 대기석으로 복귀한다. 복귀한 유닛은 사령관이 코인을 내면 다시 소환될 수 있다.</p>
+        </div>
+        <div class="step">
+          <div class="step-num">6</div>
+          <p><strong>승리:</strong> 적 기지(의자)를 먼저 터치하는 팀이 승리! 제한시간이 다 되면 서든데스 — 코인이 2배로 쌓이는 총력전에 돌입한다.</p>
+        </div>
+      </div>
+      <div class="tip-box" style="margin-top: 16px;">
+        <strong>전략 포인트 3가지</strong><br>
+        ① 병사 물량 러시 vs 코인 모아 거인 탱킹 ② 상대가 유닛을 소환한 직후(코인 없음)가 공격 타이밍 ③ 방패병을 앞세우고 뒤에 마법사를 붙이는 조합 등 유닛 순서가 곧 전술이다.
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>💡 진행 팁</h2>
+      <div class="tip-box">
+        <strong>사령관이 곧 진행자!</strong><br>
+        도구가 코인 계산을 다 해주므로, 어른은 전투 판정 시비만 가끔 봐주면 됩니다.
+        <ul>
+          <li>첫 판은 연습 게임으로 코인 규칙 없이 소환 → 걷기 → 전투만 익히게 하자. 두 번째 판부터 진짜 시작.</li>
+          <li>소환할 때 사령관이 <strong>"돌격병 소환!"</strong>을 크게 외치게 하자(도구 화면에도 크게 뜸). 게임 몰입감이 확 올라간다.</li>
+          <li>전투는 반드시 <strong>멈춰서</strong> 하도록. 걸으면서 가위바위보 하면 판정이 흐려진다.</li>
+          <li>경로에 <strong>중앙선</strong>을 그어두면 "제한시간 종료 시 적진에 더 깊이 들어간 팀 승리" 판정이 쉬워진다.</li>
+          <li>팀원이 5명 이상이면 병종이 골고루 배정되도록 뽑기 도구가 자동으로 섞어준다. 같은 병종이 2명이어도 OK.</li>
+          <li>사령관 역할이 인기가 많다. 판마다 사령관을 교대하면 모두가 전략가 체험 가능.</li>
+          <li>초등 저학년과 하면 걸음 규칙이 잘 안 지켜진다. "경로에 발 도장 스티커 밟고 가기"로 바꾸면 명확해진다.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>🔄 변형 방법</h2>
+      <div class="variation-list">
+        <div class="variation">
+          <strong>🗼 2라인 전장</strong>
+          경로를 두 줄로 만들어 유닛이 어느 라인으로 갈지 사령관이 지정하는 버전. 라인 분산 견제가 추가되어 진짜 디펜스 게임의 심리전에 가까워진다.
+        </div>
+        <div class="variation">
+          <strong>🃏 히든 유닛</strong>
+          유닛 뽑기 결과를 상대 팀에 공개하지 않는 버전. 걸음걸이로 병종을 숨기다가 전투 직전에 공개! "쟤 마법사 같은데..." 하는 눈치 싸움이 생긴다.
+        </div>
+        <div class="variation">
+          <strong>🏹 타워 추가</strong>
+          기지 앞 3걸음 지점에 수비 전용 유닛(타워) 1명을 세워두는 버전. 타워는 움직일 수 없지만 목숨이 2이고, 타워를 이겨야 기지에 접근할 수 있다.
+        </div>
+        <div class="variation">
+          <strong>⚡ 스킬 카드</strong>
+          각 팀에 판당 1회 스킬 카드를 준다: "전선 얼리기(상대 유닛 5초 정지)", "긴급 소환(코인 반값)" 등. 사령관이 언제 쓰느냐가 승부처가 된다.
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align: center; margin-top: 8px; margin-bottom: 8px;">
+      <a href="unit-defense-tool.html" style="
+        display: inline-block;
+        background: linear-gradient(135deg, #FF6B35, #FFD700);
+        color: white;
+        text-decoration: none;
+        font-size: 17px;
+        font-weight: 800;
+        padding: 18px 36px;
+        border-radius: 18px;
+        box-shadow: 0 6px 20px rgba(255,107,53,0.35);
+        letter-spacing: -0.3px;
+        transition: transform 0.15s, box-shadow 0.15s;
+      " onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='0 10px 28px rgba(255,107,53,0.45)'" onmouseout="this.style.transform='';this.style.boxShadow='0 6px 20px rgba(255,107,53,0.35)'">
+        🏰 사령관 도구 사용하기
+      </a>
+      <p style="font-size:13px; color:#999; margin-top:10px;">각 팀 사령관의 폰에서 이 도구를 열어 코인·소환·유닛 뽑기를 관리하세요</p>
+    </div>
+  </div>
+
+    <footer>
+    <p>© 2025 레크 뭐하지? | 모든 레크 진행자를 위한 아이디어 모음</p>
+    <p style="margin-top:8px;font-size:13px;">
+      <a href="/about.html" style="color:#bbb;">소개</a> |
+      <a href="/contact.html" style="color:#bbb;">문의</a> |
+      <a href="/privacy.html" style="color:#bbb;">개인정보처리방침</a> |
+      <a href="/terms.html" style="color:#bbb;">이용약관</a>
+    </p>
+  </footer>
+
+  <script src="../js/ux-helpers.js"></script>
+</body>
+</html>
