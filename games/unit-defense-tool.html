@@ -3,23 +3,24 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <meta name="description" content="유닛 디펜스 사령관 도구. 코인 자동 적립, 유닛 소환 상점, 유닛 랜덤 뽑기, 경기 타이머, 서든데스 더블 코인까지. 각 팀 사령관의 폰에서 사용.">
+  <meta name="description" content="유닛 디펜스 진행 도구. 사회자가 방을 만들고 사령관들이 코드로 입장해 코인·소환이 실시간 공유. 사회자 심판 권한(페널티·서든데스), 오프라인 중계석 모드, 유닛 뽑기까지.">
   <!-- Open Graph / SNS 공유 -->
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="레크 뭐하지?">
-  <meta property="og:title" content="🏰 유닛 디펜스 사령관 도구 | 레크 뭐하지?">
-  <meta property="og:description" content="유닛 디펜스 사령관 도구. 코인 자동 적립, 유닛 소환 상점, 유닛 랜덤 뽑기, 경기 타이머, 서든데스 더블 코인까지.">
+  <meta property="og:title" content="🏰 유닛 디펜스 진행 도구 | 레크 뭐하지?">
+  <meta property="og:description" content="사회자가 방을 만들고 사령관들이 코드로 입장해 코인·소환이 실시간 공유. 사회자 심판 권한, 오프라인 중계석 모드, 유닛 뽑기까지.">
   <meta property="og:url" content="https://rec-what.vercel.app/games/unit-defense-tool.html">
   <meta property="og:image" content="https://rec-what.vercel.app/og-image.png">
   <meta property="og:locale" content="ko_KR">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="🏰 유닛 디펜스 사령관 도구 | 레크 뭐하지?">
-  <meta name="twitter:description" content="유닛 디펜스 사령관 도구. 코인 자동 적립, 유닛 소환 상점, 유닛 랜덤 뽑기, 경기 타이머, 서든데스 더블 코인까지.">
+  <meta name="twitter:title" content="🏰 유닛 디펜스 진행 도구 | 레크 뭐하지?">
+  <meta name="twitter:description" content="사회자가 방을 만들고 사령관들이 코드로 입장해 코인·소환이 실시간 공유되는 유닛 디펜스 진행 도구.">
   <meta name="twitter:image" content="https://rec-what.vercel.app/og-image.png">
-  <title>🏰 유닛 디펜스 사령관 도구 | 레크 뭐하지?</title>
+  <title>🏰 유닛 디펜스 진행 도구 | 레크 뭐하지?</title>
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="../js/peerjs.min.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -33,7 +34,7 @@
       overflow-x: hidden;
     }
 
-    /* ── 헤더 ── */
+    /* ── 공통 ── */
     .tool-header {
       display: flex;
       align-items: center;
@@ -42,381 +43,237 @@
       background: rgba(255,255,255,0.04);
       border-bottom: 1px solid rgba(255,255,255,0.07);
     }
-    .back-link {
-      color: #a78bfa;
-      text-decoration: none;
-      font-size: 13px;
-      font-weight: 600;
-      white-space: nowrap;
-    }
+    .back-link { color: #a78bfa; text-decoration: none; font-size: 13px; font-weight: 600; white-space: nowrap; }
     .back-link:hover { color: #c4b5fd; }
-    .header-title {
-      font-size: 15px;
-      font-weight: 800;
-      color: #f1f5f9;
-      flex: 1;
+    .header-title { font-size: 15px; font-weight: 800; flex: 1; }
+    .conn-badge {
+      font-size: 11px; font-weight: 800; padding: 4px 10px; border-radius: 12px;
+      background: #1e293b; color: #64748b;
     }
-    .team-badge {
-      background: #1e293b;
-      border-radius: 10px;
-      padding: 5px 10px;
-      font-size: 12px;
-      font-weight: 800;
-      color: #fbbf24;
-    }
+    .conn-badge.on { background: rgba(52,211,153,0.15); color: #34d399; border: 1px solid rgba(52,211,153,0.35); }
+    .conn-badge.err { background: rgba(248,113,113,0.12); color: #f87171; border: 1px solid rgba(248,113,113,0.3); }
 
     .screen { display: none; }
     .screen.active { display: block; }
+    .wrap { max-width: 560px; margin: 0 auto; padding: 18px 16px 30px; }
 
-    /* ══════════ 설정 화면 ══════════ */
-    .setup-wrap {
-      max-width: 520px;
-      margin: 0 auto;
-      padding: 18px 16px 30px;
+    .big-btn {
+      width: 100%; padding: 17px; border-radius: 16px; border: none;
+      font-size: 17px; font-weight: 900; cursor: pointer; font-family: inherit;
+      transition: transform 0.15s, box-shadow 0.15s; margin-top: 10px;
     }
-    .setup-title {
-      font-size: 13px;
-      font-weight: 800;
-      color: #94a3b8;
-      margin: 18px 0 8px;
+    .big-btn:active { transform: scale(0.97); }
+    .btn-gold { background: linear-gradient(135deg, #b45309, #fbbf24); color: #0f172a; box-shadow: 0 6px 24px rgba(251,191,36,0.3); }
+    .btn-purple { background: linear-gradient(135deg, #6d28d9, #a78bfa); color: white; box-shadow: 0 6px 24px rgba(139,92,246,0.3); }
+    .btn-slate { background: #1e293b; color: #94a3b8; border: 1.5px solid #334155; }
+    .btn-slate:hover { color: #c4b5fd; border-color: #a78bfa; }
+    .ghost-btn {
+      width: 100%; margin-top: 10px; padding: 11px; border-radius: 11px;
+      border: 1.5px solid #1e293b; background: transparent; color: #64748b;
+      font-size: 12.5px; font-weight: 700; cursor: pointer; font-family: inherit;
     }
-    .opt-row {
-      display: flex;
-      gap: 7px;
-      flex-wrap: wrap;
+    .ghost-btn:hover { border-color: #334155; color: #94a3b8; }
+    .note { font-size: 11.5px; color: #475569; margin-top: 6px; line-height: 1.5; }
+
+    /* ── 역할 선택 ── */
+    .role-desc { font-size: 13px; color: #94a3b8; text-align: center; line-height: 1.6; margin-bottom: 14px; }
+    .role-card {
+      width: 100%; text-align: left; padding: 16px; border-radius: 16px;
+      border: 1.5px solid #334155; background: #1e293b; cursor: pointer;
+      font-family: inherit; margin-top: 10px; transition: all 0.15s;
     }
+    .role-card:hover { border-color: #fbbf24; transform: translateY(-2px); }
+    .role-t { font-size: 16px; font-weight: 900; color: #f1f5f9; }
+    .role-s { font-size: 12px; color: #94a3b8; margin-top: 4px; line-height: 1.5; }
+
+    /* ── 설정 ── */
+    .setup-title { font-size: 13px; font-weight: 800; color: #94a3b8; margin: 16px 0 8px; }
+    .opt-row { display: flex; gap: 7px; flex-wrap: wrap; }
     .opt-btn {
-      flex: 1;
-      min-width: 70px;
-      padding: 12px 8px;
-      border-radius: 12px;
-      border: 1.5px solid #1e293b;
-      background: #1e293b;
-      color: #94a3b8;
-      font-size: 14px;
-      font-weight: 700;
-      cursor: pointer;
-      font-family: inherit;
-      transition: all 0.15s;
-      text-align: center;
+      flex: 1; min-width: 68px; padding: 12px 8px; border-radius: 12px;
+      border: 1.5px solid #1e293b; background: #1e293b; color: #94a3b8;
+      font-size: 14px; font-weight: 700; cursor: pointer; font-family: inherit;
+      transition: all 0.15s; text-align: center;
     }
-    .opt-btn.active {
-      border-color: #fbbf24;
-      background: rgba(251,191,36,0.12);
-      color: #fbbf24;
-    }
-    .setup-desc { font-size: 11px; color: #475569; margin-top: 5px; }
+    .opt-btn.active { border-color: #fbbf24; background: rgba(251,191,36,0.12); color: #fbbf24; }
 
-    .start-btn {
-      width: 100%;
-      margin-top: 26px;
-      padding: 18px;
-      border-radius: 16px;
-      border: none;
-      background: linear-gradient(135deg, #b45309, #fbbf24);
-      color: #0f172a;
-      font-size: 18px;
-      font-weight: 900;
-      cursor: pointer;
-      font-family: inherit;
-      box-shadow: 0 6px 24px rgba(251,191,36,0.35);
-      transition: transform 0.15s, box-shadow 0.15s;
+    /* ── 방 코드 ── */
+    .room-code-box {
+      text-align: center; background: #1e293b; border: 2px solid rgba(251,191,36,0.4);
+      border-radius: 20px; padding: 20px; margin-top: 16px;
     }
-    .start-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(251,191,36,0.5); }
-    .start-btn:active { transform: scale(0.97); }
-    .draw-link-btn {
-      width: 100%;
-      margin-top: 10px;
-      padding: 13px;
-      border-radius: 13px;
-      border: 1.5px solid #334155;
-      background: transparent;
-      color: #94a3b8;
-      font-size: 14px;
-      font-weight: 700;
-      cursor: pointer;
-      font-family: inherit;
+    .rc-label { font-size: 12px; font-weight: 700; color: #94a3b8; }
+    .rc-code { font-size: 52px; font-weight: 900; color: #fbbf24; letter-spacing: 10px; margin: 4px 0; }
+    .rc-sub { font-size: 12px; color: #64748b; line-height: 1.5; }
+    .peer-list { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin-top: 12px; min-height: 24px; }
+    .peer-chip {
+      font-size: 12px; font-weight: 800; padding: 5px 11px; border-radius: 14px;
+    }
+    .peer-chip.A { background: rgba(248,113,113,0.12); color: #f87171; border: 1px solid rgba(248,113,113,0.35); }
+    .peer-chip.B { background: rgba(96,165,250,0.12); color: #60a5fa; border: 1px solid rgba(96,165,250,0.35); }
+
+    /* ── 코드 입력 (사령관) ── */
+    .code-input {
+      width: 100%; margin-top: 12px; padding: 16px; border-radius: 14px;
+      border: 1.5px solid #334155; background: #1e293b; color: #fbbf24;
+      font-size: 30px; font-weight: 900; text-align: center; letter-spacing: 8px;
+      font-family: inherit; outline: none; text-transform: uppercase;
+    }
+    .code-input:focus { border-color: #fbbf24; }
+    .team-pick { display: flex; gap: 10px; margin-top: 12px; }
+    .team-btn {
+      flex: 1; padding: 16px; border-radius: 14px; border: 2px solid #334155;
+      background: #1e293b; font-size: 16px; font-weight: 900; cursor: pointer; font-family: inherit;
       transition: all 0.15s;
     }
-    .draw-link-btn:hover { border-color: #a78bfa; color: #c4b5fd; }
+    .team-btn.A { color: #f87171; }
+    .team-btn.B { color: #60a5fa; }
+    .team-btn.A.sel { border-color: #f87171; background: rgba(248,113,113,0.12); }
+    .team-btn.B.sel { border-color: #60a5fa; background: rgba(96,165,250,0.12); }
+    .status-msg { text-align: center; font-size: 13px; font-weight: 700; margin-top: 12px; min-height: 20px; }
+    .status-msg.ok { color: #34d399; }
+    .status-msg.err { color: #f87171; }
+    .status-msg.wait { color: #fbbf24; }
 
-    /* ══════════ 유닛 뽑기 화면 ══════════ */
-    .draw-wrap {
-      max-width: 520px;
-      margin: 0 auto;
-      padding: 18px 16px 30px;
-      text-align: center;
-    }
-    .draw-info { font-size: 13px; color: #94a3b8; margin-bottom: 16px; line-height: 1.5; }
-    .draw-card {
-      background: #1e293b;
-      border: 2px solid #334155;
-      border-radius: 22px;
-      padding: 34px 20px;
-      margin-bottom: 14px;
-      min-height: 210px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-    }
-    .draw-card.revealed {
-      border-color: #fbbf24;
-      background: rgba(251,191,36,0.07);
-      animation: cardPop 0.35s cubic-bezier(0.34,1.5,0.64,1) both;
-    }
-    @keyframes cardPop {
-      from { transform: scale(0.75) rotateY(90deg); opacity: 0; }
-      to   { transform: scale(1) rotateY(0); opacity: 1; }
-    }
-    .draw-emoji { font-size: 64px; margin-bottom: 10px; }
-    .draw-name { font-size: 26px; font-weight: 900; color: #fbbf24; margin-bottom: 6px; }
-    .draw-trait { font-size: 13px; color: #94a3b8; line-height: 1.5; }
-    .draw-count { font-size: 12px; color: #475569; margin-bottom: 12px; font-weight: 700; }
-    .draw-btn {
-      width: 100%;
-      padding: 16px;
-      border-radius: 15px;
-      border: none;
-      background: linear-gradient(135deg, #6d28d9, #a78bfa);
-      color: white;
-      font-size: 17px;
-      font-weight: 800;
-      cursor: pointer;
-      font-family: inherit;
-      box-shadow: 0 5px 18px rgba(139,92,246,0.35);
-      transition: transform 0.15s;
-    }
-    .draw-btn:active { transform: scale(0.97); }
-    .drawn-list {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      justify-content: center;
-      margin-top: 14px;
-      min-height: 24px;
-    }
-    .drawn-chip {
-      font-size: 12px;
-      font-weight: 700;
-      padding: 5px 10px;
-      border-radius: 14px;
-      background: #1e293b;
-      border: 1px solid #334155;
-      color: #94a3b8;
-    }
-    .draw-back {
-      margin-top: 16px;
-      padding: 11px 20px;
-      border-radius: 11px;
-      border: 1.5px solid #334155;
-      background: transparent;
-      color: #64748b;
-      font-size: 13px;
-      font-weight: 700;
-      cursor: pointer;
-      font-family: inherit;
-    }
-
-    /* ══════════ 플레이 화면 ══════════ */
-    /* 타이머 바 */
+    /* ── 타이머 바 ── */
     .timer-bar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 8px 14px;
-      background: rgba(255,255,255,0.03);
+      display: flex; align-items: center; justify-content: space-between; gap: 8px;
+      padding: 8px 14px; background: rgba(255,255,255,0.03);
       border-bottom: 1px solid rgba(255,255,255,0.06);
     }
-    .match-time {
-      font-size: 20px;
-      font-weight: 900;
-      color: #f1f5f9;
-      font-variant-numeric: tabular-nums;
-    }
+    .match-time { font-size: 20px; font-weight: 900; font-variant-numeric: tabular-nums; }
     .match-time.sudden { color: #f87171; animation: blink 1s infinite; }
     @keyframes blink { 50% { opacity: 0.45; } }
     .double-badge {
-      font-size: 11px;
-      font-weight: 800;
-      padding: 4px 10px;
-      border-radius: 12px;
-      background: rgba(248,113,113,0.15);
-      border: 1px solid rgba(248,113,113,0.4);
-      color: #f87171;
-      display: none;
+      font-size: 11px; font-weight: 800; padding: 4px 10px; border-radius: 12px;
+      background: rgba(248,113,113,0.15); border: 1px solid rgba(248,113,113,0.4);
+      color: #f87171; display: none;
     }
     .double-badge.on { display: inline-block; animation: blink 1s infinite; }
-    .pause-btn {
-      padding: 6px 12px;
-      border-radius: 10px;
-      border: 1.5px solid #334155;
-      background: transparent;
-      color: #94a3b8;
-      font-size: 12px;
-      font-weight: 700;
-      cursor: pointer;
-      font-family: inherit;
+    .tb-btn {
+      padding: 6px 11px; border-radius: 10px; border: 1.5px solid #334155;
+      background: transparent; color: #94a3b8; font-size: 12px; font-weight: 700;
+      cursor: pointer; font-family: inherit; white-space: nowrap;
     }
 
-    /* 코인 영역 */
-    .coin-area {
-      text-align: center;
-      padding: 16px 16px 6px;
+    /* ── 사회자 대시보드 ── */
+    .host-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 12px 12px 0; max-width: 720px; margin: 0 auto; }
+    .team-panel { border-radius: 18px; padding: 14px 12px; border: 1.5px solid; }
+    .team-panel.A { background: rgba(248,113,113,0.06); border-color: rgba(248,113,113,0.35); }
+    .team-panel.B { background: rgba(96,165,250,0.06); border-color: rgba(96,165,250,0.35); }
+    .tp-name { font-size: 14px; font-weight: 900; text-align: center; }
+    .team-panel.A .tp-name, .team-panel.A .tp-coin { color: #f87171; }
+    .team-panel.B .tp-name, .team-panel.B .tp-coin { color: #60a5fa; }
+    .tp-coin { font-size: 44px; font-weight: 900; text-align: center; line-height: 1.1; }
+    .tp-coin.pop { animation: coinPop 0.3s cubic-bezier(0.34,1.56,0.64,1); }
+    .tp-sub { font-size: 11px; color: #64748b; text-align: center; }
+    .tp-log { display: flex; flex-wrap: wrap; gap: 4px; justify-content: center; margin-top: 8px; min-height: 20px; }
+    .tp-log .s-chip { font-size: 10.5px; padding: 3px 7px; }
+    .tp-pen { display: flex; gap: 6px; margin-top: 10px; }
+    .pen-btn {
+      flex: 1; padding: 9px 4px; border-radius: 10px; border: 1.5px solid #334155;
+      background: #1e293b; color: #fbbf24; font-size: 11.5px; font-weight: 800;
+      cursor: pointer; font-family: inherit;
     }
+    .pen-btn:hover { border-color: #fbbf24; }
+    .host-actions { display: flex; gap: 8px; padding: 12px; max-width: 720px; margin: 0 auto; flex-wrap: wrap; }
+    .host-actions .tb-btn { flex: 1; padding: 11px; }
+    .event-ticker {
+      text-align: center; font-size: 14px; font-weight: 800; color: #fbbf24;
+      min-height: 22px; padding: 4px 12px 10px;
+    }
+
+    /* ── 코인/상점 (사령관·중계석 공용) ── */
+    .coin-area { text-align: center; padding: 14px 16px 4px; }
     .coin-label { font-size: 12px; font-weight: 700; color: #64748b; }
     .coin-num {
-      font-size: clamp(64px, 17vmin, 104px);
-      font-weight: 900;
-      color: #fbbf24;
-      line-height: 1.05;
-      letter-spacing: -2px;
-      user-select: none;
+      font-size: clamp(56px, 15vmin, 92px); font-weight: 900; color: #fbbf24;
+      line-height: 1.05; letter-spacing: -2px; user-select: none;
     }
     .coin-num.pop { animation: coinPop 0.3s cubic-bezier(0.34,1.56,0.64,1); }
-    @keyframes coinPop {
-      0% { transform: scale(1); }
-      40% { transform: scale(1.15); }
-      100% { transform: scale(1); }
-    }
-    /* 다음 코인 진행 바 */
-    .coin-progress {
-      max-width: 260px;
-      height: 8px;
-      background: #1e293b;
-      border-radius: 6px;
-      margin: 6px auto 0;
-      overflow: hidden;
-    }
-    .coin-progress-fill {
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(90deg, #b45309, #fbbf24);
-      border-radius: 6px;
-      transition: width 0.2s linear;
-    }
-    .coin-adjust {
-      display: flex;
-      gap: 8px;
-      justify-content: center;
-      margin-top: 8px;
-    }
-    .adj-btn {
-      width: 34px;
-      height: 34px;
-      border-radius: 10px;
-      border: 1.5px solid #334155;
-      background: #1e293b;
-      color: #fbbf24;
-      font-size: 17px;
-      font-weight: 800;
-      cursor: pointer;
-      font-family: inherit;
-    }
+    @keyframes coinPop { 0% { transform: scale(1); } 40% { transform: scale(1.15); } 100% { transform: scale(1); } }
+    .coin-progress { max-width: 240px; height: 8px; background: #1e293b; border-radius: 6px; margin: 6px auto 0; overflow: hidden; }
+    .coin-progress-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #b45309, #fbbf24); border-radius: 6px; transition: width 0.2s linear; }
 
-    /* 유닛 상점 */
-    .shop-wrap {
-      padding: 12px 14px 16px;
-      max-width: 560px;
-      margin: 0 auto;
-      width: 100%;
-    }
+    .shop-wrap { padding: 12px 14px 8px; max-width: 560px; margin: 0 auto; width: 100%; }
     .shop-title { font-size: 12px; font-weight: 800; color: #475569; margin-bottom: 8px; text-align: center; }
-    .shop-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(96px, 1fr));
-      gap: 8px;
-    }
+    .shop-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(94px, 1fr)); gap: 8px; }
     .unit-btn {
-      padding: 13px 6px 11px;
-      border-radius: 15px;
-      border: 1.5px solid #334155;
-      background: #1e293b;
-      cursor: pointer;
-      font-family: inherit;
-      text-align: center;
-      transition: all 0.15s;
-      user-select: none;
+      padding: 12px 6px 10px; border-radius: 15px; border: 1.5px solid #334155;
+      background: #1e293b; cursor: pointer; font-family: inherit; text-align: center;
+      transition: all 0.15s; user-select: none;
     }
     .unit-btn:not(:disabled):hover { border-color: #fbbf24; transform: translateY(-2px); }
     .unit-btn:not(:disabled):active { transform: scale(0.95); }
     .unit-btn:disabled { opacity: 0.35; cursor: default; }
-    .u-emoji { font-size: 30px; display: block; }
-    .u-name { font-size: 13px; font-weight: 800; color: #f1f5f9; display: block; margin-top: 3px; }
-    .u-cost { font-size: 12px; font-weight: 800; color: #fbbf24; display: block; margin-top: 2px; }
-    .u-trait { font-size: 9.5px; color: #64748b; display: block; margin-top: 3px; line-height: 1.3; }
+    .u-emoji { font-size: 28px; display: block; }
+    .u-name { font-size: 12.5px; font-weight: 800; color: #f1f5f9; display: block; margin-top: 3px; }
+    .u-cost { font-size: 11.5px; font-weight: 800; color: #fbbf24; display: block; margin-top: 2px; }
+    .u-trait { font-size: 9px; color: #64748b; display: block; margin-top: 3px; line-height: 1.3; }
 
-    /* 소환 로그 */
-    .log-area {
-      padding: 0 14px 20px;
-      max-width: 560px;
-      margin: 0 auto;
-      width: 100%;
-    }
-    .log-title { font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 6px; text-align: center; }
-    .summon-log {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 5px;
-      justify-content: center;
-      min-height: 22px;
-    }
+    .log-area { padding: 0 14px 20px; max-width: 560px; margin: 0 auto; width: 100%; }
+    .log-title { font-size: 11px; font-weight: 700; color: #475569; margin: 6px 0; text-align: center; }
+    .summon-log { display: flex; flex-wrap: wrap; gap: 5px; justify-content: center; min-height: 20px; }
     .s-chip {
-      font-size: 11px;
-      font-weight: 700;
-      padding: 4px 9px;
-      border-radius: 13px;
-      background: rgba(251,191,36,0.1);
-      border: 1px solid rgba(251,191,36,0.3);
-      color: #fbbf24;
-      animation: chipIn 0.2s ease both;
+      font-size: 11px; font-weight: 700; padding: 4px 9px; border-radius: 13px;
+      background: rgba(251,191,36,0.1); border: 1px solid rgba(251,191,36,0.3);
+      color: #fbbf24; animation: chipIn 0.2s ease both;
     }
     @keyframes chipIn { from { opacity: 0; transform: scale(0.6); } to { opacity: 1; transform: scale(1); } }
-    .reset-row {
-      display: flex;
-      gap: 8px;
-      margin-top: 14px;
-    }
-    .sub-btn {
-      flex: 1;
-      padding: 10px;
-      border-radius: 11px;
-      border: 1.5px solid #1e293b;
-      background: transparent;
-      color: #64748b;
-      font-size: 12px;
-      font-weight: 700;
-      cursor: pointer;
-      font-family: inherit;
-    }
-    .sub-btn:hover { border-color: #334155; color: #94a3b8; }
 
-    /* 소환 오버레이 */
+    /* ── 중계석 모드 ── */
+    .split-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 10px 10px 0; max-width: 900px; margin: 0 auto; }
+    .split-panel { border-radius: 18px; border: 1.5px solid; padding: 8px 6px 12px; }
+    .split-panel.A { background: rgba(248,113,113,0.05); border-color: rgba(248,113,113,0.3); }
+    .split-panel.B { background: rgba(96,165,250,0.05); border-color: rgba(96,165,250,0.3); }
+    .sp-name { font-size: 13px; font-weight: 900; text-align: center; }
+    .split-panel.A .sp-name, .split-panel.A .sp-coin { color: #f87171; }
+    .split-panel.B .sp-name, .split-panel.B .sp-coin { color: #60a5fa; }
+    .sp-coin { font-size: 40px; font-weight: 900; text-align: center; line-height: 1.1; }
+    .sp-coin.pop { animation: coinPop 0.3s cubic-bezier(0.34,1.56,0.64,1); }
+    .sp-progress { max-width: 130px; height: 6px; background: #1e293b; border-radius: 5px; margin: 4px auto 8px; overflow: hidden; }
+    .sp-progress-fill { height: 100%; width: 0%; border-radius: 5px; transition: width 0.2s linear; }
+    .split-panel.A .sp-progress-fill { background: linear-gradient(90deg, #991b1b, #f87171); }
+    .split-panel.B .sp-progress-fill { background: linear-gradient(90deg, #1d4ed8, #60a5fa); }
+    .sp-shop { display: grid; grid-template-columns: repeat(auto-fit, minmax(72px, 1fr)); gap: 5px; padding: 0 4px; }
+    .sp-shop .unit-btn { padding: 8px 3px 7px; border-radius: 12px; }
+    .sp-shop .u-emoji { font-size: 22px; }
+    .sp-shop .u-name { font-size: 10.5px; }
+    .sp-shop .u-cost { font-size: 10px; }
+    .sp-shop .u-trait { display: none; }
+    .sp-log { display: flex; flex-wrap: wrap; gap: 4px; justify-content: center; margin-top: 8px; min-height: 18px; padding: 0 4px; }
+    .sp-log .s-chip { font-size: 10px; padding: 3px 7px; }
+
+    /* ── 소환 오버레이 ── */
     .summon-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(15,23,42,0.93);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 60;
-      flex-direction: column;
-      gap: 6px;
+      position: fixed; inset: 0; background: rgba(15,23,42,0.93);
+      display: none; align-items: center; justify-content: center;
+      z-index: 60; flex-direction: column; gap: 6px; pointer-events: none;
     }
     .summon-overlay.show { display: flex; }
-    .so-emoji { font-size: 110px; animation: soIn 0.4s cubic-bezier(0.34,1.5,0.64,1) both; }
-    .so-text {
-      font-size: 38px;
-      font-weight: 900;
-      color: #fbbf24;
-      letter-spacing: -1px;
-      animation: soIn 0.4s 0.05s cubic-bezier(0.34,1.5,0.64,1) both;
-    }
+    .so-emoji { font-size: 100px; animation: soIn 0.4s cubic-bezier(0.34,1.5,0.64,1) both; }
+    .so-text { font-size: 34px; font-weight: 900; letter-spacing: -1px; animation: soIn 0.4s 0.05s cubic-bezier(0.34,1.5,0.64,1) both; text-align: center; }
+    .so-text.tA { color: #f87171; }
+    .so-text.tB { color: #60a5fa; }
+    .so-text.tN { color: #fbbf24; }
     .so-sub { font-size: 14px; color: #94a3b8; font-weight: 700; animation: soIn 0.4s 0.1s both; }
-    @keyframes soIn {
-      from { transform: scale(0.5) translateY(30px); opacity: 0; }
-      to   { transform: scale(1) translateY(0); opacity: 1; }
+    @keyframes soIn { from { transform: scale(0.5) translateY(30px); opacity: 0; } to { transform: scale(1) translateY(0); opacity: 1; } }
+
+    /* ── 유닛 뽑기 ── */
+    .draw-card {
+      background: #1e293b; border: 2px solid #334155; border-radius: 22px;
+      padding: 30px 20px; margin: 14px 0; min-height: 190px;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center;
     }
+    .draw-card.revealed { border-color: #fbbf24; background: rgba(251,191,36,0.07); animation: cardPop 0.35s cubic-bezier(0.34,1.5,0.64,1) both; }
+    @keyframes cardPop { from { transform: scale(0.75) rotateY(90deg); opacity: 0; } to { transform: scale(1) rotateY(0); opacity: 1; } }
+    .draw-emoji { font-size: 58px; margin-bottom: 8px; }
+    .draw-name { font-size: 24px; font-weight: 900; color: #fbbf24; margin-bottom: 5px; }
+    .draw-trait { font-size: 13px; color: #94a3b8; line-height: 1.5; }
+    .draw-count { font-size: 12px; color: #475569; margin-bottom: 10px; font-weight: 700; }
+    .drawn-list { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin-top: 12px; min-height: 24px; }
+    .drawn-chip { font-size: 12px; font-weight: 700; padding: 5px 10px; border-radius: 14px; background: #1e293b; border: 1px solid #334155; color: #94a3b8; }
   </style>
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-75JKFQWSHP"></script>
   <script>
@@ -431,117 +288,246 @@
 <!-- ── 헤더 ── -->
 <div class="tool-header">
   <a href="unit-defense.html" class="back-link">← 게임 설명</a>
-  <span class="header-title">🏰 유닛 디펜스 사령관 도구</span>
-  <span class="team-badge" id="coinRateBadge">8초/1코인</span>
+  <span class="header-title">🏰 유닛 디펜스 진행 도구</span>
+  <span class="conn-badge" id="connBadge">오프라인</span>
 </div>
 
-<!-- ══════════ 설정 화면 ══════════ -->
-<div class="screen active" id="setupScreen">
-  <div class="setup-wrap">
+<!-- ══════════ 역할 선택 ══════════ -->
+<div class="screen active" id="roleScreen">
+  <div class="wrap">
+    <p class="role-desc">사회자가 방을 만들고 사령관들이 코드로 입장하면<br>코인과 소환이 <b>실시간으로 공유</b>됩니다.</p>
 
+    <button class="role-card" onclick="showScreen('hostSetupScreen')">
+      <div class="role-t">🎙️ 사회자 — 방 만들기</div>
+      <div class="role-s">경기 설정 후 4자리 코드 생성. 양 팀 현황 실시간 중계, 페널티·일시정지·서든데스 심판 권한</div>
+    </button>
+
+    <button class="role-card" onclick="showScreen('joinScreen')">
+      <div class="role-t">⚔️ 사령관 — 방 입장</div>
+      <div class="role-s">사회자에게 받은 코드로 입장. 내 팀 코인 확인과 유닛 소환은 내 폰에서!</div>
+    </button>
+
+    <button class="role-card" onclick="showScreen('offlineSetupScreen')">
+      <div class="role-t">📺 중계석 모드 — 기기 1대 (오프라인)</div>
+      <div class="role-s">인터넷 없이 태블릿·노트북 한 대를 반으로 나눠 두 사령관이 함께 사용. 어디서든 100% 동작</div>
+    </button>
+
+    <button class="ghost-btn" onclick="showScreen('drawScreen')">🎴 유닛 뽑기만 사용하기</button>
+    <p class="note">💡 방 만들기가 안 되는 네트워크(일부 학교·기관 와이파이)에서는 중계석 모드를 사용하세요. 폰 핫스팟으로 같은 네트워크를 만들면 방 모드가 대부분 동작합니다.</p>
+  </div>
+</div>
+
+<!-- ══════════ 사회자: 설정 + 방 생성 ══════════ -->
+<div class="screen" id="hostSetupScreen">
+  <div class="wrap">
     <div class="setup-title">⏱️ 코인 적립 속도</div>
-    <div class="opt-row" id="rateRow">
+    <div class="opt-row" data-cfg="rate">
       <button class="opt-btn" data-v="6">6초</button>
       <button class="opt-btn active" data-v="8">8초</button>
       <button class="opt-btn" data-v="10">10초</button>
     </div>
-    <div class="setup-desc">1코인이 쌓이는 데 걸리는 시간. 빠를수록 정신없는 난타전!</div>
-
     <div class="setup-title">💰 시작 코인</div>
-    <div class="opt-row" id="startCoinRow">
+    <div class="opt-row" data-cfg="startCoin">
       <button class="opt-btn" data-v="0">0</button>
       <button class="opt-btn active" data-v="3">3</button>
       <button class="opt-btn" data-v="5">5</button>
     </div>
-    <div class="setup-desc">경기 시작과 동시에 보유하는 코인</div>
-
     <div class="setup-title">⏰ 경기 시간</div>
-    <div class="opt-row" id="timeRow">
+    <div class="opt-row" data-cfg="matchMin">
       <button class="opt-btn active" data-v="5">5분</button>
       <button class="opt-btn" data-v="7">7분</button>
       <button class="opt-btn" data-v="10">10분</button>
       <button class="opt-btn" data-v="0">무제한</button>
     </div>
-    <div class="setup-desc">시간 종료 후엔 서든데스(코인 2배)로 전환됩니다</div>
-
     <div class="setup-title">⚡ 더블 코인 타임</div>
-    <div class="opt-row" id="doubleRow">
+    <div class="opt-row" data-cfg="doubleMin">
       <button class="opt-btn active" data-v="1">마지막 1분</button>
       <button class="opt-btn" data-v="2">마지막 2분</button>
       <button class="opt-btn" data-v="-1">없음</button>
     </div>
-    <div class="setup-desc">경기 후반 코인이 2배 속도로 쌓여 총력전 유도</div>
 
-    <button class="start-btn" onclick="startMatch()">⚔️ 경기 시작!</button>
-    <button class="draw-link-btn" onclick="showScreen('drawScreen')">🎴 유닛 뽑기 먼저 하기</button>
+    <button class="big-btn btn-gold" id="createRoomBtn" onclick="createRoom()">📡 방 만들기</button>
+
+    <div class="room-code-box" id="roomCodeBox" style="display:none;">
+      <div class="rc-label">방 코드 — 사령관에게 알려주세요</div>
+      <div class="rc-code" id="roomCode">----</div>
+      <div class="rc-sub">사령관 폰에서 [사령관 — 방 입장] → 이 코드 입력</div>
+      <div class="peer-list" id="peerList"></div>
+    </div>
+    <div class="status-msg" id="hostStatus"></div>
+
+    <button class="big-btn btn-purple" id="hostStartBtn" onclick="hostStartMatch()" style="display:none;">⚔️ 경기 시작!</button>
+    <button class="ghost-btn" onclick="backToRole()">← 처음으로</button>
   </div>
 </div>
 
-<!-- ══════════ 유닛 뽑기 화면 ══════════ -->
-<div class="screen" id="drawScreen">
-  <div class="draw-wrap">
-    <div class="draw-info">사령관을 제외한 팀원이 한 명씩 버튼을 눌러<br>자기 유닛을 뽑으세요! (병종이 골고루 섞여 나옵니다)</div>
+<!-- ══════════ 사회자: 대시보드 ══════════ -->
+<div class="screen" id="hostPlayScreen">
+  <div class="timer-bar">
+    <span class="match-time" id="hMatchTime">5:00</span>
+    <span class="double-badge" id="hDoubleBadge">⚡ 더블 코인!</span>
+    <button class="tb-btn" id="hPauseBtn" onclick="hostTogglePause()">⏸ 일시정지</button>
+  </div>
 
+  <div class="event-ticker" id="eventTicker">경기 진행 중 — 모든 소환이 여기에 중계됩니다</div>
+
+  <div class="host-grid">
+    <div class="team-panel A">
+      <div class="tp-name">🔴 A팀</div>
+      <div class="tp-coin" id="hCoinA">0</div>
+      <div class="tp-sub" id="hSubA">소환 0회</div>
+      <div class="tp-log" id="hLogA"></div>
+      <div class="tp-pen">
+        <button class="pen-btn" onclick="hostPenalty('A',1)">⚠️ -1</button>
+        <button class="pen-btn" onclick="hostPenalty('A',3)">🚨 -3</button>
+        <button class="pen-btn" onclick="hostBonus('A',1)">🎁 +1</button>
+      </div>
+    </div>
+    <div class="team-panel B">
+      <div class="tp-name">🔵 B팀</div>
+      <div class="tp-coin" id="hCoinB">0</div>
+      <div class="tp-sub" id="hSubB">소환 0회</div>
+      <div class="tp-log" id="hLogB"></div>
+      <div class="tp-pen">
+        <button class="pen-btn" onclick="hostPenalty('B',1)">⚠️ -1</button>
+        <button class="pen-btn" onclick="hostPenalty('B',3)">🚨 -3</button>
+        <button class="pen-btn" onclick="hostBonus('B',1)">🎁 +1</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="host-actions">
+    <button class="tb-btn" onclick="hostSudden()">💀 서든데스 발동</button>
+    <button class="tb-btn" onclick="hostEnd()">🏁 경기 종료</button>
+  </div>
+</div>
+
+<!-- ══════════ 사령관: 입장 ══════════ -->
+<div class="screen" id="joinScreen">
+  <div class="wrap">
+    <div class="setup-title" style="text-align:center;">사회자에게 받은 방 코드</div>
+    <input class="code-input" id="codeInput" maxlength="4" placeholder="0000" inputmode="numeric" autocomplete="off">
+    <div class="team-pick">
+      <button class="team-btn A" id="pickA" onclick="pickTeam('A')">🔴 A팀 사령관</button>
+      <button class="team-btn B" id="pickB" onclick="pickTeam('B')">🔵 B팀 사령관</button>
+    </div>
+    <button class="big-btn btn-gold" onclick="joinRoom()">입장하기</button>
+    <div class="status-msg" id="joinStatus"></div>
+    <button class="ghost-btn" onclick="backToRole()">← 처음으로</button>
+  </div>
+</div>
+
+<!-- ══════════ 사령관: 플레이 ══════════ -->
+<div class="screen" id="cmdPlayScreen">
+  <div class="timer-bar">
+    <span class="match-time" id="cMatchTime">-:--</span>
+    <span class="double-badge" id="cDoubleBadge">⚡ 더블 코인!</span>
+    <span class="tb-btn" id="cTeamTag" style="cursor:default;">A팀</span>
+  </div>
+  <div class="coin-area">
+    <div class="coin-label">우리 팀 코인</div>
+    <div class="coin-num" id="cCoinNum">0</div>
+    <div class="coin-progress"><div class="coin-progress-fill" id="cCoinFill"></div></div>
+  </div>
+  <div class="shop-wrap">
+    <div class="shop-title">⚔️ 유닛 소환</div>
+    <div class="shop-grid" id="cShopGrid"></div>
+  </div>
+  <div class="log-area">
+    <div class="log-title">우리 팀 소환 기록</div>
+    <div class="summon-log" id="cSummonLog"></div>
+    <div class="status-msg" id="cStatus"></div>
+    <button class="ghost-btn" onclick="location.reload()">연결 끊고 나가기</button>
+  </div>
+</div>
+
+<!-- ══════════ 중계석: 설정 ══════════ -->
+<div class="screen" id="offlineSetupScreen">
+  <div class="wrap">
+    <p class="role-desc">기기 한 대를 심판석에 두고 화면을 반으로 나눠 사용합니다.<br>두 사령관이 자기 쪽 버튼을 직접 누르세요!</p>
+    <div class="setup-title">⏱️ 코인 적립 속도</div>
+    <div class="opt-row" data-cfg="rate">
+      <button class="opt-btn" data-v="6">6초</button>
+      <button class="opt-btn active" data-v="8">8초</button>
+      <button class="opt-btn" data-v="10">10초</button>
+    </div>
+    <div class="setup-title">💰 시작 코인</div>
+    <div class="opt-row" data-cfg="startCoin">
+      <button class="opt-btn" data-v="0">0</button>
+      <button class="opt-btn active" data-v="3">3</button>
+      <button class="opt-btn" data-v="5">5</button>
+    </div>
+    <div class="setup-title">⏰ 경기 시간</div>
+    <div class="opt-row" data-cfg="matchMin">
+      <button class="opt-btn active" data-v="5">5분</button>
+      <button class="opt-btn" data-v="7">7분</button>
+      <button class="opt-btn" data-v="10">10분</button>
+      <button class="opt-btn" data-v="0">무제한</button>
+    </div>
+    <div class="setup-title">⚡ 더블 코인 타임</div>
+    <div class="opt-row" data-cfg="doubleMin">
+      <button class="opt-btn active" data-v="1">마지막 1분</button>
+      <button class="opt-btn" data-v="2">마지막 2분</button>
+      <button class="opt-btn" data-v="-1">없음</button>
+    </div>
+    <button class="big-btn btn-gold" onclick="offlineStart()">📺 중계석 모드 시작!</button>
+    <button class="ghost-btn" onclick="backToRole()">← 처음으로</button>
+  </div>
+</div>
+
+<!-- ══════════ 중계석: 플레이 ══════════ -->
+<div class="screen" id="offlinePlayScreen">
+  <div class="timer-bar">
+    <span class="match-time" id="oMatchTime">5:00</span>
+    <span class="double-badge" id="oDoubleBadge">⚡ 더블 코인!</span>
+    <button class="tb-btn" id="oPauseBtn" onclick="hostTogglePause()">⏸ 일시정지</button>
+    <button class="tb-btn" onclick="hostSudden()">💀 서든데스</button>
+    <button class="tb-btn" onclick="hostEnd()">🏁 종료</button>
+  </div>
+  <div class="split-grid">
+    <div class="split-panel A">
+      <div class="sp-name">🔴 A팀</div>
+      <div class="sp-coin" id="oCoinA">0</div>
+      <div class="sp-progress"><div class="sp-progress-fill" id="oFillA"></div></div>
+      <div class="sp-shop" id="oShopA"></div>
+      <div class="sp-log" id="oLogA"></div>
+    </div>
+    <div class="split-panel B">
+      <div class="sp-name">🔵 B팀</div>
+      <div class="sp-coin" id="oCoinB">0</div>
+      <div class="sp-progress"><div class="sp-progress-fill" id="oFillB"></div></div>
+      <div class="sp-shop" id="oShopB"></div>
+      <div class="sp-log" id="oLogB"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════ 유닛 뽑기 ══════════ -->
+<div class="screen" id="drawScreen">
+  <div class="wrap" style="text-align:center;">
+    <p class="role-desc">사령관을 제외한 팀원이 한 명씩 버튼을 눌러<br>자기 유닛을 뽑으세요! (병종이 골고루 섞여 나옵니다)</p>
     <div class="draw-card" id="drawCard">
       <div class="draw-count" id="drawCount"></div>
       <div class="draw-emoji" id="drawEmoji">🎴</div>
       <div class="draw-name" id="drawName">유닛 카드</div>
       <div class="draw-trait" id="drawTrait">버튼을 눌러 병종을 뽑으세요</div>
     </div>
-
-    <button class="draw-btn" onclick="drawUnit()">🎴 유닛 뽑기</button>
-
+    <button class="big-btn btn-purple" onclick="drawUnit()">🎴 유닛 뽑기</button>
     <div class="drawn-list" id="drawnList"></div>
-
-    <button class="draw-back" onclick="resetDraw()">🔄 뽑기 초기화</button>
-    <button class="draw-back" onclick="showScreen('setupScreen')">← 설정으로</button>
+    <button class="ghost-btn" onclick="resetDraw()">🔄 뽑기 초기화</button>
+    <button class="ghost-btn" onclick="backToRole()">← 처음으로</button>
   </div>
-</div>
-
-<!-- ══════════ 플레이 화면 ══════════ -->
-<div class="screen" id="playScreen">
-
-  <div class="timer-bar">
-    <span class="match-time" id="matchTime">5:00</span>
-    <span class="double-badge" id="doubleBadge">⚡ 더블 코인!</span>
-    <button class="pause-btn" id="pauseBtn" onclick="togglePause()">⏸ 일시정지</button>
-  </div>
-
-  <div class="coin-area">
-    <div class="coin-label">보유 코인</div>
-    <div class="coin-num" id="coinNum">0</div>
-    <div class="coin-progress"><div class="coin-progress-fill" id="coinFill"></div></div>
-    <div class="coin-adjust">
-      <button class="adj-btn" onclick="adjustCoin(-1)">−</button>
-      <button class="adj-btn" onclick="adjustCoin(1)">+</button>
-    </div>
-  </div>
-
-  <div class="shop-wrap">
-    <div class="shop-title">⚔️ 유닛 소환 (버튼을 누르면 코인 차감)</div>
-    <div class="shop-grid" id="shopGrid"></div>
-  </div>
-
-  <div class="log-area">
-    <div class="log-title">소환 기록</div>
-    <div class="summon-log" id="summonLog"></div>
-    <div class="reset-row">
-      <button class="sub-btn" onclick="undoSummon()">↩️ 소환 무르기</button>
-      <button class="sub-btn" onclick="endMatch()">🏁 경기 종료 (설정으로)</button>
-    </div>
-  </div>
-
 </div>
 
 <!-- ── 소환 오버레이 ── -->
 <div class="summon-overlay" id="summonOverlay">
   <div class="so-emoji" id="soEmoji">⚔️</div>
-  <div class="so-text" id="soText">병사 소환!</div>
-  <div class="so-sub" id="soSub">-2코인</div>
+  <div class="so-text tN" id="soText">소환!</div>
+  <div class="so-sub" id="soSub"></div>
 </div>
 
 <script>
-/* ── 유닛 정의 ── */
+/* ══════════ 공통 ══════════ */
 const UNITS = [
   { key: 'soldier', emoji: '⚔️', name: '병사',   cost: 2, trait: '기본 유닛 · 목숨 1' },
   { key: 'shield',  emoji: '🛡️', name: '방패병', cost: 3, trait: '목숨 2 · 한 번 져도 버팀' },
@@ -549,11 +535,12 @@ const UNITS = [
   { key: 'mage',    emoji: '🧙', name: '마법사', cost: 5, trait: '목숨 1 · 비기면 승리' },
   { key: 'giant',   emoji: '👹', name: '거인',   cost: 6, trait: '목숨 3 · 초슬로우 걸음' }
 ];
+const UNIT_MAP = {};
+UNITS.forEach(u => UNIT_MAP[u.key] = u);
 
 const $ = id => document.getElementById(id);
 function vibrate(p) { if (navigator.vibrate) navigator.vibrate(p); }
 
-/* ── 효과음 (Web Audio 비프) ── */
 let audioCtx = null;
 function beep(freq, dur, type) {
   try {
@@ -569,36 +556,542 @@ function beep(freq, dur, type) {
   } catch (e) {}
 }
 
-/* ── 설정 상태 ── */
-let CFG = { rate: 8, startCoin: 3, matchMin: 5, doubleMin: 1 };
-
-function bindOptRow(rowId, key) {
-  document.querySelectorAll('#' + rowId + ' .opt-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('#' + rowId + ' .opt-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      CFG[key] = parseInt(btn.dataset.v, 10);
-      if (key === 'rate') $('coinRateBadge').textContent = CFG.rate + '초/1코인';
-    });
-  });
-}
-bindOptRow('rateRow', 'rate');
-bindOptRow('startCoinRow', 'startCoin');
-bindOptRow('timeRow', 'matchMin');
-bindOptRow('doubleRow', 'doubleMin');
-
-/* ── 화면 전환 ── */
 function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   $(id).classList.add('active');
+}
+function backToRole() { location.reload(); }
+
+function setConnBadge(text, cls) {
+  const b = $('connBadge');
+  b.textContent = text;
+  b.className = 'conn-badge' + (cls ? ' ' + cls : '');
+}
+
+/* 화면 꺼짐 방지 (지원 기기 한정) */
+async function keepAwake() {
+  try { if (navigator.wakeLock) await navigator.wakeLock.request('screen'); } catch (e) {}
+}
+
+/* ── 설정 바인딩 (사회자·중계석 공용) ── */
+let CFG = { rate: 8, startCoin: 3, matchMin: 5, doubleMin: 1 };
+document.querySelectorAll('.opt-row[data-cfg]').forEach(row => {
+  row.querySelectorAll('.opt-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      row.querySelectorAll('.opt-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      CFG[row.dataset.cfg] = parseInt(btn.dataset.v, 10);
+      // 같은 설정을 쓰는 다른 화면의 행도 동기화
+      document.querySelectorAll('.opt-row[data-cfg="' + row.dataset.cfg + '"]').forEach(other => {
+        if (other === row) return;
+        other.querySelectorAll('.opt-btn').forEach(b =>
+          b.classList.toggle('active', b.dataset.v === btn.dataset.v));
+      });
+    });
+  });
+});
+
+/* ══════════ 게임 엔진 (사회자/중계석이 실행) ══════════ */
+let G = null;       // 게임 상태
+let engineId = null;
+let engineLastTick = 0;
+let mode = null;    // 'host' | 'offline' | 'cmd'
+
+function newGame() {
+  return {
+    teams: {
+      A: { coin: CFG.startCoin, coinMs: 0, log: [] },
+      B: { coin: CFG.startCoin, coinMs: 0, log: [] }
+    },
+    remainMs: CFG.matchMin > 0 ? CFG.matchMin * 60 * 1000 : -1,
+    sudden: false,
+    paused: false,
+    cfg: { rate: CFG.rate, matchMin: CFG.matchMin, doubleMin: CFG.doubleMin }
+  };
+}
+
+function isDouble() {
+  if (!G) return false;
+  if (G.sudden) return true;
+  if (G.cfg.doubleMin < 0 || G.cfg.matchMin === 0) return false;
+  return G.remainMs >= 0 && G.remainMs <= G.cfg.doubleMin * 60 * 1000;
+}
+
+function startEngine() {
+  if (engineId) clearInterval(engineId);
+  engineLastTick = performance.now();
+  engineId = setInterval(engineTick, 100);
+  keepAwake();
+}
+
+function engineTick() {
+  const now = performance.now();
+  const dt = now - engineLastTick;
+  engineLastTick = now;
+  if (!G || G.paused) { renderGame(); return; }
+
+  if (G.remainMs > 0) {
+    G.remainMs -= dt;
+    if (G.remainMs <= 0) {
+      G.remainMs = 0;
+      G.sudden = true;
+      vibrate([80, 60, 80, 60, 120]);
+      beep(880, 0.3, 'square'); setTimeout(() => beep(660, 0.4, 'square'), 320);
+      broadcastEvent({ kind: 'sudden' });
+    }
+  }
+
+  const effRate = G.cfg.rate * 1000 / (isDouble() ? 2 : 1);
+  ['A', 'B'].forEach(t => {
+    const team = G.teams[t];
+    team.coinMs += dt;
+    while (team.coinMs >= effRate) {
+      team.coinMs -= effRate;
+      team.coin++;
+    }
+  });
+
+  renderGame();
+  broadcastState();
+}
+
+/* 소환 처리 (엔진 보유자만 호출) */
+function engineSummon(team, unitKey) {
+  const u = UNIT_MAP[unitKey];
+  if (!u || !G || G.paused) return false;
+  const t = G.teams[team];
+  if (t.coin < u.cost) return false;
+  t.coin -= u.cost;
+  t.log.push(unitKey);
+  broadcastEvent({ kind: 'summon', team, unit: unitKey });
+  broadcastState();
+  renderGame();
+  return true;
+}
+
+function enginePenalty(team, amount, isBonus) {
+  if (!G) return;
+  const t = G.teams[team];
+  t.coin = Math.max(0, t.coin + (isBonus ? amount : -amount));
+  broadcastEvent({ kind: isBonus ? 'bonus' : 'penalty', team, amount });
+  broadcastState();
+  renderGame();
+}
+
+/* ══════════ P2P (PeerJS) ══════════ */
+let peer = null;
+let hostConns = [];       // 사회자: 연결된 사령관들
+let cmdConn = null;       // 사령관: 사회자와의 연결
+let myTeam = null;
+let lastState = null;     // 사령관: 최신 수신 상태
+let stateThrottle = 0;
+
+function roomIdFor(code) { return 'recwhat-unitdef-' + code; }
+
+/* ── 사회자: 방 생성 ── */
+function createRoom() {
+  if (typeof Peer === 'undefined') {
+    $('hostStatus').textContent = '연결 라이브러리를 불러오지 못했어요. 인터넷 확인 후 새로고침하거나 중계석 모드를 사용하세요.';
+    $('hostStatus').className = 'status-msg err';
+    return;
+  }
+  const code = String(Math.floor(1000 + Math.random() * 9000));
+  $('createRoomBtn').disabled = true;
+  $('hostStatus').textContent = '방을 만드는 중...';
+  $('hostStatus').className = 'status-msg wait';
+
+  peer = new Peer(roomIdFor(code));
+
+  peer.on('open', () => {
+    $('roomCode').textContent = code;
+    $('roomCodeBox').style.display = 'block';
+    $('hostStartBtn').style.display = 'block';
+    $('hostStatus').textContent = '사령관 입장을 기다리는 중 (입장 없이 시작해도 됩니다)';
+    $('hostStatus').className = 'status-msg ok';
+    setConnBadge('방 개설됨', 'on');
+  });
+
+  peer.on('connection', conn => {
+    conn.on('data', msg => handleHostMsg(conn, msg));
+    conn.on('close', () => {
+      hostConns = hostConns.filter(c => c !== conn);
+      renderPeerList();
+    });
+  });
+
+  peer.on('error', err => {
+    if (err.type === 'unavailable-id') { // 코드 충돌 → 재시도
+      peer.destroy(); peer = null;
+      $('createRoomBtn').disabled = false;
+      createRoom();
+      return;
+    }
+    $('hostStatus').textContent = '방 만들기 실패 (' + err.type + '). 네트워크가 P2P를 차단했을 수 있어요 → 중계석 모드를 사용하세요.';
+    $('hostStatus').className = 'status-msg err';
+    $('createRoomBtn').disabled = false;
+    setConnBadge('연결 실패', 'err');
+  });
+}
+
+function handleHostMsg(conn, msg) {
+  if (!msg || typeof msg !== 'object') return;
+  if (msg.t === 'join') {
+    conn._team = msg.team === 'B' ? 'B' : 'A';
+    if (!hostConns.includes(conn)) hostConns.push(conn);
+    renderPeerList();
+    conn.send({ t: 'welcome', team: conn._team, units: UNITS.map(u => u.key), state: snapshot() });
+    tickerMsg((conn._team === 'A' ? '🔴 A팀' : '🔵 B팀') + ' 사령관 입장!');
+  } else if (msg.t === 'summon') {
+    const ok = engineSummon(conn._team, msg.unit);
+    if (!ok) conn.send({ t: 'deny', reason: G && G.paused ? '일시정지 중입니다' : '코인이 부족합니다' });
+  } else if (msg.t === 'undo') {
+    if (!G) return;
+    const t = G.teams[conn._team];
+    const last = t.log.pop();
+    if (last) {
+      t.coin += UNIT_MAP[last].cost;
+      broadcastEvent({ kind: 'undo', team: conn._team, unit: last });
+      broadcastState(); renderGame();
+    }
+  }
+}
+
+function renderPeerList() {
+  const el = $('peerList');
+  if (!el) return;
+  el.innerHTML = '';
+  hostConns.forEach(c => {
+    const chip = document.createElement('span');
+    chip.className = 'peer-chip ' + (c._team || 'A');
+    chip.textContent = (c._team === 'B' ? '🔵 B팀' : '🔴 A팀') + ' 사령관';
+    el.appendChild(chip);
+  });
+}
+
+function snapshot() {
+  if (!G) return null;
+  return {
+    A: { coin: G.teams.A.coin, coinMs: G.teams.A.coinMs, log: G.teams.A.log.slice(-12) },
+    B: { coin: G.teams.B.coin, coinMs: G.teams.B.coinMs, log: G.teams.B.log.slice(-12) },
+    remainMs: G.remainMs, sudden: G.sudden, paused: G.paused,
+    cfg: G.cfg, dbl: isDouble()
+  };
+}
+
+function broadcastState() {
+  if (mode !== 'host' || hostConns.length === 0) return;
+  stateThrottle++;
+  if (stateThrottle % 3 !== 0) return; // ~300ms마다
+  const s = snapshot();
+  hostConns.forEach(c => { try { c.send({ t: 'state', s }); } catch (e) {} });
+}
+
+function broadcastEvent(ev) {
+  // 로컬(사회자/중계석) 표시
+  if (ev.kind === 'summon') {
+    const u = UNIT_MAP[ev.unit];
+    showSummonOverlay(ev.team, u);
+    tickerMsg((ev.team === 'A' ? '🔴 A팀' : '🔵 B팀') + ' ' + u.emoji + ' ' + u.name + ' 소환!');
+  } else if (ev.kind === 'penalty') {
+    tickerMsg('⚠️ ' + (ev.team === 'A' ? '🔴 A팀' : '🔵 B팀') + ' 페널티 -' + ev.amount + '코인');
+  } else if (ev.kind === 'bonus') {
+    tickerMsg('🎁 ' + (ev.team === 'A' ? '🔴 A팀' : '🔵 B팀') + ' 보너스 +' + ev.amount + '코인');
+  } else if (ev.kind === 'sudden') {
+    tickerMsg('💀 서든데스! 코인이 2배로 쌓입니다!');
+  }
+  if (mode === 'host') {
+    hostConns.forEach(c => { try { c.send({ t: 'event', ev }); } catch (e) {} });
+  }
+}
+
+function tickerMsg(text) {
+  const el = $('eventTicker');
+  if (el) el.textContent = text;
+}
+
+/* ── 사회자: 경기 제어 ── */
+function hostStartMatch() {
+  mode = 'host';
+  G = newGame();
+  buildHostUI();
+  showScreen('hostPlayScreen');
+  startEngine();
+  broadcastEvent({ kind: 'start' });
+  hostConns.forEach(c => { try { c.send({ t: 'state', s: snapshot() }); } catch (e) {} });
+  beep(520, 0.12); setTimeout(() => beep(660, 0.12), 130); setTimeout(() => beep(880, 0.2), 260);
+}
+function hostTogglePause() {
+  if (!G) return;
+  G.paused = !G.paused;
+  const label = G.paused ? '▶ 재개' : '⏸ 일시정지';
+  if ($('hPauseBtn')) $('hPauseBtn').textContent = label;
+  if ($('oPauseBtn')) $('oPauseBtn').textContent = label;
+  tickerMsg(G.paused ? '⏸ 경기 일시정지' : '▶ 경기 재개!');
+  broadcastState();
+}
+function hostSudden() {
+  if (!G || G.sudden) return;
+  G.remainMs = 0;
+  G.sudden = true;
+  broadcastEvent({ kind: 'sudden' });
+  broadcastState();
+}
+function hostPenalty(team, n) { enginePenalty(team, n, false); vibrate(50); }
+function hostBonus(team, n) { enginePenalty(team, n, true); }
+function hostEnd() {
+  if (engineId) { clearInterval(engineId); engineId = null; }
+  location.reload();
+}
+
+function buildHostUI() { /* 정적 마크업 사용 */ }
+
+/* ══════════ 사령관 ══════════ */
+function pickTeam(t) {
+  myTeam = t;
+  $('pickA').classList.toggle('sel', t === 'A');
+  $('pickB').classList.toggle('sel', t === 'B');
+}
+
+function joinRoom() {
+  const code = $('codeInput').value.trim();
+  if (code.length !== 4) { setJoinStatus('4자리 코드를 입력하세요', 'err'); return; }
+  if (!myTeam) { setJoinStatus('팀을 선택하세요', 'err'); return; }
+  if (typeof Peer === 'undefined') { setJoinStatus('연결 라이브러리 로드 실패. 인터넷을 확인하세요.', 'err'); return; }
+
+  setJoinStatus('연결 중...', 'wait');
+  peer = new Peer();
+  peer.on('open', () => {
+    cmdConn = peer.connect(roomIdFor(code), { reliable: true });
+    cmdConn.on('open', () => {
+      cmdConn.send({ t: 'join', team: myTeam });
+    });
+    cmdConn.on('data', handleCmdMsg);
+    cmdConn.on('close', () => {
+      setConnBadge('연결 끊김', 'err');
+      const st = $('cStatus');
+      if (st) { st.textContent = '사회자와 연결이 끊겼어요. 새로고침 후 다시 입장하세요.'; st.className = 'status-msg err'; }
+    });
+    setTimeout(() => {
+      if (!cmdConn || !cmdConn.open) setJoinStatus('방을 찾을 수 없어요. 코드 확인 또는 같은 네트워크(핫스팟)인지 확인하세요.', 'err');
+    }, 8000);
+  });
+  peer.on('error', err => {
+    setJoinStatus('연결 실패 (' + err.type + '). 코드를 확인하거나 중계석 모드를 사용하세요.', 'err');
+  });
+}
+function setJoinStatus(msg, cls) {
+  const el = $('joinStatus');
+  el.textContent = msg;
+  el.className = 'status-msg ' + (cls || '');
+}
+
+function handleCmdMsg(msg) {
+  if (!msg || typeof msg !== 'object') return;
+  if (msg.t === 'welcome') {
+    mode = 'cmd';
+    $('cTeamTag').textContent = (msg.team === 'A' ? '🔴 A팀' : '🔵 B팀');
+    buildCmdShop();
+    showScreen('cmdPlayScreen');
+    setConnBadge('연결됨', 'on');
+    keepAwake();
+    if (msg.state) applyState(msg.state);
+  } else if (msg.t === 'state') {
+    applyState(msg.s);
+  } else if (msg.t === 'event') {
+    const ev = msg.ev;
+    if (ev.kind === 'summon' && ev.team === myTeam) {
+      showSummonOverlay(ev.team, UNIT_MAP[ev.unit]);
+      addChip('cSummonLog', UNIT_MAP[ev.unit]);
+      vibrate([40, 40, 80]);
+      beep(440, 0.1); setTimeout(() => beep(880, 0.25), 110);
+    } else if (ev.kind === 'sudden') {
+      vibrate([80, 60, 80]);
+      beep(880, 0.3, 'square');
+    } else if (ev.kind === 'penalty' && ev.team === myTeam) {
+      const st = $('cStatus');
+      st.textContent = '⚠️ 심판 페널티! -' + ev.amount + '코인';
+      st.className = 'status-msg err';
+      vibrate(150);
+      setTimeout(() => { st.textContent = ''; }, 2500);
+    }
+  } else if (msg.t === 'deny') {
+    const st = $('cStatus');
+    st.textContent = '❌ ' + msg.reason;
+    st.className = 'status-msg err';
+    vibrate(80);
+    setTimeout(() => { st.textContent = ''; }, 1800);
+  }
+}
+
+function applyState(s) {
+  if (!s) return;
+  lastState = s;
+  const t = s[myTeam];
+  const prev = parseInt($('cCoinNum').textContent, 10);
+  $('cCoinNum').textContent = t.coin;
+  if (t.coin > prev) {
+    $('cCoinNum').classList.remove('pop'); void $('cCoinNum').offsetWidth; $('cCoinNum').classList.add('pop');
+  }
+  const effRate = s.cfg.rate * 1000 / (s.dbl ? 2 : 1);
+  $('cCoinFill').style.width = Math.min(100, (t.coinMs / effRate) * 100) + '%';
+  $('cDoubleBadge').classList.toggle('on', !!s.dbl);
+  // 타이머
+  const el = $('cMatchTime');
+  if (s.cfg.matchMin === 0) el.textContent = '무제한';
+  else if (s.sudden) { el.textContent = '서든데스!'; el.classList.add('sudden'); }
+  else {
+    el.classList.remove('sudden');
+    const total = Math.ceil(s.remainMs / 1000);
+    el.textContent = Math.floor(total / 60) + ':' + String(total % 60).padStart(2, '0');
+  }
+  // 상점 활성화
+  UNITS.forEach(u => {
+    const btn = $('cshop-' + u.key);
+    if (btn) btn.disabled = t.coin < u.cost || s.paused;
+  });
+}
+
+function buildCmdShop() {
+  const grid = $('cShopGrid');
+  grid.innerHTML = '';
+  UNITS.forEach(u => {
+    const btn = document.createElement('button');
+    btn.className = 'unit-btn';
+    btn.id = 'cshop-' + u.key;
+    btn.innerHTML =
+      '<span class="u-emoji">' + u.emoji + '</span>' +
+      '<span class="u-name">' + u.name + '</span>' +
+      '<span class="u-cost">🪙 ' + u.cost + '</span>' +
+      '<span class="u-trait">' + u.trait + '</span>';
+    btn.addEventListener('click', () => {
+      if (cmdConn && cmdConn.open) cmdConn.send({ t: 'summon', unit: u.key });
+    });
+    grid.appendChild(btn);
+  });
+}
+
+/* ══════════ 중계석 모드 ══════════ */
+function offlineStart() {
+  mode = 'offline';
+  G = newGame();
+  buildOfflineShops();
+  showScreen('offlinePlayScreen');
+  startEngine();
+  setConnBadge('중계석 모드');
+  beep(520, 0.12); setTimeout(() => beep(660, 0.12), 130); setTimeout(() => beep(880, 0.2), 260);
+}
+
+function buildOfflineShops() {
+  ['A', 'B'].forEach(team => {
+    const grid = $('oShop' + team);
+    grid.innerHTML = '';
+    UNITS.forEach(u => {
+      const btn = document.createElement('button');
+      btn.className = 'unit-btn';
+      btn.id = 'oshop-' + team + '-' + u.key;
+      btn.innerHTML =
+        '<span class="u-emoji">' + u.emoji + '</span>' +
+        '<span class="u-name">' + u.name + '</span>' +
+        '<span class="u-cost">🪙 ' + u.cost + '</span>';
+      btn.addEventListener('click', () => {
+        const ok = engineSummon(team, u.key);
+        if (ok) { vibrate([40, 40, 80]); beep(440, 0.1); setTimeout(() => beep(880, 0.25), 110); }
+      });
+      grid.appendChild(btn);
+    });
+  });
+}
+
+/* ══════════ 렌더링 (엔진 보유자) ══════════ */
+function renderGame() {
+  if (!G) return;
+  if (mode === 'host') {
+    renderTeamNum('hCoinA', G.teams.A.coin);
+    renderTeamNum('hCoinB', G.teams.B.coin);
+    $('hSubA').textContent = '소환 ' + G.teams.A.log.length + '회';
+    $('hSubB').textContent = '소환 ' + G.teams.B.log.length + '회';
+    renderLog('hLogA', G.teams.A.log);
+    renderLog('hLogB', G.teams.B.log);
+    renderTimer('hMatchTime');
+    $('hDoubleBadge').classList.toggle('on', isDouble());
+  } else if (mode === 'offline') {
+    renderTeamNum('oCoinA', G.teams.A.coin);
+    renderTeamNum('oCoinB', G.teams.B.coin);
+    renderLog('oLogA', G.teams.A.log);
+    renderLog('oLogB', G.teams.B.log);
+    renderTimer('oMatchTime');
+    $('oDoubleBadge').classList.toggle('on', isDouble());
+    const effRate = G.cfg.rate * 1000 / (isDouble() ? 2 : 1);
+    $('oFillA').style.width = Math.min(100, (G.teams.A.coinMs / effRate) * 100) + '%';
+    $('oFillB').style.width = Math.min(100, (G.teams.B.coinMs / effRate) * 100) + '%';
+    ['A', 'B'].forEach(team => {
+      UNITS.forEach(u => {
+        const btn = $('oshop-' + team + '-' + u.key);
+        if (btn) btn.disabled = G.teams[team].coin < u.cost || G.paused;
+      });
+    });
+  }
+}
+
+const lastNums = {};
+function renderTeamNum(id, val) {
+  const el = $(id);
+  if (!el) return;
+  if (lastNums[id] !== val) {
+    el.textContent = val;
+    el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop');
+    lastNums[id] = val;
+  }
+}
+function renderLog(id, log) {
+  const el = $(id);
+  if (!el) return;
+  const recent = log.slice(-6);
+  if (el._len === log.length) return;
+  el._len = log.length;
+  el.innerHTML = '';
+  recent.forEach(k => {
+    const u = UNIT_MAP[k];
+    const chip = document.createElement('span');
+    chip.className = 's-chip';
+    chip.textContent = u.emoji + ' ' + u.name;
+    el.appendChild(chip);
+  });
+}
+function renderTimer(id) {
+  const el = $(id);
+  if (!el) return;
+  if (G.cfg.matchMin === 0) { el.textContent = '무제한'; return; }
+  if (G.sudden) { el.textContent = '서든데스!'; el.classList.add('sudden'); return; }
+  el.classList.remove('sudden');
+  const total = Math.ceil(G.remainMs / 1000);
+  el.textContent = Math.floor(total / 60) + ':' + String(total % 60).padStart(2, '0');
+}
+
+function addChip(id, u) {
+  const el = $(id);
+  if (!el) return;
+  const chip = document.createElement('span');
+  chip.className = 's-chip';
+  chip.textContent = u.emoji + ' ' + u.name;
+  el.appendChild(chip);
+}
+
+function showSummonOverlay(team, u) {
+  $('soEmoji').textContent = u.emoji;
+  const t = $('soText');
+  t.textContent = (team === 'A' ? 'A팀 ' : team === 'B' ? 'B팀 ' : '') + u.name + ' 소환!';
+  t.className = 'so-text ' + (team === 'A' ? 'tA' : team === 'B' ? 'tB' : 'tN');
+  $('soSub').textContent = '-' + u.cost + '코인';
+  const ov = $('summonOverlay');
+  ov.classList.add('show');
+  setTimeout(() => ov.classList.remove('show'), 1300);
 }
 
 /* ══════════ 유닛 뽑기 ══════════ */
 let drawDeck = [];
 let drawnUnits = [];
-
 function refillDeck() {
-  // 5종 1세트씩 섞어서 병종이 골고루 나오게
   const deck = UNITS.slice();
   for (let i = deck.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -606,34 +1099,25 @@ function refillDeck() {
   }
   drawDeck = drawDeck.concat(deck);
 }
-
 function drawUnit() {
   if (drawDeck.length === 0) refillDeck();
   const u = drawDeck.shift();
   drawnUnits.push(u);
-
   const card = $('drawCard');
-  card.classList.remove('revealed');
-  void card.offsetWidth;
-  card.classList.add('revealed');
-
+  card.classList.remove('revealed'); void card.offsetWidth; card.classList.add('revealed');
   $('drawCount').textContent = drawnUnits.length + '번째 유닛';
   $('drawEmoji').textContent = u.emoji;
   $('drawName').textContent = u.name;
   $('drawTrait').textContent = u.trait + ' · 소환 비용 ' + u.cost + '코인';
-
   const chip = document.createElement('span');
   chip.className = 'drawn-chip';
   chip.textContent = drawnUnits.length + '. ' + u.emoji + ' ' + u.name;
   $('drawnList').appendChild(chip);
-
   vibrate(30);
   beep(660, 0.15);
 }
-
 function resetDraw() {
-  drawDeck = [];
-  drawnUnits = [];
+  drawDeck = []; drawnUnits = [];
   $('drawnList').innerHTML = '';
   $('drawCount').textContent = '';
   $('drawEmoji').textContent = '🎴';
@@ -642,170 +1126,10 @@ function resetDraw() {
   $('drawCard').classList.remove('revealed');
 }
 
-/* ══════════ 경기 진행 ══════════ */
-let S = {
-  coin: 0,
-  coinMs: 0,          // 다음 코인까지 누적 ms
-  remainMs: 0,        // 남은 경기 시간 ms
-  sudden: false,
-  paused: false,
-  log: [],            // {unit, cost}
-  timerId: null,
-  lastTick: 0
-};
-
-function buildShop() {
-  const grid = $('shopGrid');
-  grid.innerHTML = '';
-  UNITS.forEach(u => {
-    const btn = document.createElement('button');
-    btn.className = 'unit-btn';
-    btn.id = 'shop-' + u.key;
-    btn.innerHTML =
-      '<span class="u-emoji">' + u.emoji + '</span>' +
-      '<span class="u-name">' + u.name + '</span>' +
-      '<span class="u-cost">🪙 ' + u.cost + '</span>' +
-      '<span class="u-trait">' + u.trait + '</span>';
-    btn.addEventListener('click', () => summon(u));
-    grid.appendChild(btn);
-  });
-}
-
-function startMatch() {
-  S.coin = CFG.startCoin;
-  S.coinMs = 0;
-  S.remainMs = CFG.matchMin > 0 ? CFG.matchMin * 60 * 1000 : -1;
-  S.sudden = false;
-  S.paused = false;
-  S.log = [];
-  $('summonLog').innerHTML = '';
-  $('doubleBadge').classList.remove('on');
-  $('matchTime').classList.remove('sudden');
-  buildShop();
-  renderCoin();
-  renderTime();
-  showScreen('playScreen');
-
-  if (S.timerId) clearInterval(S.timerId);
-  S.lastTick = performance.now();
-  S.timerId = setInterval(tick, 100);
-  beep(520, 0.12); setTimeout(() => beep(660, 0.12), 130); setTimeout(() => beep(880, 0.2), 260);
-}
-
-function isDouble() {
-  if (S.sudden) return true;
-  if (CFG.doubleMin < 0 || CFG.matchMin === 0) return false;
-  return S.remainMs >= 0 && S.remainMs <= CFG.doubleMin * 60 * 1000;
-}
-
-function tick() {
-  const now = performance.now();
-  const dt = now - S.lastTick;
-  S.lastTick = now;
-  if (S.paused) return;
-
-  // 경기 시간
-  if (S.remainMs > 0) {
-    S.remainMs -= dt;
-    if (S.remainMs <= 0) {
-      S.remainMs = 0;
-      S.sudden = true;
-      $('matchTime').classList.add('sudden');
-      vibrate([80, 60, 80, 60, 120]);
-      beep(880, 0.3, 'square'); setTimeout(() => beep(660, 0.4, 'square'), 320);
-    }
-  }
-  renderTime();
-
-  // 코인 적립
-  const effRate = CFG.rate * 1000 / (isDouble() ? 2 : 1);
-  S.coinMs += dt;
-  while (S.coinMs >= effRate) {
-    S.coinMs -= effRate;
-    S.coin++;
-    coinPop();
-  }
-  $('coinFill').style.width = Math.min(100, (S.coinMs / effRate) * 100) + '%';
-  $('doubleBadge').classList.toggle('on', isDouble());
-  renderShopState();
-}
-
-function coinPop() {
-  const el = $('coinNum');
-  el.textContent = S.coin;
-  el.classList.remove('pop');
-  void el.offsetWidth;
-  el.classList.add('pop');
-  beep(1040, 0.08);
-}
-
-function renderCoin() { $('coinNum').textContent = S.coin; renderShopState(); }
-
-function renderShopState() {
-  UNITS.forEach(u => {
-    const btn = $('shop-' + u.key);
-    if (btn) btn.disabled = S.coin < u.cost;
-  });
-}
-
-function renderTime() {
-  const el = $('matchTime');
-  if (CFG.matchMin === 0) { el.textContent = '무제한'; return; }
-  if (S.sudden) { el.textContent = '서든데스!'; return; }
-  const total = Math.ceil(S.remainMs / 1000);
-  const m = Math.floor(total / 60);
-  const s = total % 60;
-  el.textContent = m + ':' + String(s).padStart(2, '0');
-}
-
-/* ── 소환 ── */
-function summon(u) {
-  if (S.paused || S.coin < u.cost) return;
-  S.coin -= u.cost;
-  S.log.push(u);
-  renderCoin();
-
-  // 로그 칩
-  const chip = document.createElement('span');
-  chip.className = 's-chip';
-  chip.textContent = u.emoji + ' ' + u.name;
-  $('summonLog').appendChild(chip);
-
-  // 오버레이
-  $('soEmoji').textContent = u.emoji;
-  $('soText').textContent = u.name + ' 소환!';
-  $('soSub').textContent = '-' + u.cost + '코인';
-  const ov = $('summonOverlay');
-  ov.classList.add('show');
-  vibrate([40, 40, 80]);
-  beep(440, 0.1); setTimeout(() => beep(880, 0.25), 110);
-  setTimeout(() => ov.classList.remove('show'), 1400);
-}
-
-function undoSummon() {
-  const u = S.log.pop();
-  if (!u) return;
-  S.coin += u.cost;
-  renderCoin();
-  const chips = $('summonLog');
-  if (chips.lastChild) chips.removeChild(chips.lastChild);
-  vibrate(20);
-}
-
-function adjustCoin(d) {
-  S.coin = Math.max(0, S.coin + d);
-  renderCoin();
-}
-
-function togglePause() {
-  S.paused = !S.paused;
-  $('pauseBtn').textContent = S.paused ? '▶ 재개' : '⏸ 일시정지';
-}
-
-function endMatch() {
-  if (S.timerId) { clearInterval(S.timerId); S.timerId = null; }
-  showScreen('setupScreen');
-}
+/* 코드 입력: 숫자만 */
+$('codeInput').addEventListener('input', e => {
+  e.target.value = e.target.value.replace(/\D/g, '').slice(0, 4);
+});
 </script>
 </body>
 </html>
