@@ -919,6 +919,57 @@ const gamesData = [
       duration: 'medium',
       situation: ['ice-break', 'no-prep']
     }
+  },
+  {
+    id: 'mugunghwa',
+    emoji: '🌺',
+    title: '무궁화 꽃이 피었습니다',
+    description: '술래가 뒤도는 순간 모두 얼음! 술래가 곧 진행자라 아이들끼리 알아서 굴러가는 국민 술래 놀이',
+    url: 'games/mugunghwa.html',
+    people: '5명+',
+    time: '10~20분',
+    prep: '없음',
+    tags: {
+      location: ['both'],
+      groupSize: ['small', 'medium', 'large'],
+      ageGroup: ['young', 'kid-young', 'kid-old'],
+      duration: 'medium',
+      situation: ['energy', 'no-prep']
+    }
+  },
+  {
+    id: 'gawibawibo-train',
+    emoji: '🚂',
+    title: '가위바위보 기차',
+    description: '지면 이긴 사람 뒤에 붙어 기차가 된다! 전원이 한 줄이 되면 저절로 끝나는 자율 진행 게임',
+    url: 'games/gawibawibo-train.html',
+    people: '8명+',
+    time: '5~10분',
+    prep: '없음',
+    tags: {
+      location: ['both'],
+      groupSize: ['medium', 'large', 'xlarge'],
+      ageGroup: ['young', 'kid-young', 'kid-old', 'teen', 'adult'],
+      duration: 'short',
+      situation: ['ice-break', 'energy', 'no-prep']
+    }
+  },
+  {
+    id: 'kokoko',
+    emoji: '👃',
+    title: '코코코 게임',
+    description: '코코코... 눈! 말과 손이 다른 함정에 걸리면 진다. 짝만 지어주면 교실 전체가 동시에 시작',
+    url: 'games/kokoko.html',
+    people: '2명+',
+    time: '5~10분',
+    prep: '없음',
+    tags: {
+      location: ['indoor'],
+      groupSize: ['small', 'medium'],
+      ageGroup: ['young', 'kid-young', 'kid-old'],
+      duration: 'short',
+      situation: ['ice-break', 'no-prep']
+    }
   }
 ];
 
