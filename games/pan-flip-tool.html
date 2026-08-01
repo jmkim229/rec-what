@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="description" content="판 뒤집기 타이머·점수판. 라운드 카운트다운(마지막 5초 비프+종료 휘슬), 팀별 판 개수 집계, 라운드별·누적 스코어 자동 계산. 프로젝터에 띄우기 좋은 큰 화면.">
+  <!-- Open Graph / SNS 공유 -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="레크 뭐하지?">
+  <meta property="og:title" content="⏱️ 판 뒤집기 타이머·점수판 | 레크 뭐하지?">
+  <meta property="og:description" content="판 뒤집기 타이머·점수판. 라운드 카운트다운(마지막 5초 비프+종료 휘슬), 팀별 판 개수 집계, 라운드별·누적 스코어 자동 계산.">
+  <meta property="og:url" content="https://recwhat.com/games/pan-flip-tool.html">
+  <meta property="og:image" content="https://recwhat.com/og-image.png">
+  <meta property="og:locale" content="ko_KR">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="⏱️ 판 뒤집기 타이머·점수판 | 레크 뭐하지?">
+  <meta name="twitter:description" content="판 뒤집기 타이머·점수판. 라운드 카운트다운, 팀별 판 개수 집계, 누적 스코어 자동 계산.">
+  <meta name="twitter:image" content="https://recwhat.com/og-image.png">
+  <title>⏱️ 판 뒤집기 타이머·점수판 | 레크 뭐하지?</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif;
+      background: #0f172a;
+      color: #f1f5f9;
+      min-height: 100vh;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+      overflow-x: hidden;
+    }
+
+    /* ── 헤더 ── */
+    .tool-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 11px 14px;
+      background: rgba(255,255,255,0.04);
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+    }
+    .back-link { color: #a78bfa; text-decoration: none; font-size: 13px; font-weight: 600; white-space: nowrap; }
+    .back-link:hover { color: #c4b5fd; }
+    .header-title { font-size: 15px; font-weight: 800; flex: 1; }
+    .round-badge {
+      background: #1e293b; border-radius: 10px; padding: 5px 10px;
+      font-size: 12px; font-weight: 700; color: #94a3b8;
+    }
+    .round-badge b { color: #fbbf24; }
+
+    .screen { display: none; }
+    .screen.active { display: block; }
+    .wrap { max-width: 560px; margin: 0 auto; padding: 18px 16px 30px; }
+
+    /* ── 설정 ── */
+    .setup-title { font-size: 13px; font-weight: 800; color: #94a3b8; margin: 16px 0 8px; }
+    .opt-row { display: flex; gap: 7px; flex-wrap: wrap; }
+    .opt-btn {
+      flex: 1; min-width: 64px; padding: 12px 8px; border-radius: 12px;
+      border: 1.5px solid #1e293b; background: #1e293b; color: #94a3b8;
+      font-size: 14px; font-weight: 700; cursor: pointer; font-family: inherit;
+      transition: all 0.15s; text-align: center;
+    }
+    .opt-btn.active { border-color: #fbbf24; background: rgba(251,191,36,0.12); color: #fbbf24; }
+    .start-btn {
+      width: 100%; margin-top: 24px; padding: 18px; border-radius: 16px; border: none;
+      background: linear-gradient(135deg, #b45309, #fbbf24); color: #0f172a;
+      font-size: 18px; font-weight: 900; cursor: pointer; font-family: inherit;
+      box-shadow: 0 6px 24px rgba(251,191,36,0.35);
+      transition: transform 0.15s;
+    }
+    .start-btn:active { transform: scale(0.97); }
+
+    /* ── 누적 스코어 바 ── */
+    .score-strip {
+      display: flex; align-items: center; justify-content: center; gap: 14px;
+      padding: 10px 14px 4px;
+    }
+    .strip-team { font-size: 15px; font-weight: 900; }
+    .strip-team.red { color: #f87171; }
+    .strip-team.blue { color: #60a5fa; }
+    .strip-num { font-size: 26px; font-weight: 900; font-variant-numeric: tabular-nums; }
+    .strip-vs { font-size: 13px; color: #475569; font-weight: 700; }
+
+    /* ── 타이머 ── */
+    .timer-area { text-align: center; padding: 8px 16px 4px; }
+    .timer-num {
+      font-size: clamp(90px, 26vmin, 170px);
+      font-weight: 900;
+      line-height: 1.02;
+      letter-spacing: -3px;
+      color: #f1f5f9;
+      font-variant-numeric: tabular-nums;
+      user-select: none;
+      transition: color 0.2s;
+    }
+    .timer-num.warn { color: #fbbf24; }
+    .timer-num.danger { color: #f87171; animation: dangerPulse 0.5s infinite; }
+    @keyframes dangerPulse { 50% { transform: scale(1.05); } }
+    .timer-sub { font-size: 13px; color: #64748b; font-weight: 700; min-height: 20px; }
+
+    .timer-controls {
+      display: flex; gap: 8px; justify-content: center;
+      padding: 12px 16px; max-width: 480px; margin: 0 auto;
+    }
+    .t-btn {
+      flex: 1; padding: 16px; border-radius: 15px; border: none;
+      font-size: 17px; font-weight: 900; cursor: pointer; font-family: inherit;
+      color: white; transition: transform 0.13s;
+    }
+    .t-btn:active { transform: scale(0.96); }
+    .t-start { background: linear-gradient(135deg, #065f46, #34d399); box-shadow: 0 6px 20px rgba(52,211,153,0.3); }
+    .t-pause { background: linear-gradient(135deg, #92400e, #fbbf24); color: #0f172a; box-shadow: 0 6px 20px rgba(251,191,36,0.25); }
+    .t-reset {
+      background: transparent; border: 1.5px solid #334155; color: #94a3b8;
+      font-size: 14px; flex: 0.6;
+    }
+
+    /* ── 점수 입력 (라운드 종료 후) ── */
+    .count-panel {
+      display: none;
+      max-width: 560px; margin: 6px auto 0; padding: 0 14px 14px;
+    }
+    .count-panel.show { display: block; }
+    .count-title { text-align: center; font-size: 14px; font-weight: 800; color: #fbbf24; margin-bottom: 10px; }
+    .count-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .count-card {
+      border-radius: 18px; padding: 14px 10px; text-align: center; border: 1.5px solid;
+    }
+    .count-card.red  { background: rgba(248,113,113,0.07); border-color: rgba(248,113,113,0.4); }
+    .count-card.blue { background: rgba(96,165,250,0.07); border-color: rgba(96,165,250,0.4); }
+    .cc-name { font-size: 14px; font-weight: 900; }
+    .count-card.red .cc-name, .count-card.red .cc-num { color: #f87171; }
+    .count-card.blue .cc-name, .count-card.blue .cc-num { color: #60a5fa; }
+    .cc-num { font-size: 52px; font-weight: 900; line-height: 1.1; font-variant-numeric: tabular-nums; }
+    .cc-label { font-size: 11px; color: #64748b; font-weight: 700; }
+    .cc-btns { display: flex; gap: 6px; justify-content: center; margin-top: 8px; }
+    .cc-btn {
+      width: 46px; height: 42px; border-radius: 12px; border: 1.5px solid #334155;
+      background: #1e293b; color: #f1f5f9; font-size: 18px; font-weight: 800;
+      cursor: pointer; font-family: inherit;
+    }
+    .cc-btn:active { transform: scale(0.93); }
+    .cc-btn.plus5 { font-size: 13px; }
+    .confirm-btn {
+      width: 100%; margin-top: 12px; padding: 15px; border-radius: 14px; border: none;
+      background: linear-gradient(135deg, #6d28d9, #a78bfa); color: white;
+      font-size: 16px; font-weight: 800; cursor: pointer; font-family: inherit;
+      box-shadow: 0 5px 18px rgba(139,92,246,0.35);
+    }
+
+    /* ── 라운드 기록 ── */
+    .history { padding: 4px 14px 20px; max-width: 560px; margin: 0 auto; }
+    .history-title { font-size: 11px; font-weight: 700; color: #475569; text-align: center; margin-bottom: 6px; }
+    .history-rows { display: flex; flex-direction: column; gap: 5px; }
+    .h-row {
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      background: #1e293b; border-radius: 12px; padding: 8px 12px;
+      font-size: 13px; font-weight: 700;
+      animation: chipIn 0.25s ease both;
+    }
+    @keyframes chipIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+    .h-round { color: #64748b; font-size: 11px; }
+    .h-red { color: #f87171; font-variant-numeric: tabular-nums; }
+    .h-blue { color: #60a5fa; font-variant-numeric: tabular-nums; }
+    .h-win { font-size: 12px; }
+    .ghost-btn {
+      width: 100%; margin-top: 10px; padding: 11px; border-radius: 11px;
+      border: 1.5px solid #1e293b; background: transparent; color: #64748b;
+      font-size: 12.5px; font-weight: 700; cursor: pointer; font-family: inherit;
+    }
+    .ghost-btn:hover { border-color: #334155; color: #94a3b8; }
+
+    /* ── 최종 결과 오버레이 ── */
+    .result-overlay {
+      position: fixed; inset: 0; background: rgba(15,23,42,0.94);
+      display: none; align-items: center; justify-content: center; z-index: 50; padding: 24px;
+    }
+    .result-overlay.show { display: flex; }
+    .result-card {
+      background: #1e293b; border-radius: 24px; padding: 36px 28px; text-align: center;
+      max-width: 400px; width: 100%; border: 1.5px solid rgba(251,191,36,0.35);
+      animation: cardIn 0.35s cubic-bezier(0.34,1.4,0.64,1) both;
+    }
+    @keyframes cardIn { from { opacity: 0; transform: scale(0.8) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+    .result-emoji { font-size: 64px; margin-bottom: 10px; }
+    .result-title { font-size: 28px; font-weight: 900; margin-bottom: 6px; }
+    .result-title.red { color: #f87171; }
+    .result-title.blue { color: #60a5fa; }
+    .result-title.tie { color: #fbbf24; }
+    .result-sub { font-size: 14px; color: #94a3b8; margin-bottom: 22px; }
+    .result-btn {
+      width: 100%; padding: 15px; border-radius: 14px; border: none;
+      background: linear-gradient(135deg, #6d28d9, #a78bfa); color: white;
+      font-size: 16px; font-weight: 800; cursor: pointer; font-family: inherit;
+    }
+  </style>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-75JKFQWSHP"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-75JKFQWSHP');
+  </script>
+</head>
+<body>
+
+<!-- ── 헤더 ── -->
+<div class="tool-header">
+  <a href="pan-flip.html" class="back-link">← 게임 설명</a>
+  <span class="header-title">⏱️ 판 뒤집기 타이머·점수판</span>
+  <span class="round-badge">라운드 <b id="roundNum">1</b>/<b id="roundTotal">3</b></span>
+</div>
+
+<!-- ══════════ 설정 화면 ══════════ -->
+<div class="screen active" id="setupScreen">
+  <div class="wrap">
+    <div class="setup-title">⏱️ 라운드 시간</div>
+    <div class="opt-row" data-cfg="sec">
+      <button class="opt-btn" data-v="30">30초</button>
+      <button class="opt-btn active" data-v="45">45초</button>
+      <button class="opt-btn" data-v="60">60초</button>
+      <button class="opt-btn" data-v="90">90초</button>
+    </div>
+    <div class="setup-title">🏆 라운드 수</div>
+    <div class="opt-row" data-cfg="rounds">
+      <button class="opt-btn" data-v="1">단판</button>
+      <button class="opt-btn active" data-v="3">3라운드</button>
+      <button class="opt-btn" data-v="5">5라운드</button>
+    </div>
+    <button class="start-btn" onclick="startGame()">🔴🔵 게임 시작!</button>
+  </div>
+</div>
+
+<!-- ══════════ 플레이 화면 ══════════ -->
+<div class="screen" id="playScreen">
+
+  <div class="score-strip">
+    <span class="strip-team red">🔴 빨강</span>
+    <span class="strip-num" id="winRed" style="color:#f87171;">0</span>
+    <span class="strip-vs">승부</span>
+    <span class="strip-num" id="winBlue" style="color:#60a5fa;">0</span>
+    <span class="strip-team blue">파랑 🔵</span>
+  </div>
+
+  <div class="timer-area">
+    <div class="timer-num" id="timerNum">45</div>
+    <div class="timer-sub" id="timerSub">시작 버튼을 누르면 카운트다운!</div>
+  </div>
+
+  <div class="timer-controls" id="timerControls">
+    <button class="t-btn t-start" id="startPauseBtn" onclick="toggleTimer()">▶ 라운드 시작</button>
+    <button class="t-btn t-reset" onclick="resetTimer()">↺</button>
+  </div>
+
+  <!-- 라운드 종료 후 점수 입력 -->
+  <div class="count-panel" id="countPanel">
+    <div class="count-title">🔢 판 개수를 세서 입력하세요</div>
+    <div class="count-grid">
+      <div class="count-card red">
+        <div class="cc-name">🔴 빨강팀</div>
+        <div class="cc-num" id="cntRed">0</div>
+        <div class="cc-label">판 개수</div>
+        <div class="cc-btns">
+          <button class="cc-btn" onclick="cnt('red',-1)">−</button>
+          <button class="cc-btn" onclick="cnt('red',1)">+</button>
+          <button class="cc-btn plus5" onclick="cnt('red',5)">+5</button>
+        </div>
+      </div>
+      <div class="count-card blue">
+        <div class="cc-name">🔵 파랑팀</div>
+        <div class="cc-num" id="cntBlue">0</div>
+        <div class="cc-label">판 개수</div>
+        <div class="cc-btns">
+          <button class="cc-btn" onclick="cnt('blue',-1)">−</button>
+          <button class="cc-btn" onclick="cnt('blue',1)">+</button>
+          <button class="cc-btn plus5" onclick="cnt('blue',5)">+5</button>
+        </div>
+      </div>
+    </div>
+    <button class="confirm-btn" onclick="confirmRound()">✅ 라운드 결과 확정</button>
+  </div>
+
+  <div class="history">
+    <div class="history-title">라운드 기록</div>
+    <div class="history-rows" id="historyRows"></div>
+    <button class="ghost-btn" onclick="location.reload()">🔄 처음부터 다시</button>
+  </div>
+</div>
+
+<!-- ── 최종 결과 ── -->
+<div class="result-overlay" id="resultOverlay">
+  <div class="result-card">
+    <div class="result-emoji" id="resultEmoji">🏆</div>
+    <div class="result-title" id="resultTitle">빨강팀 승리!</div>
+    <div class="result-sub" id="resultSub"></div>
+    <button class="result-btn" onclick="location.reload()">🔄 새 게임 시작</button>
+  </div>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+function vibrate(p) { if (navigator.vibrate) navigator.vibrate(p); }
+
+let audioCtx = null;
+function beep(freq, dur, type, vol) {
+  try {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const o = audioCtx.createOscillator();
+    const g = audioCtx.createGain();
+    o.type = type || 'triangle';
+    o.frequency.value = freq;
+    g.gain.setValueAtTime(vol || 0.2, audioCtx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + dur);
+    o.connect(g); g.connect(audioCtx.destination);
+    o.start(); o.stop(audioCtx.currentTime + dur);
+  } catch (e) {}
+}
+function whistle() {
+  // 종료 휘슬: 높은 음 3연타
+  beep(1800, 0.35, 'square', 0.25);
+  setTimeout(() => beep(1800, 0.35, 'square', 0.25), 400);
+  setTimeout(() => beep(2200, 0.6, 'square', 0.28), 800);
+}
+
+/* ── 설정 ── */
+let CFG = { sec: 45, rounds: 3 };
+document.querySelectorAll('.opt-row[data-cfg]').forEach(row => {
+  row.querySelectorAll('.opt-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      row.querySelectorAll('.opt-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      CFG[row.dataset.cfg] = parseInt(btn.dataset.v, 10);
+    });
+  });
+});
+
+/* ── 상태 ── */
+let S = {
+  round: 1,
+  remainMs: 0,
+  running: false,
+  timerId: null,
+  lastTick: 0,
+  winRed: 0,
+  winBlue: 0,
+  cntRed: 0,
+  cntBlue: 0,
+  history: []
+};
+
+async function keepAwake() {
+  try { if (navigator.wakeLock) await navigator.wakeLock.request('screen'); } catch (e) {}
+}
+
+function startGame() {
+  S.round = 1;
+  S.winRed = 0; S.winBlue = 0;
+  S.history = [];
+  $('roundTotal').textContent = CFG.rounds;
+  $('historyRows').innerHTML = '';
+  updateStrip();
+  resetTimer();
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  $('playScreen').classList.add('active');
+  keepAwake();
+}
+
+/* ── 타이머 ── */
+function resetTimer() {
+  stopTick();
+  S.running = false;
+  S.remainMs = CFG.sec * 1000;
+  renderTimer();
+  $('startPauseBtn').textContent = '▶ 라운드 시작';
+  $('startPauseBtn').className = 't-btn t-start';
+  $('timerSub').textContent = '시작 버튼을 누르면 카운트다운!';
+  $('countPanel').classList.remove('show');
+  $('timerControls').style.display = 'flex';
+}
+
+function toggleTimer() {
+  if (S.running) {
+    S.running = false;
+    stopTick();
+    $('startPauseBtn').textContent = '▶ 재개';
+    $('startPauseBtn').className = 't-btn t-start';
+    $('timerSub').textContent = '일시정지 중';
+  } else {
+    S.running = true;
+    S.lastTick = performance.now();
+    S.timerId = setInterval(tick, 100);
+    $('startPauseBtn').textContent = '⏸ 일시정지';
+    $('startPauseBtn').className = 't-btn t-pause';
+    $('timerSub').textContent = '뒤집어라!!! 🔥';
+    beep(660, 0.15); setTimeout(() => beep(880, 0.25), 160);
+  }
+}
+
+function stopTick() {
+  if (S.timerId) { clearInterval(S.timerId); S.timerId = null; }
+}
+
+let lastWholeSec = null;
+function tick() {
+  const now = performance.now();
+  const dt = now - S.lastTick;
+  S.lastTick = now;
+  S.remainMs -= dt;
+
+  if (S.remainMs <= 0) {
+    S.remainMs = 0;
+    S.running = false;
+    stopTick();
+    renderTimer();
+    roundEnd();
+    return;
+  }
+  renderTimer();
+
+  // 마지막 5초 비프
+  const whole = Math.ceil(S.remainMs / 1000);
+  if (whole !== lastWholeSec) {
+    lastWholeSec = whole;
+    if (whole <= 5) { beep(1000, 0.12, 'square', 0.22); vibrate(30); }
+  }
+}
+
+function renderTimer() {
+  const whole = Math.ceil(S.remainMs / 1000);
+  const el = $('timerNum');
+  el.textContent = whole;
+  el.classList.remove('warn', 'danger');
+  if (whole <= 5) el.classList.add('danger');
+  else if (whole <= 10) el.classList.add('warn');
+}
+
+/* ── 라운드 종료 → 점수 입력 ── */
+function roundEnd() {
+  whistle();
+  vibrate([100, 80, 100, 80, 200]);
+  $('timerSub').textContent = '⏹ 라운드 종료! 모두 손 떼세요!';
+  S.cntRed = 0; S.cntBlue = 0;
+  $('cntRed').textContent = 0;
+  $('cntBlue').textContent = 0;
+  $('timerControls').style.display = 'none';
+  $('countPanel').classList.add('show');
+}
+
+function cnt(team, d) {
+  if (team === 'red') {
+    S.cntRed = Math.max(0, S.cntRed + d);
+    $('cntRed').textContent = S.cntRed;
+  } else {
+    S.cntBlue = Math.max(0, S.cntBlue + d);
+    $('cntBlue').textContent = S.cntBlue;
+  }
+  vibrate(15);
+}
+
+function confirmRound() {
+  const win = S.cntRed > S.cntBlue ? 'red' : S.cntBlue > S.cntRed ? 'blue' : 'tie';
+  if (win === 'red') S.winRed++;
+  else if (win === 'blue') S.winBlue++;
+  S.history.push({ round: S.round, red: S.cntRed, blue: S.cntBlue, win });
+
+  const row = document.createElement('div');
+  row.className = 'h-row';
+  row.innerHTML =
+    '<span class="h-round">R' + S.round + '</span>' +
+    '<span class="h-red">🔴 ' + S.cntRed + '</span>' +
+    '<span style="color:#475569;">:</span>' +
+    '<span class="h-blue">' + S.cntBlue + ' 🔵</span>' +
+    '<span class="h-win">' + (win === 'red' ? '🔴 승' : win === 'blue' ? '🔵 승' : '무승부') + '</span>';
+  $('historyRows').appendChild(row);
+
+  updateStrip();
+
+  // 승부 결정 or 다음 라운드
+  const need = Math.floor(CFG.rounds / 2) + 1;
+  if (S.winRed >= need || S.winBlue >= need || S.round >= CFG.rounds) {
+    showFinal();
+  } else {
+    S.round++;
+    $('roundNum').textContent = S.round;
+    resetTimer();
+    $('timerSub').textContent = '라운드 ' + S.round + ' 준비! 판을 반반으로 다시 섞으세요';
+  }
+}
+
+function updateStrip() {
+  $('winRed').textContent = S.winRed;
+  $('winBlue').textContent = S.winBlue;
+}
+
+function showFinal() {
+  const t = $('resultTitle');
+  if (S.winRed > S.winBlue) {
+    $('resultEmoji').textContent = '🔴';
+    t.textContent = '빨강팀 승리!';
+    t.className = 'result-title red';
+  } else if (S.winBlue > S.winRed) {
+    $('resultEmoji').textContent = '🔵';
+    t.textContent = '파랑팀 승리!';
+    t.className = 'result-title blue';
+  } else {
+    $('resultEmoji').textContent = '🤝';
+    t.textContent = '무승부!';
+    t.className = 'result-title tie';
+  }
+  $('resultSub').textContent = '라운드 스코어 ' + S.winRed + ' : ' + S.winBlue +
+    ' · 총 판 수 ' + S.history.reduce((a, h) => a + h.red, 0) + ' : ' + S.history.reduce((a, h) => a + h.blue, 0);
+  $('resultOverlay').classList.add('show');
+  beep(523, 0.2); setTimeout(() => beep(659, 0.2), 220); setTimeout(() => beep(784, 0.2), 440); setTimeout(() => beep(1047, 0.5), 660);
+}
+</script>
+</body>
+</html>

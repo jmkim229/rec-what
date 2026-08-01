@@ -987,6 +987,23 @@ const gamesData = [
       duration: 'medium',
       situation: ['energy', 'brain']
     }
+  },
+  {
+    id: 'pan-flip',
+    emoji: '🔴',
+    title: '판 뒤집기 (오셀로 대전)',
+    description: '제한시간 안에 내 팀 색으로 뒤집어라! 몸으로 하는 오셀로. 샌드위치 룰 전략전 모드 + 타이머·점수판 도구 포함',
+    url: 'games/pan-flip.html',
+    people: '6명+ (팀당 3명~)',
+    time: '10~20분',
+    prep: '양면 색판 30~50개',
+    tags: {
+      location: ['indoor'],
+      groupSize: ['small', 'medium', 'large'],
+      ageGroup: ['young', 'kid-young', 'kid-old', 'teen', 'adult'],
+      duration: 'medium',
+      situation: ['energy', 'brain']
+    }
   }
 ];
 
