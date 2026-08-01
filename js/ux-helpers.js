@@ -176,7 +176,7 @@
     var ogTitle = titleEl ? titleEl.textContent.trim() : document.title;
     var ogDesc  = descEl  ? descEl.getAttribute('content') : '';
     var ogUrl   = window.location.href.replace(/\?.*$/, '').replace(/#.*$/, '');
-    var ogImg   = 'https://rec-what.vercel.app/og-image.png';
+    var ogImg   = 'https://recwhat.com/og-image.png';
 
     var tags = [
       { p: 'og:type',        c: 'website' },

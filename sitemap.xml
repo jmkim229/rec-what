@@ -1,412 +1,412 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://rec-what.vercel.app/</loc>
+    <loc>https://recwhat.com/</loc>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://rec-what.vercel.app/indoor.html</loc>
+    <loc>https://recwhat.com/indoor.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://rec-what.vercel.app/outdoor.html</loc>
+    <loc>https://recwhat.com/outdoor.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://rec-what.vercel.app/small-group.html</loc>
+    <loc>https://recwhat.com/small-group.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://rec-what.vercel.app/large-group.html</loc>
+    <loc>https://recwhat.com/large-group.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://rec-what.vercel.app/games/bomb-pass.html</loc>
+    <loc>https://recwhat.com/games/bomb-pass.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://rec-what.vercel.app/games/nunchigame.html</loc>
+    <loc>https://recwhat.com/games/nunchigame.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://rec-what.vercel.app/games/updown.html</loc>
+    <loc>https://recwhat.com/games/updown.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://rec-what.vercel.app/games/bodyspeak.html</loc>
+    <loc>https://recwhat.com/games/bodyspeak.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://rec-what.vercel.app/games/speedquiz.html</loc>
+    <loc>https://recwhat.com/games/speedquiz.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://rec-what.vercel.app/games/relay-race.html</loc>
+    <loc>https://recwhat.com/games/relay-race.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://rec-what.vercel.app/games/treasure-hunt.html</loc>
+    <loc>https://recwhat.com/games/treasure-hunt.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://rec-what.vercel.app/games/group-jumprope.html</loc>
+    <loc>https://recwhat.com/games/group-jumprope.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://rec-what.vercel.app/games/towel-pass.html</loc>
+    <loc>https://recwhat.com/games/towel-pass.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://rec-what.vercel.app/games/balloon-pop.html</loc>
+    <loc>https://recwhat.com/games/balloon-pop.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://rec-what.vercel.app/games/mafia.html</loc>
+    <loc>https://recwhat.com/games/mafia.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://rec-what.vercel.app/games/telestrations.html</loc>
+    <loc>https://recwhat.com/games/telestrations.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://rec-what.vercel.app/games/mind-match.html</loc>
+    <loc>https://recwhat.com/games/mind-match.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://rec-what.vercel.app/games/truth-or-lie.html</loc>
+    <loc>https://recwhat.com/games/truth-or-lie.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://rec-what.vercel.app/games/wordchain.html</loc>
+    <loc>https://recwhat.com/games/wordchain.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://rec-what.vercel.app/games/ox-quiz.html</loc>
+    <loc>https://recwhat.com/games/ox-quiz.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://rec-what.vercel.app/games/bingo.html</loc>
+    <loc>https://recwhat.com/games/bingo.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://rec-what.vercel.app/games/talent-show.html</loc>
+    <loc>https://recwhat.com/games/talent-show.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://rec-what.vercel.app/games/team-relay.html</loc>
+    <loc>https://recwhat.com/games/team-relay.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://rec-what.vercel.app/games/wave.html</loc>
+    <loc>https://recwhat.com/games/wave.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://rec-what.vercel.app/ages-young.html</loc>
+    <loc>https://recwhat.com/ages-young.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://rec-what.vercel.app/ages-older.html</loc>
+    <loc>https://recwhat.com/ages-older.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://rec-what.vercel.app/games/animal-imitate.html</loc>
+    <loc>https://recwhat.com/games/animal-imitate.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://rec-what.vercel.app/games/color-hunt.html</loc>
+    <loc>https://recwhat.com/games/color-hunt.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://rec-what.vercel.app/games/balloon-play.html</loc>
+    <loc>https://recwhat.com/games/balloon-play.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://rec-what.vercel.app/games/follow-me.html</loc>
+    <loc>https://recwhat.com/games/follow-me.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://rec-what.vercel.app/games/song-dance.html</loc>
+    <loc>https://recwhat.com/games/song-dance.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://rec-what.vercel.app/games/escape-mission.html</loc>
+    <loc>https://recwhat.com/games/escape-mission.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://rec-what.vercel.app/games/debate-game.html</loc>
+    <loc>https://recwhat.com/games/debate-game.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://rec-what.vercel.app/games/strategy-board.html</loc>
+    <loc>https://recwhat.com/games/strategy-board.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://rec-what.vercel.app/games/team-mission-race.html</loc>
+    <loc>https://recwhat.com/games/team-mission-race.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://rec-what.vercel.app/games/story-creation.html</loc>
+    <loc>https://recwhat.com/games/story-creation.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://rec-what.vercel.app/about.html</loc>
+    <loc>https://recwhat.com/about.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://rec-what.vercel.app/contact.html</loc>
+    <loc>https://recwhat.com/contact.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://rec-what.vercel.app/guide-by-age.html</loc>
+    <loc>https://recwhat.com/guide-by-age.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://rec-what.vercel.app/guide-by-situation.html</loc>
+    <loc>https://recwhat.com/guide-by-situation.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://rec-what.vercel.app/icebreaking.html</loc>
+    <loc>https://recwhat.com/icebreaking.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://rec-what.vercel.app/all-games.html</loc>
+    <loc>https://recwhat.com/all-games.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://rec-what.vercel.app/games/liar-game.html</loc>
+    <loc>https://recwhat.com/games/liar-game.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://rec-what.vercel.app/games/balance-game.html</loc>
+    <loc>https://recwhat.com/games/balance-game.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://rec-what.vercel.app/games/chosung-quiz.html</loc>
+    <loc>https://recwhat.com/games/chosung-quiz.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://rec-what.vercel.app/games/jjimpigu.html</loc>
+    <loc>https://recwhat.com/games/jjimpigu.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://rec-what.vercel.app/games/iguseong.html</loc>
+    <loc>https://recwhat.com/games/iguseong.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://rec-what.vercel.app/games/card-flip.html</loc>
+    <loc>https://recwhat.com/games/card-flip.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://rec-what.vercel.app/games/me-too.html</loc>
+    <loc>https://recwhat.com/games/me-too.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://rec-what.vercel.app/games/throne-battle.html</loc>
+    <loc>https://recwhat.com/games/throne-battle.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://rec-what.vercel.app/games/bigstep.html</loc>
+    <loc>https://recwhat.com/games/bigstep.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://rec-what.vercel.app/games/balloon-toss.html</loc>
+    <loc>https://recwhat.com/games/balloon-toss.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://rec-what.vercel.app/games/balloon-basketball.html</loc>
+    <loc>https://recwhat.com/games/balloon-basketball.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://rec-what.vercel.app/games/balloon-cooperate.html</loc>
+    <loc>https://recwhat.com/games/balloon-cooperate.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://rec-what.vercel.app/games/balloon-color.html</loc>
+    <loc>https://recwhat.com/games/balloon-color.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://rec-what.vercel.app/games/balloon-volleyball.html</loc>
+    <loc>https://recwhat.com/games/balloon-volleyball.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://rec-what.vercel.app/games/balloon-pair-find.html</loc>
+    <loc>https://recwhat.com/games/balloon-pair-find.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://rec-what.vercel.app/games/balloon-soccer.html</loc>
+    <loc>https://recwhat.com/games/balloon-soccer.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://rec-what.vercel.app/guide-for-leader.html</loc>
+    <loc>https://recwhat.com/guide-for-leader.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://rec-what.vercel.app/privacy.html</loc>
+    <loc>https://recwhat.com/privacy.html</loc>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://rec-what.vercel.app/terms.html</loc>
+    <loc>https://recwhat.com/terms.html</loc>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
-    <loc>https://rec-what.vercel.app/adult.html</loc>
+    <loc>https://recwhat.com/adult.html</loc>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://rec-what.vercel.app/tools.html</loc>
+    <loc>https://recwhat.com/tools.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://rec-what.vercel.app/mt-games.html</loc>
+    <loc>https://recwhat.com/mt-games.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://rec-what.vercel.app/camp-games.html</loc>
+    <loc>https://recwhat.com/camp-games.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://rec-what.vercel.app/family-holiday-games.html</loc>
+    <loc>https://recwhat.com/family-holiday-games.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://rec-what.vercel.app/games/human-bingo.html</loc>
+    <loc>https://recwhat.com/games/human-bingo.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://rec-what.vercel.app/games/photo-mission.html</loc>
+    <loc>https://recwhat.com/games/photo-mission.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://rec-what.vercel.app/games/guess-who.html</loc>
+    <loc>https://recwhat.com/games/guess-who.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://rec-what.vercel.app/games/body-talk.html</loc>
+    <loc>https://recwhat.com/games/body-talk.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://rec-what.vercel.app/games/relay-quiz.html</loc>
+    <loc>https://recwhat.com/games/relay-quiz.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://rec-what.vercel.app/games/mbti-game.html</loc>
+    <loc>https://recwhat.com/games/mbti-game.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://rec-what.vercel.app/games/twenty-questions.html</loc>
+    <loc>https://recwhat.com/games/twenty-questions.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://rec-what.vercel.app/games/007-bang.html</loc>
+    <loc>https://recwhat.com/games/007-bang.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://rec-what.vercel.app/games/chamchamcham.html</loc>
+    <loc>https://recwhat.com/games/chamchamcham.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://rec-what.vercel.app/games/369-game.html</loc>
+    <loc>https://recwhat.com/games/369-game.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://rec-what.vercel.app/games/dangyeonhaji.html</loc>
+    <loc>https://recwhat.com/games/dangyeonhaji.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://rec-what.vercel.app/games/mugunghwa.html</loc>
+    <loc>https://recwhat.com/games/mugunghwa.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://rec-what.vercel.app/games/gawibawibo-train.html</loc>
+    <loc>https://recwhat.com/games/gawibawibo-train.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://rec-what.vercel.app/games/kokoko.html</loc>
+    <loc>https://recwhat.com/games/kokoko.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://rec-what.vercel.app/games/unit-defense.html</loc>
+    <loc>https://recwhat.com/games/unit-defense.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
