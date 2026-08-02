@@ -106,6 +106,39 @@
     }
     .repeat-note.show { display: block; }
 
+    /* 준비물 체크리스트 */
+    .prep-box {
+      display: none;
+      margin-top: 12px;
+      background: rgba(251,191,36,0.06);
+      border: 1.5px solid rgba(251,191,36,0.35);
+      border-radius: 18px;
+      padding: 14px;
+    }
+    .prep-box.show { display: block; }
+    .prep-title { font-size: 14px; font-weight: 900; color: #fbbf24; margin-bottom: 4px; }
+    .prep-sub { font-size: 11px; color: #94a3b8; margin-bottom: 10px; }
+    .prep-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 8px 4px;
+      border-bottom: 1px dashed rgba(251,191,36,0.15);
+      cursor: pointer;
+      user-select: none;
+    }
+    .prep-item:last-child { border-bottom: none; }
+    .prep-check {
+      width: 24px; height: 24px; border-radius: 8px;
+      border: 2px solid #fbbf24; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 15px; color: #0f172a; background: transparent;
+      transition: all 0.15s;
+    }
+    .prep-item.done .prep-check { background: #fbbf24; }
+    .prep-name { font-size: 14.5px; font-weight: 800; color: #f1f5f9; }
+    .prep-item.done .prep-name { text-decoration: line-through; color: #64748b; }
+    .prep-for { font-size: 11px; color: #64748b; margin-left: auto; text-align: right; }
+    .prep-none { font-size: 13.5px; font-weight: 700; color: #34d399; text-align: center; padding: 4px; }
+
     .confirm-btn {
       width: 100%; margin-top: 14px; padding: 15px; border-radius: 14px; border: none;
       background: linear-gradient(135deg, #6d28d9, #a78bfa); color: white;
@@ -163,6 +196,13 @@
 
   <div class="course-list" id="courseList"></div>
   <div class="repeat-note" id="repeatNote">⚠️ 안 한 게임이 부족해서 최근에 했던 게임이 일부 포함됐어요</div>
+
+  <div class="prep-box" id="prepBox">
+    <div class="prep-title">🎒 준비물 체크리스트</div>
+    <div class="prep-sub">전날 미리 챙겨두세요! 항목을 누르면 체크됩니다</div>
+    <div id="prepItems"></div>
+  </div>
+
   <button class="confirm-btn" id="confirmBtn" onclick="confirmCourse()">✅ 이 코스로 확정 (기록 저장)</button>
 
   <div class="history-sec">
@@ -294,11 +334,49 @@ function renderCourse(showRepeatNote) {
     list.appendChild(card);
   });
   $('totalTime').textContent = current.reduce((a, g) => a + g.time, 0);
+  renderPrepList();
   $('confirmBtn').classList.toggle('show', current.length > 0);
   $('confirmBtn').disabled = false;
   $('confirmBtn').textContent = '✅ 이 코스로 확정 (기록 저장)';
   $('repeatNote').classList.toggle('show', !!showRepeatNote);
   if (navigator.vibrate) navigator.vibrate(20);
+}
+
+/* ── 준비물 체크리스트 ── */
+function renderPrepList() {
+  const box = $('prepBox');
+  const items = $('prepItems');
+  if (current.length === 0) { box.classList.remove('show'); return; }
+
+  // 준비물별로 필요한 게임 묶기 ("없음" 제외, 같은 준비물은 하나로)
+  const map = new Map();
+  current.forEach(g => {
+    if (g.prep === '없음') return;
+    if (!map.has(g.prep)) map.set(g.prep, []);
+    map.get(g.prep).push(g.emoji + ' ' + g.name);
+  });
+
+  items.innerHTML = '';
+  if (map.size === 0) {
+    items.innerHTML = '<div class="prep-none">🙌 준비물이 하나도 없는 코스! 몸만 가면 됩니다</div>';
+  } else {
+    map.forEach((games, prep) => {
+      const row = document.createElement('div');
+      row.className = 'prep-item';
+      const icon = prep.includes('도구') ? '📱 ' : '';
+      row.innerHTML =
+        '<span class="prep-check"></span>' +
+        '<span class="prep-name">' + icon + prep + '</span>' +
+        '<span class="prep-for">' + games.join('<br>') + '</span>';
+      row.addEventListener('click', () => {
+        row.classList.toggle('done');
+        row.querySelector('.prep-check').textContent = row.classList.contains('done') ? '✔' : '';
+        if (navigator.vibrate) navigator.vibrate(15);
+      });
+      items.appendChild(row);
+    });
+  }
+  box.classList.add('show');
 }
 
 /* ── 확정·기록 ── */
