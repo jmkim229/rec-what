@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="description" content="레크 코스 뽑기. 워밍업→메인→마무리 3~4개 게임 코스를 버튼 하나로 자동 구성. 최근에 했던 게임은 기억해서 빼주는 로테이션 기능. 유아~고등 혼합 연령 소그룹 맞춤.">
+  <!-- Open Graph / SNS 공유 -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="레크 뭐하지?">
+  <meta property="og:title" content="🎲 레크 코스 뽑기 (혼합 연령 소그룹) | 레크 뭐하지?">
+  <meta property="og:description" content="워밍업→메인→마무리 게임 코스를 버튼 하나로 자동 구성. 최근에 했던 게임은 기억해서 빼주는 로테이션 기능.">
+  <meta property="og:url" content="https://recwhat.com/games/rec-course-tool.html">
+  <meta property="og:image" content="https://recwhat.com/og-image.png">
+  <meta property="og:locale" content="ko_KR">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="🎲 레크 코스 뽑기 (혼합 연령 소그룹) | 레크 뭐하지?">
+  <meta name="twitter:description" content="워밍업→메인→마무리 게임 코스를 버튼 하나로 자동 구성. 로테이션 기능으로 매주 안 겹치게.">
+  <meta name="twitter:image" content="https://recwhat.com/og-image.png">
+  <title>🎲 레크 코스 뽑기 (혼합 연령 소그룹) | 레크 뭐하지?</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif;
+      background: #0f172a;
+      color: #f1f5f9;
+      min-height: 100vh;
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+      overflow-x: hidden;
+    }
+    .tool-header {
+      display: flex; align-items: center; gap: 10px; padding: 11px 14px;
+      background: rgba(255,255,255,0.04); border-bottom: 1px solid rgba(255,255,255,0.07);
+    }
+    .back-link { color: #a78bfa; text-decoration: none; font-size: 13px; font-weight: 600; white-space: nowrap; }
+    .back-link:hover { color: #c4b5fd; }
+    .header-title { font-size: 15px; font-weight: 800; flex: 1; }
+    .total-badge {
+      background: #1e293b; border-radius: 10px; padding: 5px 10px;
+      font-size: 12px; font-weight: 700; color: #94a3b8;
+    }
+    .total-badge b { color: #fbbf24; }
+
+    .wrap { max-width: 600px; margin: 0 auto; padding: 14px 14px 30px; }
+    .intro { font-size: 12.5px; color: #94a3b8; text-align: center; line-height: 1.6; margin-bottom: 12px; }
+    .intro b { color: #fbbf24; }
+
+    /* 옵션 */
+    .opt-bar { display: flex; gap: 7px; justify-content: center; margin-bottom: 12px; }
+    .opt-btn {
+      padding: 9px 18px; border-radius: 20px;
+      border: 1.5px solid #1e293b; background: #1e293b; color: #94a3b8;
+      font-size: 13px; font-weight: 700; cursor: pointer; font-family: inherit;
+      transition: all 0.15s;
+    }
+    .opt-btn.active { border-color: #fbbf24; background: rgba(251,191,36,0.12); color: #fbbf24; }
+
+    .draw-btn {
+      width: 100%; padding: 17px; border-radius: 16px; border: none;
+      background: linear-gradient(135deg, #b45309, #fbbf24); color: #0f172a;
+      font-size: 18px; font-weight: 900; cursor: pointer; font-family: inherit;
+      box-shadow: 0 6px 24px rgba(251,191,36,0.3);
+      transition: transform 0.15s;
+      margin-bottom: 14px;
+    }
+    .draw-btn:active { transform: scale(0.97); }
+
+    /* 코스 카드 */
+    .course-list { display: flex; flex-direction: column; gap: 10px; }
+    .course-card {
+      background: #1e293b; border: 1.5px solid #334155; border-radius: 18px;
+      padding: 13px 14px;
+      display: flex; align-items: center; gap: 12px;
+      animation: cardIn 0.3s cubic-bezier(0.34,1.4,0.64,1) both;
+    }
+    @keyframes cardIn { from { opacity: 0; transform: translateY(10px) scale(0.97); } to { opacity: 1; transform: translateY(0) scale(1); } }
+    .cc-emoji { font-size: 34px; flex-shrink: 0; }
+    .cc-body { flex: 1; min-width: 0; }
+    .cc-cat {
+      display: inline-block; font-size: 10px; font-weight: 800;
+      padding: 2px 8px; border-radius: 10px; margin-bottom: 4px;
+    }
+    .cc-cat.warmup { background: rgba(52,211,153,0.13); color: #34d399; }
+    .cc-cat.main   { background: rgba(248,113,113,0.13); color: #f87171; }
+    .cc-cat.finish { background: rgba(96,165,250,0.13); color: #60a5fa; }
+    .cc-name { font-size: 16px; font-weight: 900; }
+    .cc-name a { color: #f1f5f9; text-decoration: none; }
+    .cc-name a:hover { color: #fbbf24; }
+    .cc-meta { font-size: 11px; color: #64748b; font-weight: 600; margin-top: 2px; }
+    .cc-tip { font-size: 11.5px; color: #94a3b8; margin-top: 5px; line-height: 1.45; }
+    .cc-swap {
+      flex-shrink: 0; width: 40px; height: 40px; border-radius: 12px;
+      border: 1.5px solid #334155; background: transparent; color: #a78bfa;
+      font-size: 17px; cursor: pointer; font-family: inherit;
+      transition: all 0.15s;
+    }
+    .cc-swap:hover { border-color: #a78bfa; }
+    .cc-swap:active { transform: rotate(180deg); }
+
+    .repeat-note {
+      font-size: 11px; color: #fbbf24; text-align: center; margin-top: 8px;
+      display: none;
+    }
+    .repeat-note.show { display: block; }
+
+    .confirm-btn {
+      width: 100%; margin-top: 14px; padding: 15px; border-radius: 14px; border: none;
+      background: linear-gradient(135deg, #6d28d9, #a78bfa); color: white;
+      font-size: 16px; font-weight: 800; cursor: pointer; font-family: inherit;
+      box-shadow: 0 5px 18px rgba(139,92,246,0.35);
+      display: none;
+    }
+    .confirm-btn.show { display: block; }
+    .confirm-btn:disabled { opacity: 0.5; cursor: default; }
+
+    /* 기록 */
+    .history-sec { margin-top: 22px; }
+    .history-title { font-size: 12px; font-weight: 800; color: #475569; text-align: center; margin-bottom: 8px; }
+    .h-row {
+      background: rgba(30,41,59,0.6); border-radius: 12px; padding: 9px 12px;
+      font-size: 12px; color: #94a3b8; margin-bottom: 6px; line-height: 1.5;
+    }
+    .h-date { color: #fbbf24; font-weight: 800; margin-right: 6px; }
+    .ghost-btn {
+      width: 100%; margin-top: 6px; padding: 10px; border-radius: 11px;
+      border: 1.5px solid #1e293b; background: transparent; color: #64748b;
+      font-size: 12px; font-weight: 700; cursor: pointer; font-family: inherit;
+    }
+    .ghost-btn:hover { border-color: #334155; color: #94a3b8; }
+    .empty-note { font-size: 12px; color: #475569; text-align: center; padding: 8px; }
+  </style>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-75JKFQWSHP"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-75JKFQWSHP');
+  </script>
+</head>
+<body>
+
+<div class="tool-header">
+  <a href="../tools.html" class="back-link">← 도구 모음</a>
+  <span class="header-title">🎲 레크 코스 뽑기</span>
+  <span class="total-badge">총 <b id="totalTime">0</b>분</span>
+</div>
+
+<div class="wrap">
+  <p class="intro">
+    <b>유아~고등 혼합 연령 소그룹</b>에 맞는 게임으로 오늘의 코스를 짜드립니다.<br>
+    코스를 확정하면 기록되고, <b>최근 2회에 했던 게임은 다음 뽑기에서 자동 제외</b>돼요.
+  </p>
+
+  <div class="opt-bar">
+    <button class="opt-btn active" data-n="3">게임 3개 (~30분)</button>
+    <button class="opt-btn" data-n="4">게임 4개 (~45분)</button>
+  </div>
+
+  <button class="draw-btn" onclick="drawCourse()">🎲 오늘의 코스 뽑기!</button>
+
+  <div class="course-list" id="courseList"></div>
+  <div class="repeat-note" id="repeatNote">⚠️ 안 한 게임이 부족해서 최근에 했던 게임이 일부 포함됐어요</div>
+  <button class="confirm-btn" id="confirmBtn" onclick="confirmCourse()">✅ 이 코스로 확정 (기록 저장)</button>
+
+  <div class="history-sec">
+    <div class="history-title">📒 진행 기록</div>
+    <div id="historyRows"><div class="empty-note">아직 기록이 없어요. 코스를 확정하면 여기에 쌓입니다.</div></div>
+    <button class="ghost-btn" onclick="clearHistory()">🗑️ 기록 전체 삭제</button>
+  </div>
+</div>
+
+<script>
+/* ── 게임 풀 (유아~고등 혼합 연령 소그룹 검증 목록) ── */
+const POOL = [
+  // 워밍업 (5~7분, 준비물 없음 위주)
+  { id: 'kokoko',          cat: 'warmup', emoji: '👃', name: '코코코',            time: 5,  prep: '없음',            url: 'kokoko.html',          tip: '큰 아이+작은 아이로 짝을 지으면 동생이 형을 이기는 명장면이 나온다' },
+  { id: 'chamchamcham',    cat: 'warmup', emoji: '👉', name: '참참참',            time: 5,  prep: '없음',            url: 'chamchamcham.html',    tip: '유아·저학년과는 좌우 2방향만 쓰면 성공률이 올라가 더 신나한다' },
+  { id: 'ssalbori',        cat: 'warmup', emoji: '🌾', name: '쌀보리',            time: 5,  prep: '없음',            url: 'ssalbori.html',        tip: '나이 차이가 큰 짝일수록 재밌다. 5살도 고등학생을 이길 수 있는 완전 평등 게임' },
+  { id: 'gawibawibo-train',cat: 'warmup', emoji: '🚂', name: '가위바위보 기차',   time: 7,  prep: '없음',            url: 'gawibawibo-train.html',tip: '7명이면 3판 2선승으로 늘려서 진행. 유아는 버디 형과 한 몸 기차로' },
+  { id: 'follow-me',       cat: 'warmup', emoji: '🙋', name: '따라 하기 게임',    time: 5,  prep: '없음',            url: 'follow-me.html',       tip: '유아를 리더로 세우면 귀여운 동작을 전원이 따라 하며 웃음이 터진다' },
+
+  // 메인 (10~20분, 에너지·대결)
+  { id: 'pan-flip',        cat: 'main',   emoji: '🔴', name: '판 뒤집기',         time: 15, prep: '양면 색판',       url: 'pan-flip.html',        tip: '큰 아이는 한 손만 쓰는 핸디캡 매치로. 5살도 판은 뒤집을 수 있다!' },
+  { id: 'mugunghwa',       cat: 'main',   emoji: '🌺', name: '무궁화 꽃이 피었습니다', time: 10, prep: '없음',       url: 'mugunghwa.html',       tip: '유아를 술래로 세우고 큰 아이들이 과장되게 걸려주면 분위기 최고조' },
+  { id: 'color-hunt',      cat: 'main',   emoji: '🎨', name: '색깔 찾기',         time: 10, prep: '진행 도구(폰)',   url: 'color-hunt.html',      tip: '유아도 색은 아니까 완전 동등. 버디 형과 손잡고 함께 찾게 하자' },
+  { id: 'bomb-pass',       cat: 'main',   emoji: '💣', name: '폭탄 돌리기',       time: 10, prep: '진행 도구(폰)',   url: 'bomb-pass.html',       tip: '운빨 게임이라 나이 무관. 걸린 사람 벌칙은 유아도 할 수 있는 것(동물 울음소리)으로' },
+  { id: 'paper-cup-tower', cat: 'main',   emoji: '🥤', name: '종이컵 탑 쌓기',    time: 12, prep: '종이컵 30개+',    url: 'paper-cup-tower.html', tip: '유아는 1층 담당, 큰 아이는 위층 담당으로 역할을 나누면 자연 협동' },
+  { id: 'ttakji',          cat: 'main',   emoji: '🟨', name: '딱지치기',          time: 20, prep: '두꺼운 종이',     url: 'ttakji.html',          tip: '만들기부터 시작! 유아 딱지는 큰 형이 대신 출전하는 "대타 규칙"으로 전원 참여' },
+  { id: 'animal-imitate',  cat: 'main',   emoji: '🐘', name: '동물 흉내 게임',    time: 10, prep: '진행 도구(폰)',   url: 'animal-imitate.html',  tip: '유아가 제일 빛나는 게임. 아이 기분이 처졌을 때 꺼내는 회복 카드로도 좋다' },
+
+  // 마무리 (협동·차분)
+  { id: 'balloon-cooperate', cat: 'finish', emoji: '👯', name: '풍선 협동 유지',  time: 10, prep: '풍선',            url: 'balloon-cooperate.html', tip: '풍선은 느리게 떨어져서 5살도 충분히 친다. 경쟁 없이 마음을 정리하는 마무리' },
+  { id: 'newspaper-stand',   cat: 'finish', emoji: '📰', name: '신문지 위에 서기', time: 12, prep: '신문지',          url: 'newspaper-stand.html', tip: '큰 사람이 작은 아이를 안는 게 필승 전략이라 나이 차이가 무기가 된다' },
+  { id: 'song-dance',        cat: 'finish', emoji: '🎵', name: '노래 율동',       time: 8,  prep: '음악',            url: 'song-dance.html',      tip: '유아 눈높이 율동을 고등학생이 진지하게 하는 그림 자체가 마무리 웃음 포인트' }
+];
+
+const CAT_LABEL = { warmup: '🔥 워밍업', main: '⚡ 메인', finish: '🤝 마무리' };
+const STORAGE_KEY = 'recwhat-course-history';
+const EXCLUDE_RECENT = 2; // 최근 N회 진행 게임 제외
+
+const $ = id => document.getElementById(id);
+let numGames = 3;
+let current = []; // 현재 뽑힌 코스
+
+document.querySelectorAll('.opt-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.opt-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    numGames = parseInt(btn.dataset.n, 10);
+  });
+});
+
+/* ── 기록 ── */
+function loadHistory() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; } catch (e) { return []; }
+}
+function saveHistory(h) {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(h)); } catch (e) {}
+}
+function recentIds() {
+  const h = loadHistory();
+  const recent = h.slice(-EXCLUDE_RECENT);
+  const ids = new Set();
+  recent.forEach(s => s.ids.forEach(id => ids.add(id)));
+  return ids;
+}
+
+/* ── 뽑기 로직 ── */
+function pickFrom(cat, excludeIds, usedIds, count) {
+  const inCat = POOL.filter(g => g.cat === cat && !usedIds.has(g.id));
+  let fresh = inCat.filter(g => !excludeIds.has(g.id));
+  let usedRepeat = false;
+  const picks = [];
+  for (let i = 0; i < count; i++) {
+    let pool = fresh.filter(g => !usedIds.has(g.id));
+    if (pool.length === 0) {
+      pool = inCat.filter(g => !usedIds.has(g.id)); // 최근 게임도 허용 (부족할 때)
+      if (pool.length === 0) break;
+      usedRepeat = true;
+    }
+    const g = pool[Math.floor(Math.random() * pool.length)];
+    picks.push(g);
+    usedIds.add(g.id);
+  }
+  return { picks, usedRepeat };
+}
+
+function drawCourse() {
+  const excl = recentIds();
+  const used = new Set();
+  let repeat = false;
+
+  const w = pickFrom('warmup', excl, used, 1);
+  const m = pickFrom('main', excl, used, numGames === 4 ? 2 : 1);
+  const f = pickFrom('finish', excl, used, 1);
+  repeat = w.usedRepeat || m.usedRepeat || f.usedRepeat;
+
+  current = [...w.picks, ...m.picks, ...f.picks];
+  renderCourse(repeat);
+}
+
+function swapSlot(idx) {
+  const g = current[idx];
+  const excl = recentIds();
+  const used = new Set(current.map(x => x.id));
+  const inCat = POOL.filter(x => x.cat === g.cat && !used.has(x.id));
+  let pool = inCat.filter(x => !excl.has(x.id));
+  let repeat = false;
+  if (pool.length === 0) { pool = inCat; repeat = true; }
+  if (pool.length === 0) return; // 교체 불가
+  current[idx] = pool[Math.floor(Math.random() * pool.length)];
+  renderCourse(repeat || $('repeatNote').classList.contains('show'));
+}
+
+function renderCourse(showRepeatNote) {
+  const list = $('courseList');
+  list.innerHTML = '';
+  current.forEach((g, i) => {
+    const card = document.createElement('div');
+    card.className = 'course-card';
+    card.style.animationDelay = (i * 0.06) + 's';
+    card.innerHTML =
+      '<span class="cc-emoji">' + g.emoji + '</span>' +
+      '<div class="cc-body">' +
+        '<span class="cc-cat ' + g.cat + '">' + CAT_LABEL[g.cat] + '</span>' +
+        '<div class="cc-name"><a href="' + g.url + '">' + g.name + ' ↗</a></div>' +
+        '<div class="cc-meta">약 ' + g.time + '분 · 준비물: ' + g.prep + '</div>' +
+        '<div class="cc-tip">💡 ' + g.tip + '</div>' +
+      '</div>' +
+      '<button class="cc-swap" title="다른 게임으로 교체" onclick="swapSlot(' + i + ')">🔄</button>';
+    list.appendChild(card);
+  });
+  $('totalTime').textContent = current.reduce((a, g) => a + g.time, 0);
+  $('confirmBtn').classList.toggle('show', current.length > 0);
+  $('confirmBtn').disabled = false;
+  $('confirmBtn').textContent = '✅ 이 코스로 확정 (기록 저장)';
+  $('repeatNote').classList.toggle('show', !!showRepeatNote);
+  if (navigator.vibrate) navigator.vibrate(20);
+}
+
+/* ── 확정·기록 ── */
+function confirmCourse() {
+  if (current.length === 0) return;
+  const h = loadHistory();
+  const d = new Date();
+  const dateStr = (d.getMonth() + 1) + '/' + d.getDate();
+  h.push({ date: dateStr, ids: current.map(g => g.id) });
+  if (h.length > 20) h.shift();
+  saveHistory(h);
+  renderHistory();
+  $('confirmBtn').disabled = true;
+  $('confirmBtn').textContent = '✅ 저장 완료! 다음에 뽑을 땐 이 게임들이 제외돼요';
+  if (navigator.vibrate) navigator.vibrate([40, 40, 80]);
+}
+
+function renderHistory() {
+  const h = loadHistory();
+  const box = $('historyRows');
+  if (h.length === 0) {
+    box.innerHTML = '<div class="empty-note">아직 기록이 없어요. 코스를 확정하면 여기에 쌓입니다.</div>';
+    return;
+  }
+  box.innerHTML = '';
+  h.slice().reverse().forEach(s => {
+    const names = s.ids.map(id => {
+      const g = POOL.find(x => x.id === id);
+      return g ? g.emoji + ' ' + g.name : id;
+    }).join(' → ');
+    const row = document.createElement('div');
+    row.className = 'h-row';
+    row.innerHTML = '<span class="h-date">' + s.date + '</span>' + names;
+    box.appendChild(row);
+  });
+}
+
+function clearHistory() {
+  saveHistory([]);
+  renderHistory();
+}
+
+renderHistory();
+</script>
+</body>
+</html>

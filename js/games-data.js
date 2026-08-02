@@ -1004,6 +1004,74 @@ const gamesData = [
       duration: 'medium',
       situation: ['energy', 'brain']
     }
+  },
+  {
+    id: 'ssalbori',
+    emoji: '🌾',
+    title: '쌀보리',
+    description: '쌀! 보리! 주먹을 잡아라! 5살도 어른을 이기는 완전 평등 전래 손게임. 혼합 연령 모임의 워밍업 강자',
+    url: 'games/ssalbori.html',
+    people: '2명+',
+    time: '5~10분',
+    prep: '없음',
+    tags: {
+      location: ['indoor'],
+      groupSize: ['small', 'medium'],
+      ageGroup: ['young', 'kid-young', 'kid-old', 'teen', 'adult'],
+      duration: 'short',
+      situation: ['ice-break', 'no-prep']
+    }
+  },
+  {
+    id: 'newspaper-stand',
+    emoji: '📰',
+    title: '신문지 위에 서기',
+    description: '반씩 접히는 신문지 위에 팀 전원이 버텨라! 업기·안기가 필승 전략이라 나이 차이가 무기가 되는 협동 게임',
+    url: 'games/newspaper-stand.html',
+    people: '4명+ (팀당 2~4명)',
+    time: '10~15분',
+    prep: '신문지',
+    tags: {
+      location: ['indoor'],
+      groupSize: ['small', 'medium', 'large'],
+      ageGroup: ['young', 'kid-young', 'kid-old', 'teen', 'adult'],
+      duration: 'medium',
+      situation: ['ice-break', 'energy']
+    }
+  },
+  {
+    id: 'paper-cup-tower',
+    emoji: '🥤',
+    title: '종이컵 탑 쌓기',
+    description: '제한시간 안에 가장 높은 탑을! 힘이 아니라 침착함의 승부라 5살도 어른도 똑같이 즐기는 집중력 게임',
+    url: 'games/paper-cup-tower.html',
+    people: '2명+',
+    time: '10~15분',
+    prep: '종이컵 30개+',
+    tags: {
+      location: ['indoor'],
+      groupSize: ['small', 'medium'],
+      ageGroup: ['young', 'kid-young', 'kid-old', 'teen', 'adult'],
+      duration: 'medium',
+      situation: ['brain']
+    }
+  },
+  {
+    id: 'ttakji',
+    emoji: '🟨',
+    title: '딱지치기',
+    description: '접는 것부터 놀이! 딱지 접는 법 + 대결 + 토너먼트까지. 만들기와 승부가 한 세트인 전래 게임',
+    url: 'games/ttakji.html',
+    people: '2명+',
+    time: '20~30분',
+    prep: '두꺼운 종이',
+    tags: {
+      location: ['indoor'],
+      groupSize: ['small', 'medium'],
+      ageGroup: ['kid-young', 'kid-old', 'teen', 'adult'],
+      duration: 'long',
+      situation: ['energy']
+    }
   }
 ];
 
