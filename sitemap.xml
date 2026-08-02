@@ -41,11 +41,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://recwhat.com/games/bodyspeak.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://recwhat.com/games/speedquiz.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -146,11 +141,6 @@
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://recwhat.com/games/balloon-play.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://recwhat.com/games/follow-me.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -162,11 +152,6 @@
   </url>
   <url>
     <loc>https://recwhat.com/games/escape-mission.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://recwhat.com/games/debate-game.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
@@ -336,11 +321,6 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://recwhat.com/games/human-bingo.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://recwhat.com/games/photo-mission.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -432,6 +412,21 @@
   </url>
   <url>
     <loc>https://recwhat.com/games/ttakji.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://recwhat.com/games/escape-beginner.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://recwhat.com/games/escape-advanced.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://recwhat.com/games/escape-bible.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>

@@ -533,11 +533,11 @@ const gamesData = [
     id: 'updown',
     emoji: '⬆️',
     title: '업다운 게임',
-    description: '진행자가 숫자를 외치면 그 숫자만큼 일어서거나 앉아야 해요. 순간 판단 단체 반응 게임',
+    description: '1~100 사이 비밀 숫자를 피해라! 업·다운 힌트로 범위가 좁혀지는 폭탄 돌리기식 추리 게임. 진행자 도구 포함',
     url: 'games/updown.html',
     people: '5명+',
     time: '10~15분',
-    prep: '준비물 없음',
+    prep: '없음 (메모지 선택)',
     tags: {
       location: ['indoor'],
       groupSize: ['small', 'medium', 'large'],
