@@ -158,8 +158,8 @@ const gamesData = [
   {
     id: 'follow-me',
     emoji: '🪞',
-    title: '따라 하기 게임',
-    description: '진행자의 동작을 그대로 따라 해요! 집중력과 모방 능력을 자연스럽게 키워주는 어린이 인기 게임',
+    title: '따라 하기 게임 (가라사대)',
+    description: '"선생님 말씀대로 할게요"가 붙은 지시만 따라 하기! 가라사대·사이먼 세즈로도 불리는 게임. 속도를 올리면 중고등학생이 더 잘 틀려서 혼합 연령에 강함',
     url: 'games/follow-me.html',
     people: '4명+',
     time: '10~15분',
@@ -167,7 +167,7 @@ const gamesData = [
     tags: {
       location: ['both'],
       groupSize: ['small'],
-      ageGroup: ['young', 'kid-young'],
+      ageGroup: ['young', 'kid-young', 'kid-old', 'teen'],
       duration: 'medium',
       situation: ['energy', 'no-prep']
     }
@@ -924,7 +924,7 @@ const gamesData = [
     id: 'mugunghwa',
     emoji: '🌺',
     title: '무궁화 꽃이 피었습니다',
-    description: '술래가 뒤도는 순간 모두 얼음! 술래가 곧 진행자라 아이들끼리 알아서 굴러가는 국민 술래 놀이',
+    description: '술래가 뒤도는 순간 모두 얼음! 술래가 곧 진행자라 아이들끼리 알아서 굴러가는 국민 술래 놀이. 술래 포즈를 그대로 따라 멈추는 거울 무궁화 등 응용 5종 포함',
     url: 'games/mugunghwa.html',
     people: '5명+',
     time: '10~20분',
